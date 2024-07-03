@@ -7,6 +7,7 @@
 
 #root {
   --primary-clr: #00687B;
+  --primary-dark-clr: #005766;
   --primary-light-clr: #D6F9FF;
   --font-clr: #1E1E1E;
   --placeholder-clr: #AAB0B7;
@@ -26,7 +27,7 @@
   --success: #388E3C;
   --light-success: #BBF7D0;
 
-  background-color: var(--primary-light-clr);
+  background-color: var(--background-clr);
   color: var(--font-clr);
   transition: background-color 0.2s ease;
   font-family: 'Inter', 'Segoe UI', 'Tahoma';
