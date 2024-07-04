@@ -33,6 +33,9 @@
   font-family: 'Inter', 'Segoe UI', 'Tahoma';
 }
 
+button {
+  -webkit-tap-highlight-color: transparent;
+}
 
 ::-webkit-scrollbar {
   width: 7px;
