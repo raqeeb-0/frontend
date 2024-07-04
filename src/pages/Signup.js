@@ -1,4 +1,5 @@
-import styles from './styles/signup.module.css';
+import styles from './styles/form.module.css';
+import { AuthLayout } from '../layouts/AuthLayout';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { IconBtn } from '../components/IconBtn';
@@ -18,14 +19,7 @@ export const Signup = () => {
   const handlePassword = (e) => setPassword(e.target.value);
 
   return (
-    <section className={styles.page}>
-      <main className={styles.main}>
-        <img
-          src={process.env.PUBLIC_URL + '/logo192name.png'}
-          width={192}
-          height={192}
-          alt='Logo'
-        />
+    <AuthLayout>
         <form className={styles.form}>
           <IconBtn
             icon={<FcGoogle style={{fontSize: '1.5rem'}} />}
@@ -68,7 +62,6 @@ export const Signup = () => {
             Log in
           </Link>
         </div>
-      </main>
-    </section>
+    </AuthLayout>
   );
 }
