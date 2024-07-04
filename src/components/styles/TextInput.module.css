@@ -1,6 +1,6 @@
 .input {
   background-color: var(--contrast-background-clr);
-  outline: 2px solid transparent;
+  outline: 1.5px solid transparent;
   border: 1px solid var(--border-clr);
   border-radius: 8px;
   width: 300px;
