@@ -8,7 +8,7 @@ import {
   FormSep,
   FormField,
   Button
-} from '../components';
+} from '../components/auth';
 
 
 export const Login = () => {
