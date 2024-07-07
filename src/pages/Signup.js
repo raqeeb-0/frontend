@@ -1,12 +1,14 @@
 import styles from './styles/form.module.css';
-import { AuthLayout } from '../layouts/AuthLayout';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
-import { IconBtn } from '../components/IconBtn';
-import { FormSep } from '../components/FormSep';
-import { FormField } from '../components/FormField';
-import { Button } from '../components/Button';
-import { useState } from 'react';
+import { AuthLayout } from '../layouts';
+import {
+  IconBtn,
+  FormSep,
+  FormField,
+  Button
+} from '../components';
 
 
 export const Signup = () => {
@@ -17,10 +19,14 @@ export const Signup = () => {
   const handleEmail = (e) => setEmail(e.target.value);
   const handleUsername = (e) => setUsername(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('submitted');
+  }
 
   return (
     <AuthLayout>
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <IconBtn
             icon={<FcGoogle style={{fontSize: '1.5rem'}} />}
             value='Sign up with Google'
@@ -52,13 +58,13 @@ export const Signup = () => {
             handleChange={handlePassword}
           />
           <Button
+            type='submit'
             value='Sign up'
-            onClick={(e) => e.preventDefault()}
           />
         </form>
         <div>
           <span>Have an account? </span>
-          <Link to='/login'>
+          <Link to='/auth/login'>
             Log in
           </Link>
         </div>
