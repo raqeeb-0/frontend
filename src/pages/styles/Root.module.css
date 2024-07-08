@@ -1,8 +1,52 @@
 .header {
+  background-color: var(--contrast-background-clr);
+}
+
+.headerSection {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  width: 90%;
+  margin: 0 auto;
 }
 
 .logo {
   object-fit: cover;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.navLink {
+  color: var(--font-clr);
+  border-radius: 8px;
+  padding: 18px 17px;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: var(--primary-clr);
+}
+
+.CTA {
+  color: var(--background-clr);
+  background-color: var(--primary-clr);
+  padding: 18px 13px;
+  transition: background-color 0.2s ease;
+}
+
+.CTA:hover {
+  color: var(--background-clr);
+  background-color: var(--primary-dark-clr);
+}
+
+.separator {
+  background-color: var(--font-clr);
+  width: 1px;
+  height: 16px;
+  margin: 0 17px;
 }
