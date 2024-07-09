@@ -20,12 +20,12 @@
   --contrast-background-clr: #F7F7F9;
   --available: #2DCA8C;
 
-  --danger: #D32F2F;
-  --light-danger: #FECDD3;
+  --error: #F91226;
+  --light-error: #FFF0F1;
   --warning: #FBC02D;
   --light-warning: #FFF2C6;
   --success: #388E3C;
-  --light-success: #BBF7D0;
+  --light-success: #EEFAF2;
 
   background-color: var(--background-clr);
   color: var(--font-clr);
