@@ -1,0 +1,43 @@
+.notification{
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: -65px;
+  color: var(--font-clr);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 18px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.message {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 350px;
+}
+
+.active {
+  transform: translateY(100px);
+}
+
+.error {
+  background-color: #FFF0F1EB;
+  border-color: var(--error);
+}
+
+.error:hover {
+  background-color: var(--light-error);
+}
+
+.closeIcon {
+  color: var(--font-clr);
+  font-size: 1.5rem;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.success {
+  background-color: var(--light-success);
+}
