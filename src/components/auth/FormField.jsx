@@ -1,5 +1,5 @@
 import styles from './styles/FormField.module.css';
-import { TextInput } from './TextInput';
+import { Input } from './Input';
 import { PasswordInput } from './PasswordInput';
 import { useState } from 'react';
 
@@ -9,9 +9,7 @@ export const FormField = (props) => {
     label,
     type,
     name,
-    value,
-    placeholder,
-    handleChange
+    placeholder
   } = props;
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -34,25 +32,23 @@ ${!isFocused && isMouseOver? styles.hovered: ''} \
         { label }
       </span>
       {
-        type === 'text'
-          ?<TextInput
+        type === 'password'
+          ?<PasswordInput
+             isFocused={isFocused}
+             isMouseOver={isMouseOver}
+             handleFocus={handleFocus}
+             handleBlur={handleBlur}
+           />
+          :<Input
+             type={type}
              name={name}
-             value={value}
              placeholder={placeholder}
              isFocused={isFocused}
              isMouseOver={isMouseOver}
-             handleChange={handleChange}
              handleFocus={handleFocus}
              handleBlur={handleBlur}
            />
-          :<PasswordInput
-             value={value}
-             isFocused={isFocused}
-             isMouseOver={isMouseOver}
-             handleChange={handleChange}
-             handleFocus={handleFocus}
-             handleBlur={handleBlur}
-           />
+
       }
     </label>
   );

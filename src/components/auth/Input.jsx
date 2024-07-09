@@ -1,31 +1,28 @@
 import styles from './styles/TextInput.module.css';
 
 
-export const TextInput = (props) => {
+export const Input = (props) => {
   const {
+    type,
     name,
-    value,
     placeholder,
     isFocused,
     isMouseOver,
-    handleChange,
     handleFocus,
     handleBlur
   } = props;
 
   return (
     <input
-      type='text'
+      type={type}
       className={`\
 ${styles.input} \
 ${isFocused? styles.focused: ''} \
 ${!isFocused && isMouseOver? styles.hovered: ''} \
 `}
       name={name}
-      value={value}
       placeholder={placeholder}
       autoComplete='on'
-      onChange={handleChange}
       onFocus={handleFocus}
       onBlur={handleBlur}
     />

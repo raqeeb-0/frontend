@@ -6,15 +6,21 @@ import { useState } from 'react';
 
 export const PasswordInput = (props) => {
   const {
-    value,
     isFocused,
     isMouseOver,
-    handleChange,
     handleFocus,
     handleBlur
   } = props;
   const [isVisible, setIsVisible] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(true);
 
+  const handleChange = (e) => {
+    if (e.target.value === '') {
+      setIsEmpty(true);
+    } else {
+      setIsEmpty(false);
+    }
+  }
   const toggleVisibility = () => {
     isVisible
       ?setIsVisible(false)
@@ -34,13 +40,12 @@ ${!isFocused && isMouseOver? styles.hovered: ''} \
           {backgroundColor: isFocused? 'var(--background-clr)': ''}
         }
         name='password'
-        value={value}
         placeholder='••••••••'
         onChange={handleChange}
         onFocus={handleFocus}
       />
       {
-        value !== '' &&
+        !isEmpty &&
         <span onClick={toggleVisibility}>
           {
             isVisible

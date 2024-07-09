@@ -1,17 +1,35 @@
 import styles from './styles/Root.module.css';
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { isLoggedIn } from '../api/auth';
+import { useState, useEffect, useRef } from 'react';
+import {
+  Link,
+  useLoaderData
+} from 'react-router-dom';
+import { RiArrowDropDownLine } from "react-icons/ri";
+import { BiLogOut } from "react-icons/bi";
 
 
 export const Root = () => {
-  const [authStatus, setAuthStatus] = useState('');
+  const { isAuthenticated, username } = useLoaderData();
+  const [isVisible, setIsVisible] = useState(false);
+  let menuRef = useRef();
 
   useEffect(() => {
-    isLoggedIn()
-      .then((r) => setAuthStatus(r.status))
-      .catch((err) => console.error(err));
-  }, []);
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsVisible(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+  }, [menuRef]);
+
+  const handleIsVisible = () => {
+    isVisible?
+      setIsVisible(false):
+      setIsVisible(true);
+  }
+
+  const activeStatus = isVisible? styles.active: styles.inactive;
 
   return (
     <div>
@@ -27,22 +45,46 @@ export const Root = () => {
             />
           </Link>
           <nav className={styles.nav}>
-            <Link to='/support' className={styles.navLink}> Support </Link>
-            <Link to='/download' className={styles.navLink}> Download </Link>
+            <Link to='/support' className={styles.navLink}>
+              Support
+            </Link>
+            <Link to='/download' className={styles.navLink}>
+              Download
+            </Link>
             <div className={styles.separator}></div>
-            <Link to='/auth/login' className={styles.navLink}> Log in </Link>
+            {isAuthenticated?
+              <div className={styles.container} ref={menuRef}>
+                <span className={styles.user} onClick={handleIsVisible}>
+                  {username}
+                  <RiArrowDropDownLine className={styles.icon} />
+                </span>
+                <div className={`${styles.actionMenu} ${activeStatus}`} >
+                  <Link to='/logout' className={styles.navLink}>
+                    <BiLogOut
+                      className={styles.icon}
+                      style={{marginRight: '10px'}}
+                    />
+                    Log Out
+                  </Link>
+                </div>
+              </div>:
+              <Link
+                to='/auth/login'
+                className={styles.navLink}
+              >
+                Log in
+              </Link>
+            }
             <Link
-              to='/auth/signup'
+              to={isAuthenticated? '/app': '/auth/signup'}
               className={`${styles.navLink} ${styles.CTA}`}
-            > Get Started </Link>
+            >
+              {isAuthenticated? 'Dashboard': 'Get Started'}
+            </Link>
           </nav>
         </section>
       </header>
       <section>
-        <div>
-          Test Is User Logged in: <br />
-          { authStatus } 
-        </div>
       </section>
       <footer>
       </footer>

@@ -1,6 +1,10 @@
 import styles from './styles/form.module.css';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import {
+  Link,
+  Form,
+  useActionData
+} from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { AuthLayout } from '../layouts';
 import {
@@ -9,22 +13,28 @@ import {
   FormField,
   Button
 } from '../components/auth';
+import { Notification } from '../components';
 
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const error = useActionData();
+  const [showNotification, setShowNotification] = useState(false);
 
-  const handleEmail = (e) => setEmail(e.target.value);
-  const handlePassword = (e) => setPassword(e.target.value);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('submitted');
-  }
+  const handleClose = () => setShowNotification(false);
+
+  useEffect(() => {
+    let timer;
+    if (error?.message) {
+      setShowNotification(true);
+      timer = setTimeout(() => setShowNotification(false), 3000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [error]);
 
   return (
     <AuthLayout>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <Form method='post' className={styles.form} replace>
         <IconBtn
           icon={<FcGoogle style={{fontSize: '1.5rem'}} />}
           value='Log in with Google'
@@ -34,29 +44,31 @@ export const Login = () => {
           label='Email'
           type='text'
           name='email'
-          value={email}
           placeholder='JohnDoe@gmail.com'
-          handleChange={handleEmail}
         />
         <FormField
           label='Password'
           type='password'
           name='password'
-          value={password}
           placeholder='••••••••'
-          handleChange={handlePassword}
         />
         <Button
           type='submit'
           value='Log in'
         />
-      </form>
+      </Form>
       <div>
         <span>Don't have an account? </span>
         <Link to='/auth/signup'>
           Sign up
         </Link>
       </div>
+      <Notification
+        message={error?.message && error.message}
+        type={'error'}
+        active={showNotification}
+        handleClose={handleClose}
+      />
     </AuthLayout>
   );
 }
