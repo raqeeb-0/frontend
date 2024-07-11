@@ -3,7 +3,7 @@ import { fetchApi } from '../utils/fetchApi';
 
 
 export const logOutLoader = async () => {
-  const response = await fetchApi('get', '/auth/user/logout');
+  const response = await fetchApi('get', '/auth/users/logout');
 
   if (response.status === 'success') {
     return redirect('/');

@@ -5,7 +5,7 @@ import { fetchApi } from '../utils/fetchApi';
 export const logInAction = async ({ request }) => {
   const formData = await request.formData();
   const requestBody = Object.fromEntries(formData);
-  const response = await fetchApi('post', '/auth/user/login', requestBody);
+  const response = await fetchApi('post', '/auth/users/login', requestBody);
   const error = {}
 
   if (response.status === 'success') {

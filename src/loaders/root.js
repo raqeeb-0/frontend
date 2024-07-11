@@ -2,7 +2,7 @@ import { fetchApi } from '../utils/fetchApi';
 
 
 export const rootLoader = async () => {
-  const response = await fetchApi('get', '/auth/user/me');
+  const response = await fetchApi('get', '/users');
 
   if (response.status === 'success') {
     return {
