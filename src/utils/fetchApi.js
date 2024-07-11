@@ -9,8 +9,21 @@ export const fetchApi = async (method, resourcePath, requestBody) => {
     body: JSON.stringify(requestBody)
   }
 
-  const response = await fetch(url, options);
-  const data = await response.json();
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
 
-  return data;
+    return data;
+  } catch (err) {
+    if (err.message === 'Failed to fetch') {
+      return {
+        error: {
+          status: 503,
+          message: 'Network Error: Failed to fetch data'
+        }
+      }
+    } else {
+      console.error(err);
+    }
+  }
 }
