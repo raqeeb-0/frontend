@@ -9,7 +9,7 @@ export const signUpAction = async ({ request }) => {
   const error = {}
 
   if (response.status === 'success') {
-    return redirect('/');
+    return redirect('/dashboard');
   } else {
     error.message = response.message;
     return error;
