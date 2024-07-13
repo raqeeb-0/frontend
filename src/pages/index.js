@@ -1,3 +1,4 @@
+export { Dashboard } from './Dashboard';
 export { Root } from './Root';
 export { App } from './App';
 export { ErrorPage } from './Error';
