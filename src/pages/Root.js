@@ -4,7 +4,7 @@ import {
 } from 'react-router-dom';
 import {
   TopNav
-} from '../components';
+} from '../components/landing';
 
 
 export const Root = () => {

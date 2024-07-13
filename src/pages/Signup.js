@@ -13,7 +13,7 @@ import {
   FormField,
   Button
 } from '../components/auth';
-import { Notification } from '../components';
+import { Notification } from '../components/common';
 
 
 export const Signup = () => {
