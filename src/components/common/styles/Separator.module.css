@@ -1,0 +1,6 @@
+.separator {
+  background-color: var(--font-clr);
+  width: 1px;
+  height: 16px;
+  margin: 0 17px;
+}

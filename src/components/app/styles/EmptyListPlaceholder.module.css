@@ -1,0 +1,34 @@
+.empty {
+  margin: auto 0;
+  text-align: center;
+}
+
+.header {
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.callToAction {
+  display: block;
+  color: var(--background-clr);
+  background-color: var(--primary-clr);
+  border-radius: 16px;
+  width: fit-content;
+  padding: 13px;
+  margin: 0 auto;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.callToAction:hover {
+  background-color: var(--primary-dark-clr);
+}
+
+.icon {
+  display: inline-block;
+  height: 1em;
+  font-size: 1.5rem;
+  margin: 5px;
+  vertical-align: -6px;
+}

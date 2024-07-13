@@ -1,7 +1,10 @@
 import styles from './styles/TopNav.module.css';
 import { Link } from 'react-router-dom';
-import { Logo } from './Logo';
-import { UserMenu } from './UserMenu';
+import {
+  Separator,
+  Logo,
+  UserMenu
+} from '../common';
 
 
 export const TopNav = (props) => {
@@ -20,7 +23,7 @@ export const TopNav = (props) => {
             <Link to='/download' className={styles.navLink}>
               Download
             </Link>
-            <div className={styles.separator}></div>
+            <Separator />
             {isAuthenticated?
               <UserMenu
                 username={username}
@@ -33,7 +36,7 @@ export const TopNav = (props) => {
               </Link>
             }
             <Link
-              to={isAuthenticated? '/app': '/auth/signup'}
+              to={isAuthenticated? '/dashboard': '/auth/signup'}
               className={`${styles.navLink} ${styles.callToAction}`}
             >
               {isAuthenticated? 'Dashboard': 'Get Started'}

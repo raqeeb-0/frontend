@@ -1,0 +1,74 @@
+.actionIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  width: 2.5rem;
+  height: 2rem;
+  margin: 0 auto;
+  cursor: pointer;
+  vertical-align: -20px; 
+  transition: all 0.2s ease;
+}
+
+.actionIcon:hover {
+  background-color: var(--primary-light-clr);
+}
+
+.actionMenu {
+  position: absolute;
+  top: -10%;
+  left: -245%;
+  background-color: var(--background-clr);
+  border: 1px solid var(--primary-clr);
+  width: 170px;
+  padding: 10px 30px;
+  border-radius: 4px;
+  z-index: 1;
+  transition: all 0.2s ease;
+}
+
+.link {
+  display: block;
+  text-decoration: none;
+  color: var(--font-clr);
+  padding: 2px 5px;
+  text-align: left;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.link:hover {
+  background-color: var(--primary-light-clr);
+}
+
+.danger {
+  color: var(--error);
+}
+
+.danger:hover {
+  color: var(--error);
+  background-color: var(--light-error);
+}
+
+.icon {
+  font-size: 1.3rem;
+  vertical-align: middle;
+}
+
+.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.inactive {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(20px);
+}
+
+.activeIcon {
+  background-color: var(--primary-light-clr);
+  border-radius: 0 8px 8px 0;
+}
