@@ -1,3 +1,4 @@
+export { Public } from './Public';
 export { Dashboard } from './Dashboard';
 export { Root } from './Root';
 export { App } from './App';

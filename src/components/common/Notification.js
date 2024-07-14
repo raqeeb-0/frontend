@@ -1,5 +1,5 @@
 import styles from './styles/Notification.module.css';
-import { IoClose } from "react-icons/io5";
+import { IoClose } from 'react-icons/io5';
 
 
 export const Notification = ({ message, type, active, handleClose }) => {

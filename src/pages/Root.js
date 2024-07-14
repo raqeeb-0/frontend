@@ -1,25 +1,11 @@
-import {
-  Link,
-  useLoaderData
-} from 'react-router-dom';
-import {
-  TopNav
-} from '../components/landing';
+import { Outlet } from 'react-router-dom';
+import { AuthProvider } from '../contexts/AuthContext';
 
 
 export const Root = () => {
-  const { isAuthenticated, username } = useLoaderData();
-
   return (
-    <div>
-      <TopNav
-        isAuthenticated={isAuthenticated}
-        username={username}
-      />
-      <section>
-      </section>
-      <footer>
-      </footer>
-    </div>
+    <AuthProvider>
+      <Outlet />
+    </AuthProvider>
   );
 }

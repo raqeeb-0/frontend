@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react';
 import {
   Link,
   Form,
-  useActionData
+  useActionData,
+  useNavigate,
+  useLocation
 } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { AuthLayout } from '../layouts';
@@ -14,27 +16,27 @@ import {
   Button
 } from '../components/auth';
 import { Notification } from '../components/common';
+import { useNotify, useAuth } from '../hooks/common';
 
 
 export const Login = () => {
-  const error = useActionData();
-  const [showNotification, setShowNotification] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuth();
+  const from = location.state?.from?.pathname || '/dashboard';
 
-  const handleClose = () => setShowNotification(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    let timer;
-    if (error?.message) {
-      setShowNotification(true);
-      timer = setTimeout(() => setShowNotification(false), 3000);
-    }
+    const formData = new FormData(e.currentTarget);
+    const { email, password } = Object.fromEntries(formData);
+    auth.handleLogin(email, password);
+  }
 
-    return () => clearTimeout(timer);
-  }, [error]);
 
   return (
     <AuthLayout>
-      <Form method='post' className={styles.form} replace>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <IconBtn
           icon={<FcGoogle style={{fontSize: '1.5rem'}} />}
           value='Log in with Google'
@@ -56,19 +58,14 @@ export const Login = () => {
           type='submit'
           value='Log in'
         />
-      </Form>
+      </form>
       <div>
         <span>Don't have an account? </span>
         <Link to='/auth/signup'>
           Sign up
         </Link>
       </div>
-      <Notification
-        message={error?.message && error.message}
-        type={'error'}
-        active={showNotification}
-        handleClose={handleClose}
-      />
+
     </AuthLayout>
   );
 }

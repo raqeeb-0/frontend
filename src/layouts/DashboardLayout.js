@@ -1,21 +1,21 @@
 import styles from './styles/DashboardLayout.module.css';
-import { Outlet, useLoaderData } from 'react-router-dom';
 import { TopNav } from '../components/app';
 
 
-export const DashboardLayout = () => {
-  const { isAuthenticated, username, orgs } = useLoaderData();
+export const DashboardLayout = (props) => {
+  const { username, isEmptyList, children } = props;
 
   return (
-    <div className={styles.page}>
-      <TopNav
-        isAuthenticated={isAuthenticated}
-        username={username}
-        isEmptyList={orgs.length === 0}
-      />
-      <main className={styles.main}>
-        <Outlet />
-      </main>
-    </div>
+    <>
+      <div className={styles.page}>
+        <TopNav
+          username={username}
+          isEmptyList={isEmptyList}
+        />
+        <main className={styles.main}>
+          { children }
+        </main>
+      </div>
+    </>
   );
 }

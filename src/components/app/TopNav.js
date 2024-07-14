@@ -10,7 +10,7 @@ import { MdAddCircleOutline } from 'react-icons/md';
 
 
 export const TopNav = (props) => {
-  const { isAuthenticated, username, isEmptyList } = props;
+  const { username, isEmptyList } = props;
 
   return (
       <header className={styles.header}>
@@ -30,18 +30,9 @@ export const TopNav = (props) => {
                   <Separator />
                 </>
             }
-            {
-              isAuthenticated?
-                <UserMenu
-                  username={username}
-                />:
-                <Link
-                  to='/auth/login'
-                  className={styles.navLink}
-                >
-                  Log in
-                </Link>
-            }
+            <UserMenu
+              username={username}
+            />
           </nav>
         </section>
       </header>

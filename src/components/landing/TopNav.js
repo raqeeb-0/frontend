@@ -5,10 +5,14 @@ import {
   Logo,
   UserMenu
 } from '../common';
+import { useAuth } from '../../hooks/common';
 
 
 export const TopNav = (props) => {
   const { isAuthenticated, username } = props;
+  const auth = useAuth();
+
+  console.log(auth);
 
   return (
       <header className={styles.header}>

@@ -4,6 +4,7 @@ import {
   DashboardLayout
 } from './layouts';
 import {
+  Public,
   Dashboard,
   Root,
   App,
@@ -13,6 +14,8 @@ import {
   Signup
 } from './pages';
 import {
+  orgsLoader,
+  userLoader,
   dashboardLoader,
   rootLoader,
   logOutLoader
@@ -26,28 +29,20 @@ import {
 export const router = createBrowserRouter([
   {
     path: '/',
+    element: <Root />,
     errorElement: <ErrorPage />,
     children: [
       {
         index: true,
-        element: <Root />,
-        loader: rootLoader,
+        element: <Public />,
       },
       {
-        element: <DashboardLayout />,
-        loader: dashboardLoader,
-        children: [
-          {
-            path: 'dashboard',
-            element: <Dashboard />,
-            loader: dashboardLoader,
-          },
-        ]
+        path: 'dashboard',
+        element: <Dashboard />,
       },
       {
         path: '/logout',
         element: <LogOut />,
-        loader: logOutLoader,
       },
       {
         path: '/auth/signup',
