@@ -4,6 +4,8 @@ import {
   DashboardLayout
 } from './layouts';
 import {
+  OrganizationUpdate,
+  OrganizationCreate,
   Public,
   Dashboard,
   Root,
@@ -29,15 +31,23 @@ export const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: '/auth/signup',
+        path: 'organizations/create',
+        element: <OrganizationCreate />
+      },
+      {
+        path: 'organizations/:orgId/edit',
+        element: <OrganizationUpdate />
+      },
+      {
+        path: 'auth/signup',
         element: <Signup />,
       },
       {
-        path: '/auth/login',
+        path: 'auth/login',
         element: <Login />,
       },
       {
-        path: '/app',
+        path: 'app',
         element: <App />,
       }
     ]

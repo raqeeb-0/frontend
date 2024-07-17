@@ -15,6 +15,11 @@
 }
 
 .name {
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  background-color: inherit;
   color: var(--font-clr);
   padding: 10px;
   border-radius: 8px;

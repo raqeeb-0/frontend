@@ -21,3 +21,26 @@ export const useAuth = () => {
 
   return context;
 }
+
+
+export const useResponseHandler = () => {
+  const { setMessage, setType, showNotification } = useNotify();
+
+  const handleResponse = (response, success) => {
+    if (response === undefined) {
+      setMessage('Can\'t connect to the server');
+      setType('error');
+      showNotification();
+    } else if (response.status === 'fail') {
+      setMessage(response?.message);
+      setType('error');
+      response?.message && showNotification();
+    } else if (response.status === 'success') {
+      success();
+    } else {
+      console.log('Unknown Response');
+    }
+  }
+
+  return { handleResponse };
+}

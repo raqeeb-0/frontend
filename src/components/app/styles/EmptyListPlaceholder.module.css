@@ -3,8 +3,13 @@
   text-align: center;
 }
 
-.header {
+.h1 {
   margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.h2 {
+  margin-bottom: 15px;
   white-space: nowrap;
 }
 

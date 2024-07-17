@@ -7,8 +7,8 @@ export const EmptyListPlaceholder = (props) => {
   const { listName } = props;
   return (
     <div className={styles.empty}>
-      <h1 className={styles.header}>You have no { listName }s yet!</h1>
-      <h3 className={styles.header}>Try creating one to get started.</h3>
+      <h1 className={styles.h1}>You have no { listName }s yet!</h1>
+      <h3 className={styles.h2}>Try creating one to get started.</h3>
       <Link
         to={`/${listName}s/create`}
         className={styles.callToAction}

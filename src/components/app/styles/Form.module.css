@@ -1,0 +1,50 @@
+.form {
+  width: clamp(319px, 100%, 800px);
+}
+
+.legend {
+  background-color: var(--contrast-background-clr);
+  border-bottom: 1px solid var(--border-clr);
+  border-radius: 16px 16px 0 0;
+  color: var(--font-clr);
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /*--span: 2;
+  display: grid;
+  gap: 15px;
+  grid-template-columns: 200px auto;
+  grid-template-rows: repeat(var(--span), 1fr);*/
+  /*border-radius: 0 0 15px 15px;*/
+  padding: 40px;
+  transition: background-color 0.2s ease;
+}
+
+.button {
+  float: right;
+  color: var(--background-clr);
+  background-color: var(--primary-clr);
+  border-radius: 8px;
+  width: 100px;
+  height: 42px;
+  padding: 10px 20px;
+  margin-right: 40px;
+  margin-top: 30px;
+  font-size: 1.2rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.button:hover, .button:disabled {
+  background-color: var(--primary-dark-clr);
+}

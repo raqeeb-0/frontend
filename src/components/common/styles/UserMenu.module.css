@@ -43,7 +43,7 @@
   border: none;
   width: 100%;
   padding: 5px 17px;
-  font-family: inherit;
+  font: inherit;
   white-space: nowrap;
   cursor: pointer;
   transition: all 0.2s ease;

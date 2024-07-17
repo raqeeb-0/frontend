@@ -8,20 +8,22 @@ import {
 } from '../components/app';
 import {
   Loader,
-  Notification,
   ActionsMenu,
   SearchInput,
   PageHeader
 } from '../components/common';
 import { useAuth } from '../hooks/common';
-import { useGetOrgs } from '../hooks/orgs';
+import { useGetOrgs, useSelectOrg } from '../hooks/orgs';
 
 
 export const Dashboard = () => {
   const { isLoading: isFetchingUser } = useAuth();
   const { orgs, isLoading: isFetchingOrgs } = useGetOrgs();
+  const { handleSelectOrg, isLoading: isSelectingOrg } = useSelectOrg();
 
   const isLoading = isFetchingUser || isFetchingOrgs;
+
+  const handleClick = (e) => handleSelectOrg(e.currentTarget.getAttribute('data-id'));
 
   return (
     <>
@@ -47,9 +49,14 @@ export const Dashboard = () => {
                       { index + 1 }
                     </td>
                     <td>
-                      <Link to='/app' className={styles.name}>
+                      <button
+                        data-id={org.id}
+                        className={styles.name}
+                        onClick={handleClick}
+                        disabled={isSelectingOrg}
+                      >
                         { org.name }
-                      </Link>
+                      </button>
                     </td>
                     <td>
                       { org.createdAt.split('T')[0] }

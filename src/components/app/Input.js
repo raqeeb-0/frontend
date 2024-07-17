@@ -5,6 +5,8 @@ export const Input = (props) => {
   const {
     type,
     name,
+    value,
+    handleChange,
     placeholder,
     isFocused,
     isMouseOver,
@@ -21,6 +23,7 @@ ${isFocused? styles.focused: ''} \
 ${!isFocused && isMouseOver? styles.hovered: ''} \
 `}
       name={name}
+      defaultValue={value}
       placeholder={placeholder}
       autoComplete='on'
       onFocus={handleFocus}
