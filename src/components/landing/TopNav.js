@@ -8,11 +8,8 @@ import {
 import { useAuth } from '../../hooks/common';
 
 
-export const TopNav = (props) => {
-  const { isAuthenticated, username } = props;
-  const auth = useAuth();
-
-  console.log(auth);
+export const TopNav = () => {
+  const { username, isLoading, handleLogout } = useAuth();
 
   return (
       <header className={styles.header}>
@@ -28,23 +25,31 @@ export const TopNav = (props) => {
               Download
             </Link>
             <Separator />
-            {isAuthenticated?
-              <UserMenu
-                username={username}
-              />:
-              <Link
-                to='/auth/login'
-                className={styles.navLink}
-              >
-                Log in
-              </Link>
+            {
+              isLoading
+                ?<h1> Loading ... </h1>
+                :<>
+                  {
+                    username
+                      ?<UserMenu
+                        username={username}
+                        handleLogout={handleLogout}
+                      />
+                      :<Link
+                        to='/auth/login'
+                        className={styles.navLink}
+                      >
+                        Log in
+                      </Link>
+                  }
+                  <Link
+                    to={username? '/dashboard': '/auth/signup'}
+                    className={`${styles.navLink} ${styles.callToAction}`}
+                  >
+                    {username? 'Dashboard': 'Get Started'}
+                  </Link>
+                </>
             }
-            <Link
-              to={isAuthenticated? '/dashboard': '/auth/signup'}
-              className={`${styles.navLink} ${styles.callToAction}`}
-            >
-              {isAuthenticated? 'Dashboard': 'Get Started'}
-            </Link>
           </nav>
         </section>
       </header>

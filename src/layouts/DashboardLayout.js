@@ -1,12 +1,13 @@
 import styles from './styles/DashboardLayout.module.css';
 import { TopNav } from '../components/app';
+import { RequireAuth } from '../components/auth';
 
 
 export const DashboardLayout = (props) => {
   const { username, isEmptyList, children } = props;
 
   return (
-    <>
+    <RequireAuth>
       <div className={styles.page}>
         <TopNav
           username={username}
@@ -16,6 +17,6 @@ export const DashboardLayout = (props) => {
           { children }
         </main>
       </div>
-    </>
+    </RequireAuth>
   );
 }

@@ -20,7 +20,7 @@
   background-color: var(--contrast-background-clr);
   border: 1px solid var(--primary-clr);
   width: 170px;
-  padding: 10px ;
+  padding: 10px 0;
   border-radius: 8px;
   transition: all 0.2s ease;
 }
@@ -37,17 +37,24 @@
   transform: translateY(-10px);
 }
 
-.navLink {
+.button {
+  background-color: var(--contrast-background-clr);
   color: var(--font-clr);
-  border-radius: 8px;
-  padding: 18px 17px;
+  border: none;
+  width: 100%;
+  padding: 5px 17px;
+  font-family: inherit;
   white-space: nowrap;
-  text-decoration: none;
-  transition: color 0.2s ease;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.navLink:hover, .user:hover {
+.button:hover, .user:hover {
   color: var(--primary-clr);
+}
+
+.danger:hover {
+  color: var(--error);
 }
 
 .icon {

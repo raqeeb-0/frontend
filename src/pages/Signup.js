@@ -2,8 +2,8 @@ import styles from './styles/form.module.css';
 import { useState, useEffect } from 'react';
 import {
   Link,
-  Form,
-  useActionData
+  useNavigate,
+  useLocation
 } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { AuthLayout } from '../layouts';
@@ -13,28 +13,26 @@ import {
   FormField,
   Button
 } from '../components/auth';
-import { Notification } from '../components/common';
+import { useAuth } from '../hooks/common';
 
 
 export const Signup = () => {
-  const error = useActionData();
-  const [showNotification, setShowNotification] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuth();
+  const from = location.state?.from?.pathname || '/dashboard';
 
-  const handleClose = () => setShowNotification(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    let timer;
-    if (error?.message) {
-      setShowNotification(true);
-      timer = setTimeout(() => setShowNotification(false), 3000);
-    }
-
-    return () => clearTimeout(timer);
-  }, [error]);
+    const formData = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(formData);
+    auth.handleSignup(payload);
+  }
 
   return (
     <AuthLayout>
-      <Form method='post' className={styles.form} replace>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <IconBtn
           icon={<FcGoogle style={{fontSize: '1.5rem'}} />}
           value='Sign up with Google'
@@ -74,21 +72,15 @@ export const Signup = () => {
         <Button
           type='submit'
           value='Sign up'
+          disabled={auth.isLoading}
         />
-      </Form>
+      </form>
       <div>
         <span>Have an account? </span>
         <Link to='/auth/login'>
           Log in
         </Link>
       </div>
-      <Notification
-        message={error?.message && error.message}
-        type={'error'}
-        active={showNotification}
-        handleClose={handleClose}
-      />
-
     </AuthLayout>
   );
 }

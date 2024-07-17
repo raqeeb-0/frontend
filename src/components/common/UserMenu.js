@@ -6,7 +6,7 @@ import { BiLogOut } from 'react-icons/bi';
 
 
 export const UserMenu = (props) => {
-  const { username } = props;
+  const { username, handleLogout } = props;
   const [isVisible, setIsVisible] = useState(false);
   const menuRef = useRef();
   const activeStatus = isVisible? styles.active: styles.inactive;
@@ -33,13 +33,16 @@ export const UserMenu = (props) => {
         <RiArrowDropDownLine className={styles.icon} />
       </span>
       <div className={`${styles.actionMenu} ${activeStatus}`} >
-        <Link to='/logout' className={styles.navLink}>
+        <button
+          onClick={handleLogout}
+          className={`${styles.button} ${styles.danger}`}
+        >
           <BiLogOut
             className={styles.icon}
             style={{marginRight: '10px'}}
           />
           Log Out
-        </Link>
+        </button>
       </div>
     </div>
   );

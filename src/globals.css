@@ -5,6 +5,10 @@
   scroll-behavior: smooth;
 }
 
+body {
+  overflow: hidden;
+}
+
 #root {
   --primary-clr: #00687B;
   --primary-dark-clr: #005766;

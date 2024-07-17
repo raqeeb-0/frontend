@@ -1,14 +1,16 @@
 .notification{
   display: flex;
   align-items: center;
-  position: fixed;
+  position: absolute;
   top: -65px;
+  left: 50%;
+  transform: translateX(-50%);
   color: var(--font-clr);
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 18px;
   margin: 0 auto;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .message {
@@ -19,7 +21,7 @@
 }
 
 .active {
-  transform: translateY(100px);
+  transform: translate(-50%, 100px);
 }
 
 .error {
@@ -40,4 +42,5 @@
 
 .success {
   background-color: var(--light-success);
+  border-color: var(--success);
 }

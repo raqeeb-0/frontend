@@ -2,8 +2,6 @@ import styles from './styles/form.module.css';
 import { useState, useEffect } from 'react';
 import {
   Link,
-  Form,
-  useActionData,
   useNavigate,
   useLocation
 } from 'react-router-dom';
@@ -15,8 +13,7 @@ import {
   FormField,
   Button
 } from '../components/auth';
-import { Notification } from '../components/common';
-import { useNotify, useAuth } from '../hooks/common';
+import { useAuth } from '../hooks/common';
 
 
 export const Login = () => {
@@ -29,10 +26,9 @@ export const Login = () => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const { email, password } = Object.fromEntries(formData);
-    auth.handleLogin(email, password);
+    const payload = Object.fromEntries(formData);
+    auth.handleLogin(payload);
   }
-
 
   return (
     <AuthLayout>
@@ -57,6 +53,7 @@ export const Login = () => {
         <Button
           type='submit'
           value='Log in'
+          disabled={auth.isLoading}
         />
       </form>
       <div>
@@ -65,7 +62,6 @@ export const Login = () => {
           Sign up
         </Link>
       </div>
-
     </AuthLayout>
   );
 }

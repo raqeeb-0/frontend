@@ -10,7 +10,6 @@ import {
   App,
   ErrorPage,
   Login,
-  LogOut,
   Signup
 } from './pages';
 import {
@@ -39,10 +38,6 @@ export const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: <Dashboard />,
-      },
-      {
-        path: '/logout',
-        element: <LogOut />,
       },
       {
         path: '/auth/signup',

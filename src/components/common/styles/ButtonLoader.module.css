@@ -1,0 +1,19 @@
+.loader {
+  border: 3px solid var(--contrast-background-clr);
+  border-left-color: transparent;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

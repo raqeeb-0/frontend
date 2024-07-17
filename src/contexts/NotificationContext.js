@@ -6,33 +6,26 @@ const NotificationContext = createContext({
   setMessage: () => {},
   type: '',
   setType: () => {},
-  isActive: false,
-  handleClose: () => {},
+  refresh: 0,
+  showNotification: () => {},
 });
 
 const NotificationProvider = ({ children }) => {
   const [message, setMessage] = useState('');
   const [type, setType] = useState('');
-  const [isActive, setIsActive] = useState(false);
-  const handleClose = () => setIsActive(false);
+  const [refresh, setRefresh] = useState(0);
 
-  useEffect(() => {
-    let timer;
-    if (message) {
-      setIsActive(true);
-      timer = setTimeout(() => setIsActive(false), 3000);
-    }
-
-    return () => clearTimeout(timer);
-  }, [message]);
+  const showNotification = () => {
+    setRefresh(refresh + 1);
+  }
 
   const value = {
     message,
     setMessage,
     type,
     setType,
-    isActive,
-    handleClose,
+    refresh,
+    showNotification,
   }
 
   return (

@@ -1,44 +1,30 @@
 import styles from './styles/Dashboard.module.css';
 import {
-  Link,
-  useLoaderData
+  Link
 } from 'react-router-dom';
 import { DashboardLayout } from '../layouts';
 import {
   EmptyListPlaceholder
 } from '../components/app';
 import {
+  Loader,
   Notification,
   ActionsMenu,
   SearchInput,
   PageHeader
 } from '../components/common';
-import { useGetUser } from '../hooks/users';
-import { useGetOrgs } from '../hooks/orgs';
-import { useNotify } from '../hooks/common';
+import { useAuth } from '../hooks/common';
 
 
 export const Dashboard = () => {
-  const {
-    user,
-    refreshUser,
-    error: userError,
-    isLoading: isFetchingUser
-  } = useGetUser();
-  const {
-    orgs,
-    refreshOrgs,
-    error: orgsError,
-    isLoading: isFetchingOrgs
-  } = useGetOrgs();
+  const { isLoading: isFetchingUser } = useAuth();
 
-
-  const isLoading = isFetchingUser || isFetchingOrgs;
+  const isLoading = isFetchingUser/* || isFetchingOrgs*/;
 
   return (
     isLoading
-      ?<h1> Loading ... </h1>
-      :<DashboardLayout username={user.userName}>
+      ?<Loader />
+      :<DashboardLayout>
           <PageHeader value='Overview' />
           <SearchInput />
           <table className={styles.table}>
@@ -51,40 +37,9 @@ export const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-             {
-               orgs.map((org, index) => {
-                return (
-                <tr key={index + 1} className={styles.tr}>
-                  <td style={{textAlign: 'center'}}>
-                    { index + 1 }
-                  </td>
-                  <td>
-                    <Link to='/app' className={styles.name}>
-                      { org.name }
-                    </Link>
-                  </td>
-                  <td>
-                    { org.createdAt.split('T')[0] }
-                  </td>
-                  <td style={{
-                    textAlign: 'center',
-                    position: 'relative',
-                  }}>
-                    <ActionsMenu
-                      updatePath={`/organizations/${org.id}/edit`}
-                      deletePath={`/organizations/${org.id}/delete`}
-                    />
-                  </td>
-                </tr>
-                );
-              })
-            }
             </tbody>
           </table>
-          {
-            orgs.length === 0 &&
-            <EmptyListPlaceholder listName='organization' />
-          }
+
       </DashboardLayout>
   );
 }

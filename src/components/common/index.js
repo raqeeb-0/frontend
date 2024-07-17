@@ -1,3 +1,5 @@
+export { Loader } from './Loader';
+export { ButtonLoader } from './ButtonLoader';
 export { ActionsMenu } from './ActionsMenu';
 export { PageHeader } from './PageHeader';
 export { SearchInput } from './SearchInput';

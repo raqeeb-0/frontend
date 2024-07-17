@@ -7,10 +7,12 @@ import {
   UserMenu
 } from '../common';
 import { MdAddCircleOutline } from 'react-icons/md';
+import { useAuth } from '../../hooks/common';
 
 
 export const TopNav = (props) => {
-  const { username, isEmptyList } = props;
+  const { isEmptyList } = props;
+  const { username, handleLogout } = useAuth();
 
   return (
       <header className={styles.header}>
@@ -32,6 +34,7 @@ export const TopNav = (props) => {
             }
             <UserMenu
               username={username}
+              handleLogout={handleLogout}
             />
           </nav>
         </section>
