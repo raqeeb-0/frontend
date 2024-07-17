@@ -20,7 +20,6 @@ export const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuth();
-  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleSubmit = (e) => {
     e.preventDefault();

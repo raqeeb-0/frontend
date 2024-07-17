@@ -1,6 +1,7 @@
 import styles from './styles/TopNav.module.css';
 import { Link } from 'react-router-dom';
 import {
+  ButtonLoader,
   Separator,
   Logo,
   UserMenu
@@ -10,6 +11,11 @@ import { useAuth } from '../../hooks/common';
 
 export const TopNav = () => {
   const { username, isLoading, handleLogout } = useAuth();
+  const loaderStyle = {
+    borderColor: 'var(--font-clr)',
+    borderLeftColor: 'transparent',
+    margin: '0 100px',
+  }
 
   return (
       <header className={styles.header}>
@@ -27,7 +33,7 @@ export const TopNav = () => {
             <Separator />
             {
               isLoading
-                ?<h1> Loading ... </h1>
+                ?<ButtonLoader style={loaderStyle} />
                 :<>
                   {
                     username

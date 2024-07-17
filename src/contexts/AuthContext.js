@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { createContext, useState, useEffect } from 'react';
 import { isLoggedIn, login, signup, logout } from '../services/auth';
 import { useNotify } from '../hooks/common';
@@ -14,10 +14,15 @@ const AuthContext = createContext({
 
 
 const AuthProvider = ({ children }) => {
-  const { setMessage, setType, showNotification } = useNotify();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { setMessage, setType, showNotification } = useNotify();
   const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+
+  const from = location.state?.from?.pathname || '/dashboard';
+
   const handleResponse = (response, redirect) => {
     if (response === undefined) {
       setMessage('Can\'t connect to the server');
@@ -58,7 +63,7 @@ const AuthProvider = ({ children }) => {
     setIsLoading(true);
     signup(payload)
       .then((response) => {
-        const redirect = () => navigate('/dashboard', { replace: true });
+        const redirect = () => navigate(from, { replace: true });
         handleResponse(response, redirect);
         setIsLoading(false);
       });
@@ -68,7 +73,7 @@ const AuthProvider = ({ children }) => {
     setIsLoading(true);
     login(payload)
       .then((response) => {
-        const redirect = () => navigate('/dashboard', { replace: true });
+        const redirect = () => navigate(from, { replace: true });
         handleResponse(response, redirect);
         setIsLoading(false);
       });

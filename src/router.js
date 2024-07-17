@@ -12,17 +12,6 @@ import {
   Login,
   Signup
 } from './pages';
-import {
-  orgsLoader,
-  userLoader,
-  dashboardLoader,
-  rootLoader,
-  logOutLoader
-} from './loaders';
-import {
-  logInAction,
-  signUpAction
-} from './actions';
 
 
 export const router = createBrowserRouter([
@@ -42,12 +31,10 @@ export const router = createBrowserRouter([
       {
         path: '/auth/signup',
         element: <Signup />,
-        action: signUpAction,
       },
       {
         path: '/auth/login',
         element: <Login />,
-        action: logInAction,
       },
       {
         path: '/app',
