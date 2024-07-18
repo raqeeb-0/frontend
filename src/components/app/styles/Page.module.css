@@ -1,0 +1,14 @@
+.pageLayout {
+  background-color: var(--contrast-background-clr);
+  border-radius: 16px 16px 0 0;
+}
+
+.pageLayout > main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: clamp(350px, 100%, 1440px);
+  padding-right: 1.25rem;
+  padding-left: 1.25rem;
+  margin: 0 auto;
+}

@@ -4,10 +4,12 @@ import {
   FormField,
   Form
 } from '../components/app';
+import { useAuth } from '../hooks/common';
 import { useGetOrg, useUpdateOrg } from '../hooks/orgs';
 
 
 export const OrganizationUpdate = () => {
+  const auth = useAuth();
   const { isLoading: isFetchingOrg, org } = useGetOrg();
   const { isLoading, handleUpdate } = useUpdateOrg();
 
@@ -21,7 +23,7 @@ export const OrganizationUpdate = () => {
   return (
     <DashboardLayout isEmptyList={true}>
       {
-        isFetchingOrg
+        isFetchingOrg || auth.isLoading
           ?<Loader />
           :<>
             <PageHeader value='Update Organization' />

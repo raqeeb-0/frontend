@@ -18,47 +18,47 @@ export const TopNav = () => {
   }
 
   return (
-      <header className={styles.header}>
-        <section className={styles.headerSection}>
-          <Logo
-            imagePath='/logo192name.png'
-          />
-          <nav className={styles.nav}>
-            <Link to='/support' className={styles.navLink}>
-              Support
-            </Link>
-            <Link to='/download' className={styles.navLink}>
-              Download
-            </Link>
-            <Separator />
-            {
-              isLoading
-                ?<ButtonLoader style={loaderStyle} />
-                :<>
-                  {
-                    username
-                      ?<UserMenu
-                        username={username}
-                        handleLogout={handleLogout}
-                      />
-                      :<Link
-                        to='/auth/login'
-                        className={styles.navLink}
-                      >
-                        Log in
-                      </Link>
-                  }
-                  <Link
-                    to={username? '/dashboard': '/auth/signup'}
-                    className={`${styles.navLink} ${styles.callToAction}`}
-                  >
-                    {username? 'Dashboard': 'Get Started'}
-                  </Link>
-                </>
-            }
-          </nav>
-        </section>
-      </header>
- 
+    <header className={styles.header}>
+      <section className={styles.headerSection}>
+        <Logo
+          imagePath='/logo192name.png'
+          to='/'
+        />
+        <nav className={styles.nav}>
+          <Link to='/support' className={styles.navLink}>
+            Support
+          </Link>
+          <Link to='/download' className={styles.navLink}>
+            Download
+          </Link>
+          <Separator />
+          {
+            isLoading
+              ?<ButtonLoader loaderStyle='dark' />
+              :<>
+                {
+                  username
+                    ?<UserMenu
+                      username={username}
+                      handleLogout={handleLogout}
+                    />
+                    :<Link
+                      to='/auth/login'
+                      className={styles.navLink}
+                    >
+                      Log in
+                    </Link>
+                }
+                <Link
+                  to={username? '/dashboard': '/auth/signup'}
+                  className={`${styles.navLink} ${styles.callToAction}`}
+                >
+                  {username? 'Dashboard': 'Get Started'}
+                </Link>
+              </>
+          }
+        </nav>
+      </section>
+    </header> 
   );
 }

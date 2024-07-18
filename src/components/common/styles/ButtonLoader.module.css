@@ -1,11 +1,21 @@
 .loader {
-  border: 3px solid var(--contrast-background-clr);
-  border-left-color: transparent;
+  display: inline-block;
   border-radius: 50%;
   width: 18px;
   height: 18px;
   margin: 0 auto;
+  vertical-align: middle;
   animation: spin 1s linear infinite;
+}
+
+.light {
+  border: 3px solid var(--contrast-background-clr);
+  border-left-color: transparent;
+}
+
+.dark {
+  border: 3px solid var(--font-clr);
+  border-left-color: transparent;
 }
 
 @keyframes spin {

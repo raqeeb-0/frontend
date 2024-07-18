@@ -1,5 +1,10 @@
 import styles from './styles/ButtonLoader.module.css';
 
 
-export const ButtonLoader = ({ style }) =>
-  <div style={style} className={styles.loader}></div>;
+export const ButtonLoader = ({ loaderStyle }) => {
+  const cssClass = loaderStyle === 'dark'? styles.dark: styles.light;
+
+  return (
+    <div className={`${styles.loader} ${cssClass}`} data-loader></div>
+  );
+}

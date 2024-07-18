@@ -53,11 +53,16 @@
   color: var(--primary-clr);
 }
 
-.danger:hover {
+.danger:hover, .danger:disabled {
   color: var(--error);
+}
+
+.danger > [data-loader] {
+  margin-right: 10px;
 }
 
 .icon {
   font-size: 1.2rem;
   vertical-align: middle;
+  margin-right: 10px;
 }

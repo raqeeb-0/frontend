@@ -1,0 +1,50 @@
+.nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  margin-top: 50px;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  color: var(--font-clr);
+  min-height: 50px;
+  padding: 5px 15px;
+  font-size: 1.4rem;
+  white-space: nowrap;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--primary-clr);
+  text-decoration: underline;
+}
+
+.active {
+  background-color: var(--primary-clr);
+  color: var(--background-clr);
+}
+
+.active:hover {
+  color: var(--background-clr);
+}
+
+.pending {
+  color: green;
+}
+
+.link svg {
+  display: inline-block;
+  min-width: 48px;
+  margin-right: 15px;
+  text-align: center;
+  font-size: 2rem;
+}

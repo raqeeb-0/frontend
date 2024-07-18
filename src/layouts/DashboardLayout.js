@@ -1,5 +1,5 @@
 import styles from './styles/DashboardLayout.module.css';
-import { TopNav } from '../components/app';
+import { TopNavDashboard } from '../components/app';
 import { RequireAuth } from '../components/auth';
 
 
@@ -9,7 +9,7 @@ export const DashboardLayout = (props) => {
   return (
     <RequireAuth>
       <div className={styles.page}>
-        <TopNav
+        <TopNavDashboard
           username={username}
           isEmptyList={isEmptyList}
         />

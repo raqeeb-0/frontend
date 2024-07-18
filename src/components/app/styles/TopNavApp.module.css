@@ -1,0 +1,11 @@
+.topnav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--background-clr);
+  height: 70px;
+  padding-right: 30px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}

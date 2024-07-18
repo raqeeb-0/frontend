@@ -1,0 +1,29 @@
+.input_wrapper {
+  display: flex;
+  align-items: center;
+  background-color: var(--contrast-background-clr);
+  border-radius: 50px;
+  height: 2.5rem;
+  padding: 0 15px;
+  transition: background-color 0.2s ease;
+}
+
+.icon {
+  font-size: 2rem;
+}
+
+.input {
+  background-color: transparent;
+  color: var(--font-clr);
+  border: none;
+  outline: none;
+  width: 200px;
+  height: 100%;
+  margin-left: 5px;
+  font-size: 1.25rem;
+  transition: width 0.4s ease;
+}
+
+.input:focus {
+  width: 300px;
+}

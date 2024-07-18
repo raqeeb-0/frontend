@@ -1,3 +1,4 @@
+export { Hamburger } from './Hamburger';
 export { Loader } from './Loader';
 export { ButtonLoader } from './ButtonLoader';
 export { ActionsMenu } from './ActionsMenu';

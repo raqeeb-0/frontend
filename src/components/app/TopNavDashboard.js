@@ -1,4 +1,4 @@
-import styles from './styles/TopNav.module.css';
+import styles from './styles/TopNavDashboard.module.css';
 import { Link } from 'react-router-dom';
 import {
   IconNavLink,
@@ -10,7 +10,7 @@ import { MdAddCircleOutline } from 'react-icons/md';
 import { useAuth } from '../../hooks/common';
 
 
-export const TopNav = (props) => {
+export const TopNavDashboard = (props) => {
   const { isEmptyList } = props;
   const { username, handleLogout } = useAuth();
 
@@ -19,6 +19,7 @@ export const TopNav = (props) => {
         <section className={styles.headerSection}>
           <Logo
             imagePath='/logo192name.png'
+            to='/dashboard'
           />
           <nav className={styles.nav}>
             {

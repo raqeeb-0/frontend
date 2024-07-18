@@ -1,15 +1,16 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import {
+  AppLayout,
   DashboardLayout
 } from './layouts';
 import {
+  Materials,
   OrganizationUpdate,
   OrganizationCreate,
   Public,
   Dashboard,
   Root,
-  App,
   ErrorPage,
   Login,
   Signup
@@ -48,7 +49,14 @@ export const router = createBrowserRouter([
       },
       {
         path: 'app',
-        element: <App />,
+        element: <AppLayout />,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            path: 'materials',
+            element: <Materials />,
+          }
+        ]
       }
     ]
   }
