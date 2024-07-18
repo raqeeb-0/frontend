@@ -35,9 +35,15 @@ export const useResponseHandler = () => {
       setMessage(response?.message);
       setType('error');
       response?.message && showNotification();
+    } else if (response.status === 'error') {
+      console.log(response?.message);
+      setMessage('Internal Server Error');
+      setType('error');
+      showNotification();
     } else if (response.status === 'success') {
       success();
     } else {
+      console.log(response);
       console.log('Unknown Response');
     }
   }

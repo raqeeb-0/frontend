@@ -1,3 +1,4 @@
+export { ResourcesTable } from './ResourcesTable';
 export { Page } from './Page';
 export { TopNavApp } from './TopNavApp';
 export { Sidebar } from './Sidebar';

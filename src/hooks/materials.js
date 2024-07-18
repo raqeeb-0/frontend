@@ -1,64 +1,64 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useNotify, useResponseHandler } from './common';
+import { useResponseHandler } from './common';
 import {
-  selectOrg,
-  updateOrg,
-  createOrg,
-  getOrg,
-  getOrgs
-} from '../services/orgs';
+  deleteMaterial,
+  updateMaterial,
+  createMaterial,
+  getMaterial,
+  getMaterials
+} from '../services/materials';
 
 
-export const useGetOrgs = () => {
+export const useGetMaterials = () => {
   const { handleResponse } = useResponseHandler();
-  const [orgs, setOrgs] = useState([]);
+  const [materials, setMaterials] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
-    getOrgs()
+    getMaterials()
       .then((response) => {
-        const success = () => setOrgs(response.data);
+        const success = () => setMaterials(response.data);
         handleResponse(response, success);
         setIsLoading(false);
       });
   }, []);
 
-  return { orgs, isLoading };
+  return { materials, isLoading };
 }
 
 
-export const useGetOrg = () => {
+export const useGetMaterial = () => {
   const { handleResponse } = useResponseHandler();
-  const [org, setOrg] = useState({});
+  const [material, setMaterial] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const { orgId } = useParams();
+  const { materialId } = useParams();
 
   useEffect(() => {
     setIsLoading(true);
-    getOrg(orgId)
+    getMaterial(materialId)
       .then((response) => {
-        const success = () => setOrg(response.data);
+        const success = () => setMaterial(response.data);
         handleResponse(response, success);
         setIsLoading(false);
       });
   }, []);
 
-  return { org, isLoading };
+  return { material, isLoading };
 }
 
 
-export const useCreateOrg = () => {
+export const useCreateMaterial = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCreate = (payload) => {
     setIsLoading(true);
-    createOrg(payload)
+    createMaterial(payload)
       .then((response) => {
-        const success = () => navigate('/dashboard');
+        const success = () => navigate('/app/materials');
         handleResponse(response, success);
         setIsLoading(false);
       });
@@ -72,13 +72,13 @@ export const useUpdateOrg = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { orgId } = useParams();
+  const { materialId } = useParams();
 
   const handleUpdate = (payload) => {
     setIsLoading(true);
-    updateOrg(orgId, payload)
+    updateMaterial(materialId, payload)
       .then((response) => {
-        const success = () => navigate('/dashboard');
+        const success = () => navigate('/app/materials');
         handleResponse(response);
         setIsLoading(false);
       });
@@ -88,18 +88,15 @@ export const useUpdateOrg = () => {
 }
 
 
-export const useSelectOrg = () => {
-  const { setMessage, setType, showNotification } = useNotify();
+export const useDeleteMaterial = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { materialId } = useParams();
 
-  const handleSelectOrg = (orgId) => {
+  const handleDelete = (materialId) => {
     setIsLoading(true);
-    setMessage('Selecting organization ...');
-    setType('info');
-    showNotification();
-    selectOrg(orgId)
+    deleteMaterial(materialId)
       .then((response) => {
         const success = () => navigate('/app/materials');
         handleResponse(response, success);
@@ -107,5 +104,5 @@ export const useSelectOrg = () => {
       });
   }
 
-  return { isLoading, handleSelectOrg };
+  return { isLoading, handleDelete };
 }

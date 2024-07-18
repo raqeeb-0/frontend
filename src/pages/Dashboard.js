@@ -1,7 +1,5 @@
 import styles from './styles/Dashboard.module.css';
-import {
-  Link
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { DashboardLayout } from '../layouts';
 import {
   EmptyListPlaceholder

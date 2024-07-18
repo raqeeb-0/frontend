@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { MdEast } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
 import { MdOutlineDelete } from 'react-icons/md';
-import { TbDeviceAnalytics } from 'react-icons/tb';
+//import { TbDeviceAnalytics } from 'react-icons/tb';
 
 
 export function ActionsMenu({ updatePath, deletePath }) {
@@ -39,14 +39,14 @@ export function ActionsMenu({ updatePath, deletePath }) {
           <MdMoreHoriz />
       </span>
       <div className={`${styles.actionMenu} ${isActiveMenu}`} >
-        <Link
+        {/*<Link
           to='#'
           className={styles.link}
           style={{filter: 'blur(2px)'}}
           title='Currently Not Working'
         >
           <TbDeviceAnalytics className={styles.icon} /> Analytics
-        </Link>
+        </Link>*/}
         <Link to={updatePath} className={styles.link}>
           <MdEdit className={styles.icon} /> Edit
         </Link>
