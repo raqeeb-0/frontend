@@ -4,7 +4,7 @@ export { ButtonLoader } from './ButtonLoader';
 export { ActionsMenu } from './ActionsMenu';
 export { PageHeader } from './PageHeader';
 export { SearchInput } from './SearchInput';
-export { IconNavLink } from './IconNavLink';
+export { IconLink } from './IconLink';
 export { Separator } from './Separator';
 export { Logo } from './Logo';
 export { UserMenu } from './UserMenu'

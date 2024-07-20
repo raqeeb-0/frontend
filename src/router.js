@@ -5,6 +5,7 @@ import {
   DashboardLayout
 } from './layouts';
 import {
+  MaterialCreate,
   Materials,
   OrganizationUpdate,
   OrganizationCreate,
@@ -55,7 +56,11 @@ export const router = createBrowserRouter([
           {
             path: 'materials',
             element: <Materials />,
-          }
+          },
+          {
+            path: 'materials/create',
+            element: <MaterialCreate />,
+          },
         ]
       }
     ]

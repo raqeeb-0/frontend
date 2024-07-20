@@ -19,7 +19,20 @@ export const useGetMaterials = () => {
     setIsLoading(true);
     getMaterials()
       .then((response) => {
-        const success = () => setMaterials(response.data);
+        const success = () => {
+          const refinedMaterials = response.data.map((material) => {
+            return {
+              'id': material.id,
+              'name': material.name,
+              'current price': material.currentPrice,
+              'quantity': material.quantity,
+              'category': material.categoryId,
+              'notes': material.notes,
+              'created at': material.createdAt.split('T')[0],
+            };
+          });
+          setMaterials(refinedMaterials);
+        }
         handleResponse(response, success);
         setIsLoading(false);
       });

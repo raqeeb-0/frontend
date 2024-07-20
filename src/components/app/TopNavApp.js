@@ -1,7 +1,5 @@
 import styles from './styles/TopNavApp.module.css';
 import { Hamburger, UserMenu } from '../common';
-import { useAuth } from '../../hooks/common';
-//import { SearchBox } from './SearchBox';
 
 
 export const TopNavApp = (props) => {
@@ -9,7 +7,6 @@ export const TopNavApp = (props) => {
     isSidebarOpen,
     toggleSidebar
   } = props;
-  const { username, handleLogout } = useAuth();
 
   return (
     <header className={styles.topnav}>
@@ -17,11 +14,7 @@ export const TopNavApp = (props) => {
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
       />
-    {/*<SearchBox />*/}
-      <UserMenu
-        username={username}
-        handleLogout={handleLogout}
-      />
+      <UserMenu />
     </header>
   );
 }

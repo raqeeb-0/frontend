@@ -45,7 +45,7 @@ export const Sidebar = ({ isOpen }) => {
   return (
     <aside className={styles.sidebar} style={{width: isOpen? '280px': '75px'}}>
       <Header
-        logoImage='logo192name.png'
+        logoImage='/logo192name.png'
       />
       <SideNav
         paths={paths}

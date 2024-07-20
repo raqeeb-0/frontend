@@ -18,10 +18,10 @@
 .navLink {
   color: var(--font-clr);
   border-radius: 8px;
-  padding: 18px 17px;
+  padding: 18px;
   white-space: nowrap;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .navLink:hover {
@@ -31,11 +31,13 @@
 .callToAction {
   color: var(--background-clr);
   background-color: var(--primary-clr);
-  padding: 18px 13px;
-  transition: background-color 0.2s ease;
 }
 
 .callToAction:hover {
   color: var(--background-clr);
   background-color: var(--primary-dark-clr);
+}
+
+.loaderContainer {
+  margin: 0 100px;
 }

@@ -10,12 +10,7 @@ import { useAuth } from '../../hooks/common';
 
 
 export const TopNav = () => {
-  const { username, isLoading, handleLogout } = useAuth();
-  const loaderStyle = {
-    borderColor: 'var(--font-clr)',
-    borderLeftColor: 'transparent',
-    margin: '0 100px',
-  }
+  const { username, isLoading } = useAuth();
 
   return (
     <header className={styles.header}>
@@ -34,14 +29,13 @@ export const TopNav = () => {
           <Separator />
           {
             isLoading
-              ?<ButtonLoader loaderStyle='dark' />
+              ?<div className={styles.loaderContainer}>
+                <ButtonLoader loaderStyle='dark' />
+              </div>
               :<>
                 {
                   username
-                    ?<UserMenu
-                      username={username}
-                      handleLogout={handleLogout}
-                    />
+                    ?<UserMenu />
                     :<Link
                       to='/auth/login'
                       className={styles.navLink}

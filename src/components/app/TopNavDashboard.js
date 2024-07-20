@@ -1,18 +1,16 @@
 import styles from './styles/TopNavDashboard.module.css';
 import { Link } from 'react-router-dom';
 import {
-  IconNavLink,
+  IconLink,
   Separator,
   Logo,
   UserMenu
 } from '../common';
 import { MdAddCircleOutline } from 'react-icons/md';
-import { useAuth } from '../../hooks/common';
 
 
 export const TopNavDashboard = (props) => {
   const { isEmptyList } = props;
-  const { username, handleLogout } = useAuth();
 
   return (
       <header className={styles.header}>
@@ -25,18 +23,16 @@ export const TopNavDashboard = (props) => {
             {
               !isEmptyList &&
                 <>
-                  <IconNavLink
+                  <IconLink
                     path='/organizations/create'
                     name='New organization'
                     icon=<MdAddCircleOutline />
+                    margin='0 20px'
                   />
                   <Separator />
                 </>
             }
-            <UserMenu
-              username={username}
-              handleLogout={handleLogout}
-            />
+            <UserMenu />
           </nav>
         </section>
       </header>

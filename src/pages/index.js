@@ -1,3 +1,4 @@
+export { MaterialCreate } from './MaterialCreate';
 export { Materials } from './Materials';
 export { OrganizationUpdate } from './OrganizationUpdate';
 export { OrganizationCreate } from './OrganizationCreate';

@@ -4,11 +4,10 @@ import { Link } from 'react-router-dom';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { BiLogOut } from 'react-icons/bi';
 import { ButtonLoader } from './ButtonLoader';
-import { useAuth } from '../../hooks/common';
+import { useAuth, useOutsideClick } from '../../hooks/common';
 
 
-export const UserMenu = (props) => {
-  //const { username, handleLogout } = props;
+export const UserMenu = () => {
   const {
     username,
     handleLogout,
@@ -23,15 +22,10 @@ export const UserMenu = (props) => {
       setIsVisible(true);
   }
 
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsVisible(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-  }, [menuRef]);
+  useOutsideClick({
+    ref: menuRef,
+    handler: () => setIsVisible(false)
+  });
 
   return (
     <div className={styles.container} ref={menuRef}>

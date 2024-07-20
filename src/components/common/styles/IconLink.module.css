@@ -1,23 +1,22 @@
-.navLink {
+.iconLink {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   color: var(--background-clr);
   background-color: var(--primary-clr);
-  border-radius: 16px;
+  border-radius: 8px;
   width: fit-content;
-  padding: 13px;
+  padding: 18px;
   margin: 0 auto;
   white-space: nowrap;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
-.navLink:hover {
+.iconLink:hover {
   background-color: var(--primary-dark-clr);
 }
 
-.icon {
-  display: inline-block;
-  height: 1em;
+.iconLink svg {
   font-size: 1.5rem;
-  margin: 5px;
-  vertical-align: -6px;
 }

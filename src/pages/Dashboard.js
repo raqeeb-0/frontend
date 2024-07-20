@@ -27,7 +27,7 @@ export const Dashboard = () => {
       { isLoading? <Loader />
           :<>
           <PageHeader value='Overview' />
-          <SearchInput />
+          <SearchInput resourceName='organizations' />
           <table className={styles.table}>
             <thead className={styles.thead}>
               <tr className={styles.tr}>
@@ -75,7 +75,10 @@ export const Dashboard = () => {
           </table>
           {
             orgs.length === 0 &&
-            <EmptyListPlaceholder listName='organization' />
+            <EmptyListPlaceholder
+              listName='organization'
+              isOutsideApp={true}
+            />
           }
           </>
       }

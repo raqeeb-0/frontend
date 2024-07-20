@@ -6,6 +6,7 @@ import { MdEast } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
 import { MdOutlineDelete } from 'react-icons/md';
 //import { TbDeviceAnalytics } from 'react-icons/tb';
+import { useOutsideClick } from '../../hooks/common';
 
 
 export function ActionsMenu({ updatePath, deletePath }) {
@@ -19,15 +20,10 @@ export function ActionsMenu({ updatePath, deletePath }) {
       setIsVisible(true);
   }
 
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsVisible(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-  }, [menuRef]);
+  useOutsideClick({
+    ref: menuRef,
+    handler: () => setIsVisible(false),
+  });
 
   return (
     <>
