@@ -1,0 +1,340 @@
+.all {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@keyframes pulsateAndMove {
+    0% {
+        transform: scale(1) translate(0, 0) rotate(0deg);
+        opacity: 0.4;
+    }
+    25% {
+        transform: scale(1.1) translate(30px, -30px) rotate(90deg);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1) translate(-30px, -30px) rotate(180deg);
+        opacity: 0.4;
+    }
+    75% {
+        transform: scale(1.1) translate(-30px, 30px) rotate(270deg);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1) translate(0, 0) rotate(360deg);
+        opacity: 0.4;
+    }
+}
+
+.features {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    min-height: 20vh;
+    background: linear-gradient(200deg, #150425 0%, #2e1249 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 60px 0;
+}
+
+.features::before,
+.features::after,
+.features .circle {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.4;
+    animation: pulsateAndMove 8s ease-in-out infinite;
+}
+
+.features::before {
+    background: #4a90e2;
+    width: 400px;
+    height: 400px;
+    bottom: -200px;
+    right: -150px;
+    animation-delay: 0s;
+}
+
+.features::after {
+    background: #9b51e0;
+    width: 350px;
+    height: 350px;
+    top: -100px;
+    left: -100px;
+    animation-delay: -4s;
+}
+
+.circle:nth-child(1) {
+    background: #4a90e2;
+    width: 250px;
+    height: 250px;
+    top: 90%;
+    left: 20%;
+    animation-delay: -2s;
+}
+
+.circle:nth-child(2) {
+    background: #4e256b;
+    width: 300px;
+    height: 300px;
+    bottom: 10%;
+    left: 40%;
+    animation-delay: -6s;
+}
+
+.circle:nth-child(3) {
+    background: #4a90e2;
+    width: 200px;
+    height: 200px;
+    top: 90%;
+    right: 25%;
+    animation-delay: -1s;
+}
+
+.features h1 {
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(5px);
+    color: #fff;
+    text-align: center;
+}
+
+.para{
+    color: #fff;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.container {
+    display: flex;
+    position:relative;
+    justify-content:center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-top: 80px;
+    z-index: 3;
+}
+
+.card {
+    width: 450px;
+    position: relative;
+    height: 350px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    transition: 0.5s;
+    margin: 10px;
+    min-width: fit-content;
+    min-height: fit-content;
+}
+
+.card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(200deg, #150425 0%, #2e1249 100%);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.5s;
+    z-index: -1;
+}
+.card:hover:before {
+    transform: scaleY(1);
+    transform-origin: bottom;
+    transition: transform 0.5s;
+}
+
+.card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+    width: 100px;
+    position: relative;
+    top: -85px;
+    left: 300px;
+}
+
+
+.card h2{
+    position:absolute;
+    left: 20px;
+    top: 55px;
+    font-size: 4em;
+    font-weight: 800;
+    z-index: 2;
+    opacity: 0.3;
+    transition: 0.5s;
+}
+
+.card:hover h2{
+    opacity: 1;
+    transition: 0.5s;
+    color: #fff;
+    transform: translateY(-50px);
+}
+
+.card h3{
+    font-size: 1.8em;
+    position: relative;
+    z-index: 2;
+    color: #150425;
+    transition: 0.5s;
+}
+
+.card:hover h3{
+    color: #fff;
+    transition: 0.5s;
+}
+
+.card p{
+    font-size: 1.2em;
+    position: relative;
+    z-index: 2;
+    color: #150425;
+    transition: 0.5s;
+    max-width: 450px;
+    max-height: 350px;
+    overflow: hidden;
+}
+
+.card:hover p{
+    color: #fff;
+    transition: 0.5s;
+}
+
+
+
+
+
+.waves {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.waves svg {
+    position: relative;
+    display: block;
+    width: calc(110% + 1.3px);
+    height: 183px;
+}
+
+.wavesFill {
+    fill: #1A082D;
+}
+
+/** For tablet devices **/
+@media (min-width: 768px) and (max-width: 1023px) {
+    .waves svg {
+        width: calc(114% + 1.3px);
+        height: 177px;
+    }
+}
+
+/** For mobile devices **/
+@media (max-width: 767px) {
+    .waves svg {
+        width: calc(100% + 1.3px);
+        height: 83px;
+    }
+    .card h2{
+        position:absolute;
+        left: 20px;
+        top: 63px;
+        font-size: 4em;
+        font-weight: 800;
+        z-index: 2;
+        opacity: 0.3;
+        transition: 0.5s;
+    }
+}
+.anotherOne {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.anotherOne svg {
+    position: relative;
+    display: block;
+    width: calc(110% + 1.3px);
+    height: 183px;
+}
+
+.anotherOneFill {
+    fill: #1A082D;
+}
+
+/** For tablet devices **/
+@media (min-width: 768px) and (max-width: 1023px) {
+    .anotherOne svg {
+        width: calc(114% + 1.3px);
+        height: 177px;
+    }
+}
+
+/** For mobile devices **/
+@media (max-width: 767px) {
+    .anotherOne svg {
+        width: calc(100% + 1.3px);
+        height: 83px;
+    }
+}
+
+/** For tablet devices **/
+@media (min-width: 768px) and (max-width: 1023px) {
+    .waves svg {
+        width: calc(110% + 1.3px);
+        height: 93px;
+    }
+}
+
+/** For mobile devices **/
+@media (max-width: 767px) {
+    .waves svg {
+        width: calc(110% + 1.3px);
+        height: 59px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .card {
+        width: 80%;
+    }
+    .card img {
+        width: 80px;
+        position: relative;
+        top: -60px;
+        left: 180px;
+    }
+}

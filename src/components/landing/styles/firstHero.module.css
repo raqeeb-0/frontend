@@ -1,0 +1,133 @@
+.heroSection{
+  position: relative;
+}
+
+.container{
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  background-image: url('../../../../public/bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.heroVector{
+  width: 100%;
+  z-index: 1;
+  padding: 30px;
+}
+
+.textContainer {
+  padding: 50px;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.title{
+  color: #f6003f;
+  font-size: 3.3rem;
+  margin-bottom: 10px;
+}
+
+.text{
+  color: #d3d3d3;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.button{
+  padding: 1rem 2.1rem 1.1rem;
+  border-radius: 10px;
+  border: none;
+  background-color: white;
+  transition: all 0.4s;
+  color: #f6003f;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button:hover{
+  background-color: #f6003f ;
+  color: white;
+}
+
+.buttonContainer{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.checkContainer{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.check {
+  width: 25px;
+}
+
+.attract{
+  color: #b1a7a6;
+}
+
+
+@media (max-width: 884px) {
+  .container{
+    flex-direction: column;
+  }
+  .textContainer{
+    width: 100%;
+    text-align: center;
+    align-items: center;
+  }
+  .title{
+    font-size:3rem;
+  }
+  .button{
+    padding: .5rem 2rem .8rem;
+    border-radius: 10px;
+    border: none;
+    background-color: white;
+    transition: all 0.4s;
+    color: #f6003f;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.5em;
+    text-transform: uppercase;
+    text-align: center;
+    z-index: 3;
+  }
+  .check {
+    width: 15px;
+  }
+  .attract{
+    font-size: 13px;
+  }
+}
+
+
+@media (max-width: 678px) {
+  .title{
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .title{
+    font-size: 1.5rem;
+  }
+  .text{
+    font-size: 1.2rem;
+  }
+  .button{
+    font-size: 0.7rem;
+  }
+}
