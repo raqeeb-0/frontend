@@ -4,18 +4,15 @@ import { IconLink } from '../common';
 
 
 export const EmptyListPlaceholder = (props) => {
-  const { listName, isOutsideApp } = props;
-  const path = isOutsideApp
-    ?`/${listName}s/create`
-    :`/app/${listName}s/create`;
+  const { listName, link } = props;
   return (
     <div className={styles.empty}>
-      <h1 className={styles.h1}>No { listName }s yet!</h1>
+      <h1 className={styles.h1}>No { listName } yet!</h1>
       <h3 className={styles.h2}>Try creating one to get started.</h3>
       <IconLink
-        path={path}
+        path={link.path}
         icon=<MdAddCircleOutline />
-        name={`Create ${listName}`}
+        name={link.name}
       />
     </div>
   );

@@ -3,7 +3,7 @@
 }
 
 .legend {
-  background-color: var(--contrast-background-clr);
+  background-color: var(--primary-light-clr);
   border-bottom: 1px solid var(--border-clr);
   border-radius: 16px 16px 0 0;
   color: var(--font-clr);
@@ -16,12 +16,9 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /*--span: 2;
-  display: grid;
-  gap: 15px;
-  grid-template-columns: 200px auto;
-  grid-template-rows: repeat(var(--span), 1fr);*/
-  /*border-radius: 0 0 15px 15px;*/
+  border: 1px solid var(--primary-light-clr);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
   padding: 40px;
   transition: background-color 0.2s ease;
 }
@@ -30,7 +27,7 @@
   float: right;
   color: var(--background-clr);
   background-color: var(--primary-clr);
-  border-radius: 8px;
+  border-radius: 40px;
   width: 100px;
   height: 42px;
   padding: 10px 20px;

@@ -1,7 +1,6 @@
-export { MaterialCreate } from './MaterialCreate';
-export { Materials } from './Materials';
-export { OrganizationUpdate } from './OrganizationUpdate';
-export { OrganizationCreate } from './OrganizationCreate';
+export * from './MaterialsCategories';
+export * from './Materials';
+export * from './Organization';
 export { Public } from './Public';
 export { Dashboard } from './Dashboard';
 export { Root } from './Root';

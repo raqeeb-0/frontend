@@ -17,6 +17,8 @@ export const Dashboard = () => {
   const { orgs, isLoading: isFetchingOrgs } = useGetOrgs();
   const { handleSelectOrg, isLoading: isSelectingOrg } = useSelectOrg();
 
+  const deleteHandler = () => {};
+
   const isLoading = isFetchingOrgs;
 
   const handleClick = (e) => 
@@ -64,7 +66,8 @@ export const Dashboard = () => {
                   }}>
                     <ActionsMenu
                       updatePath={`/organizations/${org.id}/edit`}
-                      deletePath={`/organizations/${org.id}/delete`}
+                      data={{ id: org.id }}
+                      handleDelete={deleteHandler}
                     />
                   </td>
                 </tr>
@@ -76,8 +79,11 @@ export const Dashboard = () => {
           {
             orgs.length === 0 &&
             <EmptyListPlaceholder
-              listName='organization'
-              isOutsideApp={true}
+              listName='organizations'
+              link={{
+                path: '/organizations/create',
+                name: 'Create Organization',
+              }}
             />
           }
           </>

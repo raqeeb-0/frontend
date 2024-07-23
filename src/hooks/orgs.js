@@ -101,7 +101,7 @@ export const useSelectOrg = () => {
     showNotification();
     selectOrg(orgId)
       .then((response) => {
-        const success = () => navigate('/app/materials');
+        const success = () => navigate('/app/materials/items');
         handleResponse(response, success);
         setIsLoading(false);
       });

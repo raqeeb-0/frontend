@@ -5,6 +5,7 @@ import { Notification } from '../components/common';
 
 
 export const Root = () => {
+
   return (
     <NotificationProvider>
       <AuthProvider>

@@ -4,7 +4,7 @@ import { ActionsMenu } from '../common';
 
 
 export const ResourcesTable = (props) => {
-  const { resourceName, resources } = props;
+  const { resourceName, resourcePath, resources, handleDelete } = props;
   return (
     <table className={styles.table}>
       <thead>
@@ -48,7 +48,7 @@ export const ResourcesTable = (props) => {
                   return (
                     <td key={key}>
                       <Link
-                        to={`/app/${resourceName}s/${resource.id}`}
+                        to={`/app${resourcePath}/${resource.id}`}
                         className={styles.resourceLink}
                       >
                         { resource[key] }
@@ -66,8 +66,9 @@ export const ResourcesTable = (props) => {
             }
             <td>
               <ActionsMenu
-                updatePath={`/app/${resourceName}s/${resource.id}/edit`}
-                deletePath={`/app/${resourceName}s/${resource.id}/delete`}
+                updatePath={`/app${resourcePath}/${resource.id}/edit`}
+                data={{ id: resource.id }}
+                handleDelete={handleDelete}
               />
             </td>
           </tr>

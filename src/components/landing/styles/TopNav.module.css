@@ -17,7 +17,7 @@
 
 .navLink {
   color: var(--font-clr);
-  border-radius: 8px;
+  border-radius: 40px;
   padding: 18px;
   white-space: nowrap;
   text-decoration: none;

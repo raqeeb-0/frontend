@@ -1,3 +1,5 @@
+export { Header } from './Header';
+export { Modal } from './Modal';
 export { ResourcesTable } from './ResourcesTable';
 export { Page } from './Page';
 export { TopNavApp } from './TopNavApp';

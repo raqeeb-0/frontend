@@ -2,81 +2,76 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponseHandler } from './common';
 import {
-  deleteMaterial,
-  updateMaterial,
-  createMaterial,
-  getMaterial,
-  getMaterials
-} from '../services/materials';
+  deleteMaterialsCategory,
+  updateMaterialsCategory,
+  createMaterialsCategory,
+  getMaterialsCategory,
+  getMaterialsCategories
+} from '../services/materialsCategories';
 
 
-export const useGetMaterials = () => {
+export const useGetMaterialsCategories = () => {
   const { handleResponse } = useResponseHandler();
-  const [materials, setMaterials] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(true);
 
-  const refreshMaterials = () => {
+  const refreshCategories = () => {
     setRefresh(!refresh);
   }
 
   useEffect(() => {
     setIsLoading(true);
-    getMaterials()
+    getMaterialsCategories()
       .then((response) => {
         const success = () => {
-          const refinedMaterials = response.data.map((material) => {
+          const refinedCategories = response.data.map((category) => {
             return {
-              'id': material.id,
-              'name': material.name,
-              'current price': material.currentPrice,
-              'quantity': material.quantity,
-              'category': material.categoryId,
-              'notes': material.notes,
-              'created at': material.createdAt.split('T')[0],
+              'id': category.id,
+              'name': category.name,
             };
           });
-          setMaterials(refinedMaterials);
+          setCategories(refinedCategories);
         }
         handleResponse(response, success);
         setIsLoading(false);
       });
   }, [refresh]);
 
-  return { materials, isLoading, refreshMaterials };
+  return { categories, isLoading, refreshCategories };
 }
 
 
-export const useGetMaterial = () => {
+export const useGetMaterialsCategory = () => {
   const { handleResponse } = useResponseHandler();
-  const [material, setMaterial] = useState({});
+  const [category, setCategory] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const { materialId } = useParams();
+  const { categoryId } = useParams();
 
   useEffect(() => {
     setIsLoading(true);
-    getMaterial(materialId)
+    getMaterialsCategory(categoryId)
       .then((response) => {
-        const success = () => setMaterial(response.data);
+        const success = () => setCategory(response.data);
         handleResponse(response, success);
         setIsLoading(false);
       });
   }, []);
 
-  return { material, isLoading };
+  return { category, isLoading };
 }
 
 
-export const useCreateMaterial = () => {
+export const useCreateMaterialsCategory = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCreate = (payload) => {
     setIsLoading(true);
-    createMaterial(payload)
+    createMaterialsCategory(payload)
       .then((response) => {
-        const success = () => navigate('/app/materials/items');
+        const success = () => navigate('/app/materials/categories');
         handleResponse(response, success);
         setIsLoading(false);
       });
@@ -86,18 +81,18 @@ export const useCreateMaterial = () => {
 }
 
 
-export const useUpdateMaterial = () => {
+export const useUpdateMaterialsCategory = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { materialId } = useParams();
+  const { categoryId } = useParams();
 
   const handleUpdate = (payload) => {
     setIsLoading(true);
-    updateMaterial(materialId, payload)
+    updateMaterialsCategory(categoryId, payload)
       .then((response) => {
-        const success = () => navigate('/app/materials/items');
-        handleResponse(response);
+        const success = () => navigate('/app/materials/categories');
+        handleResponse(response, success);
         setIsLoading(false);
       });
   }
@@ -106,18 +101,18 @@ export const useUpdateMaterial = () => {
 }
 
 
-export const useDeleteMaterial = () => {
+export const useDeleteMaterialsCategory = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleDelete = (materialId, refreshMaterials) => {
+  const handleDelete = (categoryId, refreshCategories) => {
     setIsLoading(true);
-    deleteMaterial(materialId)
+    deleteMaterialsCategory(categoryId)
       .then((response) => {
-        const success = () => navigate('/app/materials/items');
+        const success = () => navigate('/app/materials/categories');
         handleResponse(response, success);
-        refreshMaterials();
+        refreshCategories();
         setIsLoading(false);
       });
   }

@@ -9,7 +9,7 @@ import { MdOutlineDelete } from 'react-icons/md';
 import { useOutsideClick } from '../../hooks/common';
 
 
-export function ActionsMenu({ updatePath, deletePath }) {
+export function ActionsMenu({ updatePath, data, handleDelete }) {
   const [isVisible, setIsVisible] = useState(false);
   const menuRef = useRef();
   const isActiveIcon = isVisible? styles.activeIcon: '';
@@ -46,7 +46,11 @@ export function ActionsMenu({ updatePath, deletePath }) {
         <Link to={updatePath} className={styles.link}>
           <MdEdit className={styles.icon} /> Edit
         </Link>
-        <Link to={deletePath} className={`${styles.link} ${styles.danger}`}>
+        <Link
+          onClick={handleDelete}
+          data-id={data.id}
+          className={`${styles.link} ${styles.danger}`}
+        >
           <MdOutlineDelete  className={styles.icon}/> Delete
         </Link>
       </div>

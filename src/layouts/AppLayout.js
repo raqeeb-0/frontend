@@ -6,7 +6,7 @@ import { Sidebar, TopNavApp, Page } from '../components/app';
 
 
 export const AppLayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     if (isSidebarOpen) {

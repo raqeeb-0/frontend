@@ -6,52 +6,54 @@ import { SideNav } from './SideNav';
 import { Link } from 'react-router-dom';
 
 
-const Header = ({ logoImage, brandName }) => {
-  const logoPath = process.env.PUBLIC_URL + logoImage;
-  return (
-    <Link to='/dashboard' className={styles.header}>
-      <img
-        src={ logoPath }
-        alt='logo'
-        width='128'
-        height='64'
-        style={{objectFit: 'cover'}}
-      />
-    </Link>
-
-  );
-}
-
-
 export const Sidebar = ({ isOpen }) => {
-  const paths = [
-    '/app/materials',
-    '/app/products',
-    '/app/production-orders'
+  const materials = [
+    {
+      path: '/app/materials/items',
+      name: 'Items',
+      icon: <MdOutlineWarehouse />,
+    },
+    {
+      path: '/app/materials/categories',
+      name: 'Categories',
+      icon: <MdOutlineWarehouse />,
+    }
   ];
 
-  const icons = [
-    <MdOutlineWarehouse />,
-    <MdOutlineInventory2 />,
-    <MdAssignmentAdd />
-  ];
-
-  const linkNames = [
-    'Materials',
-    'Products',
-    'Production Orders'
-  ];
+  const widthClass = isOpen? styles.opened: styles.closed;
 
   return (
-    <aside className={styles.sidebar} style={{width: isOpen? '280px': '75px'}}>
-      <Header
-        logoImage='/logo192name.png'
-      />
-      <SideNav
-        paths={paths}
-        icons={icons}
-        linkNames={linkNames}
-      />
+    <aside className={`${styles.sidebar} ${widthClass}`}>
+      <Link to='/dashboard' className={styles.header}>
+        <img
+          src={process.env.PUBLIC_URL + '/logo192name.png'}
+          alt='logo'
+          width='128'
+          height='64'
+        />
+      </Link>
+      <ul className={styles.list}>
+        <li>
+          <SideNav
+            panelLink={{
+              path: '/app/materials',
+              name: 'Materials',
+              icon: <MdOutlineWarehouse />
+            }}
+            linksList={materials}
+          />
+        </li>
+
+        <li>
+          <SideNav
+            panelLink={{
+              path: '/app/products',
+              name: 'materials',
+              icon: <MdOutlineWarehouse />
+            }}
+          />
+        </li>
+      </ul>
     </aside>
   );
 }

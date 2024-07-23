@@ -1,26 +1,26 @@
-.nav {
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-  align-items: stretch;
-  margin-top: 50px;
-  list-style: none;
+.list {
+  list-style-type: none;
+}
+
+.list li {
+  padding: 15px;
+  padding-left: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: background-color 0.2s ease;
+}
+
+.list li:last-child {
+  border-radius: 0 0 0 16px;
 }
 
 .link {
-  display: flex;
-  align-items: center;
   color: var(--font-clr);
-  min-height: 50px;
-  padding: 5px 15px;
-  font-size: 1.4rem;
-  white-space: nowrap;
+  width: 100%;
+  margin-left: 60px;
   text-decoration: none;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 .link:hover {
@@ -29,22 +29,58 @@
 }
 
 .active {
-  background-color: var(--primary-clr);
-  color: var(--background-clr);
+  color: var(--primary-clr);
+  text-decoration: underline;
 }
 
-.active:hover {
-  color: var(--background-clr);
+.list li:has(.active) {
+  background-color: var(--primary-light-clr);
 }
 
-.pending {
-  color: green;
+/* ============================= */
+
+.panelLink {
+  border-radius: 16px 0 0 16px;
+  padding: 15px;
+  padding-left: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.link svg {
-  display: inline-block;
-  min-width: 48px;
-  margin-right: 15px;
-  text-align: center;
-  font-size: 2rem;
+li:has(.active) {
+  background-color: var(--contrast-background-clr);
+}
+  
+
+.panelLink a {
+  color: var(--font-clr);
+  width: 100%;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.panelLink a > svg {
+  min-width: 60px;
+  font-size: 1.8rem;
+  vertical-align: middle;
+}
+
+.opacity {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.opacity100 {
+  opacity: 1;
+}
+
+.opacity20 {
+  opacity: 0.2;
+}
+
+.closed {
+  height: 0;
+  overflow: hidden;
+  display: none;
 }

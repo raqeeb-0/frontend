@@ -5,6 +5,10 @@ import {
   DashboardLayout
 } from './layouts';
 import {
+  MaterialsCategoryUpdate,
+  MaterialsCategoryCreate,
+  MaterialsCategories,
+  MaterialUpdate,
   MaterialCreate,
   Materials,
   OrganizationUpdate,
@@ -54,13 +58,33 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
           {
-            path: 'materials',
+            path: 'materials/items',
             element: <Materials />,
           },
           {
-            path: 'materials/create',
+            path: 'materials/items/create',
             element: <MaterialCreate />,
           },
+          {
+            path: 'materials/items/:materialId/edit',
+            element: <MaterialUpdate />,
+          },
+          {
+            path: 'materials/categories',
+            element: <MaterialsCategories />,
+          },
+          {
+            path: 'materials/categories/create',
+            element: <MaterialsCategoryCreate />,
+          },
+          {
+            path: 'materials/categories/:categoryId/edit',
+            element: <MaterialsCategoryUpdate />,
+          },
+          {
+            path: 'products',
+            element: <Materials />
+          }
         ]
       }
     ]

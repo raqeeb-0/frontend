@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { NotificationContext } from '../contexts/NotificationContext';
 import { AuthContext } from '../contexts/AuthContext';
+import { ModalContext } from '../contexts/ModalContext';
 
 
 export const useOutsideClick = (props) => {
@@ -34,7 +35,17 @@ export const useNotify = () => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuthe must be used within an AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+
+  return context;
+}
+
+
+export const useModal = () => {
+  const context = useContext(ModalContext);
+  if (!context) {
+    throw new Error('useModal must be used within a ModalProvider');
   }
 
   return context;
