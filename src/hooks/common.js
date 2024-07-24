@@ -71,6 +71,11 @@ export const useResponseHandler = () => {
       showNotification();
     } else if (response.status === 'success') {
       success();
+      if ('message' in response) {
+        setMessage(response.message);
+        setType('success');
+        showNotification();
+      }
     } else {
       console.log(response);
       console.log('Unknown Response');

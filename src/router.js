@@ -7,6 +7,9 @@ import {
   ExpensesCategoryUpdate,
   ExpensesCategoryCreate,
   ExpensesCategories,
+  ExpenseUpdate,
+  ExpenseCreate,
+  Expenses,
   CustomerUpdate,
   CustomerCreate,
   Customers,
@@ -107,7 +110,15 @@ export const router = createBrowserRouter([
           },
           {
             path: 'expenses/units',
-            element: <Materials />,
+            element: <Expenses />,
+          },
+          {
+            path: 'expenses/units/create',
+            element: <ExpenseCreate />,
+          },
+          {
+            path: 'expenses/units/:expenseId/edit',
+            element: <ExpenseUpdate />,
           },
           {
             path: 'expenses/categories',
