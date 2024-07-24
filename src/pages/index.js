@@ -1,3 +1,4 @@
+export * from './Customers';
 export * from './Suppliers';
 export * from './MaterialsCategories';
 export * from './Materials';
