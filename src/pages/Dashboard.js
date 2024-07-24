@@ -9,23 +9,35 @@ import {
   ActionsMenu,
   PageHeader
 } from '../components/common';
-import { useGetOrgs, useSelectOrg } from '../hooks/orgs';
+import {
+  useGetOrgs,
+  useDeleteOrg,
+  useSelectOrg
+} from '../hooks/orgs';
 
 
 export const Dashboard = () => {
-  const { orgs, isLoading: isFetchingOrgs } = useGetOrgs();
+  const { orgs, refreshOrgs, isLoading: isFetchingOrgs } = useGetOrgs();
+  const { handleDelete, isLoading: isDeletingOrg } = useDeleteOrg();
   const { handleSelectOrg, isLoading: isSelectingOrg } = useSelectOrg();
 
-  const deleteHandler = () => {};
+  const deleteHandler = (e) => {
+    handleDelete(
+      e.currentTarget.getAttribute('data-id'),
+      refreshOrgs
+    );
+  };
 
-  const isLoading = isFetchingOrgs;
+  const isLoading = isFetchingOrgs || isDeletingOrg;
 
   const handleClick = (e) => 
     handleSelectOrg(e.currentTarget.getAttribute('data-id'));
 
   return ( 
     <DashboardLayout isEmptyList={orgs.length === 0}>
-      { isLoading? <Loader />
+      {
+        isLoading
+          ?<Loader />
           :<>
           <PageHeader value='Overview' />
           <SearchInput resourceName='organizations' />

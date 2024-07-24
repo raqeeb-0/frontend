@@ -25,3 +25,6 @@ export const updateOrg = (orgId, payload) => {
 
   return api.patch(`${resource}/${orgId}`, { orgName, phoneNumber });
 }
+
+export const deleteOrg = (orgId) =>
+  api.delete(`${resource}/${orgId}`);

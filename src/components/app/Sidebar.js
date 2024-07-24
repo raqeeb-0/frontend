@@ -29,8 +29,8 @@ export const Sidebar = ({ isOpen }) => {
       icon: <LuPackagePlus />,
     },
     {
-      path: '/app/providers',
-      name: 'Providers',
+      path: '/app/suppliers',
+      name: 'Suppliers',
       icon: <LuTruck />,
     },
     {

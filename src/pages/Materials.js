@@ -151,9 +151,9 @@ export const MaterialUpdate = () => {
         isFetchingMaterial || isFetchingCategories
           ?<Loader />
           :<>
-            <PageHeader value='Update Materials Category' />
+            <PageHeader value='Update Material' />
             <Form
-              legend='Category Details'
+              legend='Material Details'
               onSubmit={handleSubmit}
               isLoading={isLoading}
             >

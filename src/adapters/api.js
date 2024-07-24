@@ -35,7 +35,7 @@ const api = {
 
 
   post: async (endpoint, body) => {
-    await new Promise(resolve => setTimeout(resolve, delay));
+    //await new Promise(resolve => setTimeout(resolve, delay));
 
     const fetchData = () => fetch(`${url}/${endpoint}`, {
       ...options,
@@ -48,7 +48,7 @@ const api = {
 
 
   patch: async (endpoint, body) => {
-    await new Promise(resolve => setTimeout(resolve, delay));
+    //await new Promise(resolve => setTimeout(resolve, delay));
 
     const fetchData = () => fetch(`${url}/${endpoint}`, {
       ...options,

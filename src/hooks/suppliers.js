@@ -1,72 +1,82 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useNotify, useResponseHandler } from './common';
+import { useResponseHandler } from './common';
 import {
-  selectOrg,
-  deleteOrg,
-  updateOrg,
-  createOrg,
-  getOrg,
-  getOrgs
-} from '../services/orgs';
+  deleteSupplier,
+  updateSupplier,
+  createSupplier,
+  getSupplier,
+  getSuppliers
+} from '../services/suppliers';
 
 
-export const useGetOrgs = () => {
+export const useGetSuppliers = () => {
   const { handleResponse } = useResponseHandler();
-  const [orgs, setOrgs] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(true);
 
-  const refreshOrgs = () => {
+  const refreshSuppliers = () => {
     setRefresh(!refresh);
   }
 
   useEffect(() => {
     setIsLoading(true);
-    getOrgs()
+    getSuppliers()
       .then((response) => {
-        const success = () => setOrgs(response.data);
+        const success = () => {
+          const refinedSuppliers = response.data.map((supplier) => {
+            return {
+              'id': supplier.id,
+              'name': supplier.name,
+              'address': supplier.address,
+              'phone': supplier.phone,
+              'account payable': supplier.accountPayable,
+            };
+          });
+          setSuppliers(refinedSuppliers);
+        }
         handleResponse(response, success);
         setIsLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
-  return { orgs, isLoading, refreshOrgs };
+  return { suppliers, isLoading, refreshSuppliers };
 }
 
 
-export const useGetOrg = () => {
+export const useGetSupplier = () => {
   const { handleResponse } = useResponseHandler();
-  const [org, setOrg] = useState({});
+  const [supplier, setSupplier] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const { orgId } = useParams();
+  const { supplierId } = useParams();
 
   useEffect(() => {
     setIsLoading(true);
-    getOrg(orgId)
+    getSupplier(supplierId)
       .then((response) => {
-        const success = () => setOrg(response.data);
+        const success = () => setSupplier(response.data);
         handleResponse(response, success);
         setIsLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { org, isLoading };
+  return { supplier, isLoading };
 }
 
 
-export const useCreateOrg = () => {
+export const useCreateSupplier = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCreate = (payload) => {
     setIsLoading(true);
-    createOrg(payload)
+    createSupplier(payload)
       .then((response) => {
-        const success = () => navigate('/dashboard');
+        const success = () => navigate('/app/suppliers');
         handleResponse(response, success);
         setIsLoading(false);
       });
@@ -76,17 +86,17 @@ export const useCreateOrg = () => {
 }
 
 
-export const useUpdateOrg = () => {
+export const useUpdateSupplier = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { orgId } = useParams();
+  const { supplierId } = useParams();
 
   const handleUpdate = (payload) => {
     setIsLoading(true);
-    updateOrg(orgId, payload)
+    updateSupplier(supplierId, payload)
       .then((response) => {
-        const success = () => navigate('/dashboard');
+        const success = () => navigate('/app/suppliers');
         handleResponse(response, success);
         setIsLoading(false);
       });
@@ -95,43 +105,22 @@ export const useUpdateOrg = () => {
   return { isLoading, handleUpdate };
 }
 
-export const useDeleteOrg = () => {
+
+export const useDeleteSupplier = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleDelete = (organizationId, refreshOrganizations) => {
+  const handleDelete = (supplierId, refreshMaterials) => {
     setIsLoading(true);
-    deleteOrg(organizationId)
+    deleteSupplier(supplierId)
       .then((response) => {
-        const success = () => navigate('/dashboard');
+        const success = () => navigate('/app/suppliers');
         handleResponse(response, success);
-        refreshOrganizations();
+        refreshMaterials();
         setIsLoading(false);
       });
   }
 
   return { isLoading, handleDelete };
-}
-
-export const useSelectOrg = () => {
-  const { setMessage, setType, showNotification } = useNotify();
-  const { handleResponse } = useResponseHandler();
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const handleSelectOrg = (orgId) => {
-    setIsLoading(true);
-    setMessage('Selecting organization ...');
-    setType('info');
-    showNotification();
-    selectOrg(orgId)
-      .then((response) => {
-        const success = () => navigate('/app/materials/items');
-        handleResponse(response, success);
-        setIsLoading(false);
-      });
-  }
-
-  return { isLoading, handleSelectOrg };
 }

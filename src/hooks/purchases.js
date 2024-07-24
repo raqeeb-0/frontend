@@ -1,72 +1,84 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useNotify, useResponseHandler } from './common';
+import { useResponseHandler } from './common';
 import {
-  selectOrg,
-  deleteOrg,
-  updateOrg,
-  createOrg,
-  getOrg,
-  getOrgs
-} from '../services/orgs';
+  deleteMaterial,
+  updateMaterial,
+  createMaterial,
+  getMaterial,
+  getMaterials
+} from '../services/materials';
 
 
-export const useGetOrgs = () => {
+export const useGetMaterials = () => {
   const { handleResponse } = useResponseHandler();
-  const [orgs, setOrgs] = useState([]);
+  const [materials, setMaterials] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(true);
 
-  const refreshOrgs = () => {
+  const refreshMaterials = () => {
     setRefresh(!refresh);
   }
 
   useEffect(() => {
     setIsLoading(true);
-    getOrgs()
+    getMaterials()
       .then((response) => {
-        const success = () => setOrgs(response.data);
+        const success = () => {
+          const refinedMaterials = response.data.map((material) => {
+            return {
+              'id': material.id,
+              'name': material.name,
+              'current price': material.currentPrice,
+              'quantity': material.quantity,
+              'category': material.categoryId,
+              'notes': material.notes,
+              'created at': material.createdAt.split('T')[0],
+            };
+          });
+          setMaterials(refinedMaterials);
+        }
         handleResponse(response, success);
         setIsLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
-  return { orgs, isLoading, refreshOrgs };
+  return { materials, isLoading, refreshMaterials };
 }
 
 
-export const useGetOrg = () => {
+export const useGetMaterial = () => {
   const { handleResponse } = useResponseHandler();
-  const [org, setOrg] = useState({});
+  const [material, setMaterial] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const { orgId } = useParams();
+  const { materialId } = useParams();
 
   useEffect(() => {
     setIsLoading(true);
-    getOrg(orgId)
+    getMaterial(materialId)
       .then((response) => {
-        const success = () => setOrg(response.data);
+        const success = () => setMaterial(response.data);
         handleResponse(response, success);
         setIsLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { org, isLoading };
+  return { material, isLoading };
 }
 
 
-export const useCreateOrg = () => {
+export const useCreateMaterial = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCreate = (payload) => {
     setIsLoading(true);
-    createOrg(payload)
+    createMaterial(payload)
       .then((response) => {
-        const success = () => navigate('/dashboard');
+        const success = () => navigate('/app/materials/items');
         handleResponse(response, success);
         setIsLoading(false);
       });
@@ -76,17 +88,17 @@ export const useCreateOrg = () => {
 }
 
 
-export const useUpdateOrg = () => {
+export const useUpdateMaterial = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { orgId } = useParams();
+  const { materialId } = useParams();
 
   const handleUpdate = (payload) => {
     setIsLoading(true);
-    updateOrg(orgId, payload)
+    updateMaterial(materialId, payload)
       .then((response) => {
-        const success = () => navigate('/dashboard');
+        const success = () => navigate('/app/materials/items');
         handleResponse(response, success);
         setIsLoading(false);
       });
@@ -95,43 +107,22 @@ export const useUpdateOrg = () => {
   return { isLoading, handleUpdate };
 }
 
-export const useDeleteOrg = () => {
+
+export const useDeleteMaterial = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleDelete = (organizationId, refreshOrganizations) => {
+  const handleDelete = (materialId, refreshMaterials) => {
     setIsLoading(true);
-    deleteOrg(organizationId)
+    deleteMaterial(materialId)
       .then((response) => {
-        const success = () => navigate('/dashboard');
+        const success = () => navigate('/app/materials/items');
         handleResponse(response, success);
-        refreshOrganizations();
+        refreshMaterials();
         setIsLoading(false);
       });
   }
 
   return { isLoading, handleDelete };
-}
-
-export const useSelectOrg = () => {
-  const { setMessage, setType, showNotification } = useNotify();
-  const { handleResponse } = useResponseHandler();
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const handleSelectOrg = (orgId) => {
-    setIsLoading(true);
-    setMessage('Selecting organization ...');
-    setType('info');
-    showNotification();
-    selectOrg(orgId)
-      .then((response) => {
-        const success = () => navigate('/app/materials/items');
-        handleResponse(response, success);
-        setIsLoading(false);
-      });
-  }
-
-  return { isLoading, handleSelectOrg };
 }

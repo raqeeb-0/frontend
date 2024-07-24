@@ -31,7 +31,7 @@ export const useGetMaterials = () => {
               'name': material.name,
               'current price': material.currentPrice,
               'quantity': material.quantity,
-              'category': material.categoryId,
+              'category': material.categoryName,
               'notes': material.notes,
               'created at': material.createdAt.split('T')[0],
             };

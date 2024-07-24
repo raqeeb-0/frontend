@@ -4,6 +4,9 @@ import {
   AppLayout
 } from './layouts';
 import {
+  SupplierUpdate,
+  SupplierCreate,
+  Suppliers,
   MaterialsCategoryUpdate,
   MaterialsCategoryCreate,
   MaterialsCategories,
@@ -85,8 +88,16 @@ export const router = createBrowserRouter([
             element: <Materials />,
           },
           {
-            path: 'providers',
-            element: <Materials />,
+            path: 'suppliers',
+            element: <Suppliers />,
+          },
+          {
+            path: 'suppliers/create',
+            element: <SupplierCreate />,
+          },
+          {
+            path: 'suppliers/:supplierId/edit',
+            element: <SupplierUpdate />,
           },
           {
             path: 'expenses/units',
