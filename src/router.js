@@ -4,6 +4,9 @@ import {
   AppLayout
 } from './layouts';
 import {
+  ExpensesCategoryUpdate,
+  ExpensesCategoryCreate,
+  ExpensesCategories,
   CustomerUpdate,
   CustomerCreate,
   Customers,
@@ -108,7 +111,15 @@ export const router = createBrowserRouter([
           },
           {
             path: 'expenses/categories',
-            element: <Materials />,
+            element: <ExpensesCategories />,
+          },
+          {
+            path: 'expenses/categories/create',
+            element: <ExpensesCategoryCreate />,
+          },
+          {
+            path: 'expenses/categories/:categoryId/edit',
+            element: <ExpensesCategoryUpdate />,
           },
           {
             path: 'sales',
