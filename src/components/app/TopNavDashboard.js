@@ -1,5 +1,4 @@
 import styles from './styles/TopNavDashboard.module.css';
-import { Link } from 'react-router-dom';
 import {
   IconLink,
   Separator,

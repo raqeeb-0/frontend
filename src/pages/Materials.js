@@ -2,11 +2,12 @@ import {
   Header,
   Form,
   FormField,
+  SelectInput,
+  SearchInput,
   ResourcesTable,
   EmptyListPlaceholder
 } from '../components/app';
 import {
-  SearchInput,
   Loader,
   PageHeader
 } from '../components/common';
@@ -111,14 +112,14 @@ export const MaterialCreate = () => {
                 label='Name'
                 type='text'
                 name='name'
+                disabled={isLoading}
               />
-              <select name='categoryId'>
-                {
-                  categories.map((category) => {
-                    return <option value={category.id}>{ category.name }</option>
-                  })
-                }
-              </select>
+              <SelectInput
+                label='Category'
+                name='categoryId'
+                options={categories}
+                disabled={isLoading}
+              />
             </Form>
           </>
       }
@@ -127,7 +128,14 @@ export const MaterialCreate = () => {
 }
 
 export const MaterialUpdate = () => {
-  const { isLoading: isFetchingMaterial, material } = useGetMaterial();
+  const {
+    material,
+    isLoading: isFetchingMaterial
+  } = useGetMaterial();
+  const {
+    categories,
+    isLoading: isFetchingCategories
+  } = useGetMaterialsCategories();
   const { isLoading, handleUpdate } = useUpdateMaterial();
 
   const handleSubmit = (e) => {
@@ -140,7 +148,7 @@ export const MaterialUpdate = () => {
   return (
     <section>
       {
-        isFetchingMaterial
+        isFetchingMaterial || isFetchingCategories
           ?<Loader />
           :<>
             <PageHeader value='Update Materials Category' />
@@ -154,6 +162,14 @@ export const MaterialUpdate = () => {
                 type='text'
                 name='name'
                 value={material.name}
+                disabled={isLoading}
+              />
+              <SelectInput
+                label='Category'
+                name='categoryId'
+                value={material.categoryId}
+                options={categories}
+                disabled={isLoading}
               />
             </Form>
           </>

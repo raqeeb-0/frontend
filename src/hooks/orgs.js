@@ -23,6 +23,7 @@ export const useGetOrgs = () => {
         handleResponse(response, success);
         setIsLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { orgs, isLoading };
@@ -43,6 +44,7 @@ export const useGetOrg = () => {
         handleResponse(response, success);
         setIsLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { org, isLoading };
@@ -79,7 +81,7 @@ export const useUpdateOrg = () => {
     updateOrg(orgId, payload)
       .then((response) => {
         const success = () => navigate('/dashboard');
-        handleResponse(response);
+        handleResponse(response, success);
         setIsLoading(false);
       });
   }

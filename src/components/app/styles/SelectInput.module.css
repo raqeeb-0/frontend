@@ -6,11 +6,11 @@
   transition: color 0.2s ease;
 }
 
-.label:has(input:hover) span, .label:has(input:focus) span {
+.label:has(select:hover) span, .label:has(select:focus) span {
   color: var(--primary-clr);
 }
 
-.label input {
+.label select {
   background-color: var(--contrast-background-clr);
   outline: 1px solid transparent;
   border: 1px solid var(--font-clr);
@@ -21,16 +21,16 @@
   transition: all 0.2s ease;
 }
 
-.label input:hover {
+.label select:hover {
   border-color: var(--primary-clr);
 }
 
-.label input:focus {
+.label select:focus {
   background-color: var(--background-clr);
   border-color: var(--primary-clr);
   outline-color: var(--primary-clr);
 }
 
-.label input:disabled {
+.label select:disabled {
   color: var(--font-dimmed-clr);
 }

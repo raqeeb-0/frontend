@@ -54,6 +54,8 @@ li:has(.active) {
   
 
 .panelLink a {
+  display: flex;
+  align-items: center;
   color: var(--font-clr);
   width: 100%;
   text-decoration: none;
@@ -67,6 +69,15 @@ li:has(.active) {
   vertical-align: middle;
 }
 
+.panelLink a span svg {
+  margin-left: 60px;
+  vertical-align: middle;
+  transition: transform 0.2s ease;
+}
+
+.panelLink .active span svg {
+}
+
 .opacity {
   transition: opacity 0.2s ease-in-out;
 }
@@ -77,6 +88,10 @@ li:has(.active) {
 
 .opacity20 {
   opacity: 0.2;
+}
+
+.opened span svg {
+  transform: rotateZ(-180deg);
 }
 
 .closed {

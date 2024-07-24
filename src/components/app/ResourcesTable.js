@@ -13,21 +13,20 @@ export const ResourcesTable = (props) => {
           {
             resources.length > 0 && Object.keys(resources[0])
               .map((field) => {
-                if (field === 'id') return
-                if (field === 'name') {
+                if (field === 'id') return null
+                else if (field === 'name') {
                   return (
                     <th key={field}>
                       {resourceName} {field}
                     </th>
                   );
+                } else {
+                  return (
+                    <th key={field}>
+                      {field}
+                    </th>
+                  );
                 }
-                return (
-                  <th
-                    key={field}
-                  >
-                    {field}
-                  </th>
-                );
               })
           }
           <th></th>
@@ -43,7 +42,7 @@ export const ResourcesTable = (props) => {
             </td>
             {
               Object.keys(resource).map((key) => {
-                if (key === 'id') return
+                if (key === 'id') return null
                 else if (key === 'name') {
                   return (
                     <td key={key}>

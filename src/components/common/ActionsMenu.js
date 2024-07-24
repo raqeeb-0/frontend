@@ -1,8 +1,7 @@
 import styles from './styles/ActionsMenu.module.css';
 import { MdMoreHoriz } from 'react-icons/md';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { MdEast } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
 import { MdOutlineDelete } from 'react-icons/md';
 //import { TbDeviceAnalytics } from 'react-icons/tb';

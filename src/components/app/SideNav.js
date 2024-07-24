@@ -5,17 +5,21 @@ import { useState } from 'react';
 
 
 export const SideNav = (props) => {
-  const { linksList, panelLink } = props;
+  const { panelList, panelLink } = props;
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleNavLink = (navLinkStates) => {
-    const { isActive, isPending } = navLinkStates;
-    const cssClass = isPending? styles.pending: isActive? styles.active: '';
+  const togglePanel = () => isOpen? setIsOpen(false): setIsOpen(true);
 
-    return `${cssClass} ${styles.link}`;
+  const handlePanelLink = ({ isActive }) => {
+    const activeClass = isActive? styles.active: '';
+    const openedClass = isOpen? styles.opened: '';
+    return `${activeClass} ${openedClass}`;
   }
 
-  const togglePanel = () => isOpen? setIsOpen(false): setIsOpen(true);
+  const handleNavLink = ({ isActive }) => {
+    const activeClass = isActive? styles.active: '';
+    return `${activeClass} ${styles.link}`;
+  }
 
   const opacityState = isOpen? styles.opacity100: styles.opacity20;
 
@@ -26,7 +30,7 @@ export const SideNav = (props) => {
       <div className={styles.panelLink}>
         <NavLink
           to={panelLink.path}
-          className={({isActive}) => isActive? styles.active: ''}
+          className={handlePanelLink}
           onClick={(e) => {e.preventDefault(); togglePanel();}}
         >
           { panelLink.icon }{ panelLink.name } <span><IoIosArrowDown /></span>
@@ -35,19 +39,21 @@ export const SideNav = (props) => {
       <div className={`${styles.opacity} ${opacityState}`}>
         <div className={`${panelState}`}>
           <ul className={styles.list}>
-            {linksList?.map((link, index) => {
-              return (
-                <li key={index}>
-                  <NavLink
-                    to={link.path}
-                    className={handleNavLink}
-                    title={link.name}
-                  >
-                    { link.name }
-                  </NavLink>
-                </li>
-              );
-            })}
+            {
+              panelList?.map((link, index) => {
+                return (
+                  <li key={index}>
+                    <NavLink
+                      to={link.path}
+                      className={handleNavLink}
+                      title={link.name}
+                    >
+                      { link.name }
+                    </NavLink>
+                  </li>
+                );
+              })
+            }
           </ul>
         </div>
       </div>

@@ -26,7 +26,7 @@ const tryCatchWrapper = async (func) => {
 const api = {
 
   get: async (endpoint) => {
-    await new Promise(resolve => setTimeout(resolve, delay));
+    //await new Promise(resolve => setTimeout(resolve, delay));
 
     const fetchData = () => fetch(`${url}/${endpoint}`, { ...options });
 
@@ -61,7 +61,7 @@ const api = {
 
 
   delete: async (endpoint) => {
-    await new Promise(resolve => setTimeout(resolve, delay));
+    //await new Promise(resolve => setTimeout(resolve, delay));
 
     const fetchData = () => fetch(`${url}/${endpoint}`, {
       ...options,

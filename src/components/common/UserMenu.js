@@ -1,6 +1,5 @@
 import styles from './styles/UserMenu.module.css';
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useRef } from 'react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { BiLogOut } from 'react-icons/bi';
 import { ButtonLoader } from './ButtonLoader';

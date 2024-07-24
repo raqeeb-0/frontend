@@ -36,6 +36,7 @@ export const useGetMaterialsCategories = () => {
         handleResponse(response, success);
         setIsLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   return { categories, isLoading, refreshCategories };
@@ -56,6 +57,7 @@ export const useGetMaterialsCategory = () => {
         handleResponse(response, success);
         setIsLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { category, isLoading };

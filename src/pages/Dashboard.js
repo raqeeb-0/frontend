@@ -1,13 +1,12 @@
 import styles from './styles/Dashboard.module.css';
-import { Link } from 'react-router-dom';
 import { DashboardLayout } from '../layouts';
 import {
+  SearchInput,
   EmptyListPlaceholder
 } from '../components/app';
 import {
   Loader,
   ActionsMenu,
-  SearchInput,
   PageHeader
 } from '../components/common';
 import { useGetOrgs, useSelectOrg } from '../hooks/orgs';

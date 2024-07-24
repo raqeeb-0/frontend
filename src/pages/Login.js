@@ -1,10 +1,5 @@
 import styles from './styles/form.module.css';
-import { useState, useEffect } from 'react';
-import {
-  Link,
-  useNavigate,
-  useLocation
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { AuthLayout } from '../layouts';
 import {
@@ -17,13 +12,10 @@ import { useAuth } from '../hooks/common';
 
 
 export const Login = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const auth = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const formData = new FormData(e.currentTarget);
     const payload = Object.fromEntries(formData);
     auth.handleLogin(payload);

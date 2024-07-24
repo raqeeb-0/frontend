@@ -1,8 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import {
-  AppLayout,
-  DashboardLayout
+  AppLayout
 } from './layouts';
 import {
   MaterialsCategoryUpdate,
@@ -82,7 +81,39 @@ export const router = createBrowserRouter([
             element: <MaterialsCategoryUpdate />,
           },
           {
-            path: 'products',
+            path: 'purchases',
+            element: <Materials />,
+          },
+          {
+            path: 'providers',
+            element: <Materials />,
+          },
+          {
+            path: 'expenses/units',
+            element: <Materials />,
+          },
+          {
+            path: 'expenses/categories',
+            element: <Materials />,
+          },
+          {
+            path: 'sales',
+            element: <Materials />,
+          },
+          {
+            path: 'customers',
+            element: <Materials />,
+          },
+          {
+            path: 'production-orders',
+            element: <Materials />,
+          },
+          {
+            path: 'products/items',
+            element: <Materials />
+          },
+          {
+            path: 'products/categories',
             element: <Materials />
           }
         ]

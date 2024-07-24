@@ -41,6 +41,7 @@ export const useGetMaterials = () => {
         handleResponse(response, success);
         setIsLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   return { materials, isLoading, refreshMaterials };
@@ -61,6 +62,7 @@ export const useGetMaterial = () => {
         handleResponse(response, success);
         setIsLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { material, isLoading };
@@ -97,7 +99,7 @@ export const useUpdateMaterial = () => {
     updateMaterial(materialId, payload)
       .then((response) => {
         const success = () => navigate('/app/materials/items');
-        handleResponse(response);
+        handleResponse(response, success);
         setIsLoading(false);
       });
   }

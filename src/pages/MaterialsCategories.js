@@ -1,12 +1,12 @@
 import {
+  Form,
   Header,
   FormField,
-  Form,
+  SearchInput,
   ResourcesTable,
   EmptyListPlaceholder
 } from '../components/app';
 import {
-  SearchInput,
   Loader,
   PageHeader
 } from '../components/common';
@@ -63,7 +63,7 @@ export const MaterialsCategories = () => {
                   }}
                 />
                 :<>
-                  <SearchInput resourceName='materials' />
+                  <SearchInput resourceName='categories' />
                   <ResourcesTable
                     resourceName='category'
                     resourcePath='/materials/categories'
@@ -101,6 +101,7 @@ export const MaterialsCategoryCreate = () => {
           label='Name'
           type='text'
           name='name'
+          disabled={isLoading}
         />
       </Form>
     </section>
@@ -135,6 +136,7 @@ export const MaterialsCategoryUpdate = () => {
                 label='Name'
                 type='text'
                 name='name'
+                disabled={isLoading}
                 value={category.name}
               />
             </Form>

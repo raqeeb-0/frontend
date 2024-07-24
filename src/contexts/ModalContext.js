@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
 
 
 const ModalContext = createContext({
@@ -10,8 +10,6 @@ const ModalContext = createContext({
 const ModalProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const close = () => setIsOpen(false);
-  
   const handler = (callback) => callback();
 
   const value = {

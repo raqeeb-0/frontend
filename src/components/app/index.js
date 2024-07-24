@@ -1,3 +1,5 @@
+export { SearchInput } from './SearchInput';
+export { SelectInput } from './SelectInput';
 export { Header } from './Header';
 export { Modal } from './Modal';
 export { ResourcesTable } from './ResourcesTable';

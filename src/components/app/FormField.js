@@ -1,6 +1,4 @@
 import styles from './styles/FormField.module.css';
-import { Input } from './Input';
-import { useState } from 'react';
 
 
 export const FormField = (props) => {
@@ -9,39 +7,21 @@ export const FormField = (props) => {
     type,
     name,
     value,
-    handleChange,
+    disabled,
     placeholder
   } = props;
-  const [isMouseOver, setIsMouseOver] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleMouseEnter = () => setIsMouseOver(true);
-  const handleMouseLeave = () => setIsMouseOver(false);
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
 
   return (
-    <label
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <span className={`\
-${styles.label} \
-${isFocused? styles.focused: ''} \
-${!isFocused && isMouseOver? styles.hovered: ''} \
-`} >
+    <label className={styles.label}>
+      <span>
         { label }
       </span>
-      <Input
+      <input
         type={type}
         name={name}
-        value={value}
-        handleChange={handleChange}
+        disabled={disabled}
+        defaultValue={value}
         placeholder={placeholder}
-        isFocused={isFocused}
-        isMouseOver={isMouseOver}
-        handleFocus={handleFocus}
-        handleBlur={handleBlur}
       />
     </label>
   );

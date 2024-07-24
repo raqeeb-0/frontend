@@ -26,8 +26,51 @@
 .list {
   list-style-type: none;
   margin: 50px 0 0 15px;
+  overflow: auto;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
 }
 
 .list > li {
   border-radius: 16px 0 0 16px;
+}
+
+/* =============================== */
+
+.link {
+  color: var(--font-clr);
+  width: 100%;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--primary-clr);
+  text-decoration: underline;
+}
+
+.link svg {
+  min-width: 60px;
+  font-size: 1.8rem;
+  vertical-align: middle;
+}
+
+.active {
+  color: var(--primary-clr);
+  text-decoration: underline;
+}
+
+.list li:has(>a) {
+  padding: 15px;
+  padding-left: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: background-color 0.2s ease;
+}
+
+.list li:has(.active) {
+  background-color: var(--primary-light-clr);
 }

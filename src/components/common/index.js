@@ -3,7 +3,6 @@ export { Loader } from './Loader';
 export { ButtonLoader } from './ButtonLoader';
 export { ActionsMenu } from './ActionsMenu';
 export { PageHeader } from './PageHeader';
-export { SearchInput } from './SearchInput';
 export { IconLink } from './IconLink';
 export { Separator } from './Separator';
 export { Logo } from './Logo';

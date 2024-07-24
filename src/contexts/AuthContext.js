@@ -50,16 +50,10 @@ const AuthProvider = ({ children }) => {
         handleResponse(response);
         setIsLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSignup = (payload) => {
-    const {
-      email,
-      userName,
-      phoneNumber,
-      password
-    } = payload;
-
     setIsLoading(true);
     signup(payload)
       .then((response) => {
