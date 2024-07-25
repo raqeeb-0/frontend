@@ -4,6 +4,9 @@ import {
   AppLayout
 } from './layouts';
 import {
+  ProductionOrderUpdate,
+  ProductionOrderCreate,
+  ProductionOrders,
   ProductsCategoryUpdate,
   ProductsCategoryCreate,
   ProductsCategories,
@@ -156,7 +159,15 @@ export const router = createBrowserRouter([
           },
           {
             path: 'production-orders',
-            element: <Materials />,
+            element: <ProductionOrders />,
+          },
+          {
+            path: 'production-orders/create',
+            element: <ProductionOrderCreate />,
+          },
+          {
+            path: 'production-orders/:productionOrderId/edit',
+            element: <ProductionOrderUpdate />,
           },
           {
             path: 'products/items',

@@ -14,7 +14,7 @@ export const ResourcesTable = (props) => {
             resources.length > 0 && Object.keys(resources[0])
               .map((field) => {
                 if (field === 'id') return null
-                else if (field === 'name') {
+                else if (field === 'name' || field ==='ID') {
                   return (
                     <th key={field}>
                       {resourceName} {field}
@@ -43,7 +43,7 @@ export const ResourcesTable = (props) => {
             {
               Object.keys(resource).map((key) => {
                 if (key === 'id') return null
-                else if (key === 'name') {
+                else if (key === 'name' || key === 'ID') {
                   return (
                     <td key={key}>
                       <Link

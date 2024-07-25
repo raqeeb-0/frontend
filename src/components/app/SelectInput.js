@@ -22,9 +22,9 @@ export const SelectInput = (props) => {
             return (
               <option
                 key={index}
-                value={option.id}
+                value={option.id? option.id: option}
               >
-                { option.name }
+                { option.name? option.name: option }
               </option>
             );
           })
