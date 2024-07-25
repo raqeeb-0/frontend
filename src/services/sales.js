@@ -11,18 +11,12 @@ export const getSale = (saleId) =>
   api.get(`${resource}/${saleId}`);
 
 
-export const createSale = (payload) => {
-  const { productId, quantity, total, customerId } = payload;
-
-  return api.post(resource, { productId, quantity, total, customerId });
-}
+export const createSale = (payload) =>
+  api.post(resource, payload);
 
 
-export const updateSale = (saleId, payload) => {
-  const { status } = payload;
-
-  return api.patch(`${resource}/${saleId}`, { status });
-}
+export const updateSale = (saleId, payload) =>
+  api.patch(`${resource}/${saleId}`, payload);
 
 
 export const deleteSale = (saleId) =>

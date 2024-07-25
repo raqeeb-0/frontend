@@ -157,6 +157,10 @@ export const SaleUpdate = () => {
     products,
     isLoading: isFetchingProducts
   } = useGetProducts();
+  const {
+    customers,
+    isLoading: isFetchingCustomers
+  } = useGetCustomers();
   const { isLoading, handleUpdate } = useUpdateSale();
 
   const handleSubmit = (e) => {
@@ -169,7 +173,7 @@ export const SaleUpdate = () => {
   return (
     <section>
       {
-        isFetchingSale || isFetchingProducts
+        isFetchingSale || isFetchingProducts || isFetchingCustomers
           ?<Loader />
           :<>
             <PageHeader value='Update Order Status' />
@@ -179,10 +183,31 @@ export const SaleUpdate = () => {
               isLoading={isLoading}
             >
               <SelectInput
-                label='Status'
-                name='status'
-                value={sale.status}
-                options={['PENDING', 'EXECUTING', 'FULFILLED', 'CANCELLED']}
+                label='Product'
+                name='productId'
+                value={sale.productId}
+                options={products}
+                disabled={isLoading}
+              />
+              <FormField
+                label='Quantity'
+                type='number'
+                name='quantity'
+                value={sale.quantity}
+                disabled={isLoading}
+              />
+              <FormField
+                label='Total'
+                type='number'
+                name='total'
+                value={sale.price}
+                disabled={isLoading}
+              />
+              <SelectInput
+                label='Customer'
+                name='customerId'
+                value={sale.customerId}
+                options={customers}
                 disabled={isLoading}
               />
             </Form>
