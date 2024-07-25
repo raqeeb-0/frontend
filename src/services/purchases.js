@@ -11,19 +11,13 @@ export const getPurchase = (purchaseId) =>
   api.get(`${resource}/${purchaseId}`);
 
 
-export const createPurchase = (payload) => {
-  const { name, categoryId } = payload;
-
-  return api.post(resource, { name, categoryId });
-}
+export const createPurchase = (payload) =>
+  api.post(resource, payload);
 
 
-export const updatePurchase = (materialId, payload) => {
-  const { name, categoryId } = payload;
-
-  return api.patch(`${resource}/${materialId}`, { name, categoryId });
-}
+export const updatePurchase = (purchaseId, payload) =>
+  api.patch(`${resource}/${purchaseId}`, payload);
 
 
-export const deletePurchase = (materialId) =>
-  api.delete(`${resource}/${materialId}`);
+export const deletePurchase = (purchaseId) =>
+  api.delete(`${resource}/${purchaseId}`);

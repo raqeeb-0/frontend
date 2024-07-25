@@ -4,6 +4,9 @@ import {
   AppLayout
 } from './layouts';
 import {
+  PurchaseUpdate,
+  PurchaseCreate,
+  Purchases,
   SaleUpdate,
   SaleCreate,
   Sales,
@@ -106,7 +109,15 @@ export const router = createBrowserRouter([
           },
           {
             path: 'purchases',
-            element: <Materials />,
+            element: <Purchases />,
+          },
+          {
+            path: 'purchases/create',
+            element: <PurchaseCreate />,
+          },
+          {
+            path: 'purchases/:purchaseId/edit',
+            element: <PurchaseUpdate />,
           },
           {
             path: 'suppliers',

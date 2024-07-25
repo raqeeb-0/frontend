@@ -2,41 +2,40 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponseHandler } from './common';
 import {
-  deleteMaterial,
-  updateMaterial,
-  createMaterial,
-  getMaterial,
-  getMaterials
-} from '../services/materials';
+  deletePurchase,
+  updatePurchase,
+  createPurchase,
+  getPurchase,
+  getPurchases
+} from '../services/purchases';
 
 
-export const useGetMaterials = () => {
+export const useGetPurchases = () => {
   const { handleResponse } = useResponseHandler();
-  const [materials, setMaterials] = useState([]);
+  const [purchases, setPurchases] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(true);
 
-  const refreshMaterials = () => {
+  const refreshPurchases = () => {
     setRefresh(!refresh);
   }
 
   useEffect(() => {
     setIsLoading(true);
-    getMaterials()
+    getPurchases()
       .then((response) => {
         const success = () => {
-          const refinedMaterials = response.data.map((material) => {
+          const refinedPurchases = response.data.map((purchase) => {
             return {
-              'id': material.id,
-              'name': material.name,
-              'current price': material.currentPrice,
-              'quantity': material.quantity,
-              'category': material.categoryId,
-              'notes': material.notes,
-              'created at': material.createdAt.split('T')[0],
+              'id': purchase.id,
+              'ID': purchase.id,
+              'material': purchase.materialId,
+              'quantity': purchase.quantity,
+              'price': purchase.price,
+              'created at': purchase.createdAt.split('T')[0],
             };
           });
-          setMaterials(refinedMaterials);
+          setPurchases(refinedPurchases);
         }
         handleResponse(response, success);
         setIsLoading(false);
@@ -44,41 +43,41 @@ export const useGetMaterials = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
-  return { materials, isLoading, refreshMaterials };
+  return { purchases, isLoading, refreshPurchases };
 }
 
 
-export const useGetMaterial = () => {
+export const useGetPurchase = () => {
   const { handleResponse } = useResponseHandler();
-  const [material, setMaterial] = useState({});
+  const [purchase, setPurchase] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const { materialId } = useParams();
+  const { purchaseId } = useParams();
 
   useEffect(() => {
     setIsLoading(true);
-    getMaterial(materialId)
+    getPurchase(purchaseId)
       .then((response) => {
-        const success = () => setMaterial(response.data);
+        const success = () => setPurchase(response.data);
         handleResponse(response, success);
         setIsLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { material, isLoading };
+  return { purchase, isLoading };
 }
 
 
-export const useCreateMaterial = () => {
+export const useCreatePurchase = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCreate = (payload) => {
     setIsLoading(true);
-    createMaterial(payload)
+    createPurchase(payload)
       .then((response) => {
-        const success = () => navigate('/app/materials/items');
+        const success = () => navigate('/app/purchases');
         handleResponse(response, success);
         setIsLoading(false);
       });
@@ -88,17 +87,17 @@ export const useCreateMaterial = () => {
 }
 
 
-export const useUpdateMaterial = () => {
+export const useUpdatePurchase = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { materialId } = useParams();
+  const { purchaseId } = useParams();
 
   const handleUpdate = (payload) => {
     setIsLoading(true);
-    updateMaterial(materialId, payload)
+    updatePurchase(purchaseId, payload)
       .then((response) => {
-        const success = () => navigate('/app/materials/items');
+        const success = () => navigate('/app/purchases');
         handleResponse(response, success);
         setIsLoading(false);
       });
@@ -108,18 +107,18 @@ export const useUpdateMaterial = () => {
 }
 
 
-export const useDeleteMaterial = () => {
+export const useDeletePurchase = () => {
   const { handleResponse } = useResponseHandler();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleDelete = (materialId, refreshMaterials) => {
+  const handleDelete = (purchaseId, refreshPurchases) => {
     setIsLoading(true);
-    deleteMaterial(materialId)
+    deletePurchase(purchaseId)
       .then((response) => {
-        const success = () => navigate('/app/materials/items');
+        const success = () => navigate('/app/purchases');
         handleResponse(response, success);
-        refreshMaterials();
+        refreshPurchases();
         setIsLoading(false);
       });
   }
