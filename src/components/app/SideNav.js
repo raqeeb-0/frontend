@@ -13,7 +13,7 @@ export const SideNav = (props) => {
   const handlePanelLink = ({ isActive }) => {
     const activeClass = isActive? styles.active: '';
     const openedClass = isOpen? styles.opened: '';
-    return `${activeClass} ${openedClass}`;
+    return `${openedClass} ${activeClass}`;
   }
 
   const handleNavLink = ({ isActive }) => {
@@ -33,7 +33,7 @@ export const SideNav = (props) => {
           className={handlePanelLink}
           onClick={(e) => {e.preventDefault(); togglePanel();}}
         >
-          { panelLink.icon }{ panelLink.name } <span><IoIosArrowDown /></span>
+          { panelLink.icon }{ panelLink.name } <div><IoIosArrowDown /></div>
         </NavLink>
       </div>
       <div className={`${styles.opacity} ${opacityState}`}>

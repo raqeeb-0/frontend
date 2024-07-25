@@ -7,6 +7,9 @@ import {
   ProductsCategoryUpdate,
   ProductsCategoryCreate,
   ProductsCategories,
+  ProductUpdate,
+  ProductCreate,
+  Products,
   ExpensesCategoryUpdate,
   ExpensesCategoryCreate,
   ExpensesCategories,
@@ -157,7 +160,15 @@ export const router = createBrowserRouter([
           },
           {
             path: 'products/items',
-            element: <Materials />
+            element: <Products />
+          },
+          {
+            path: 'products/items/create',
+            element: <ProductCreate />
+          },
+          {
+            path: 'products/items/:productId/edit',
+            element: <ProductUpdate />
           },
           {
             path: 'products/categories',

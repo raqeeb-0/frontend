@@ -69,13 +69,14 @@ li:has(.active) {
   vertical-align: middle;
 }
 
-.panelLink a span svg {
-  margin-left: 60px;
+.panelLink a div svg {
   vertical-align: middle;
   transition: transform 0.2s ease;
 }
 
-.panelLink .active span svg {
+.panelLink a div {
+  margin-right: 10px;
+  margin-left: auto;
 }
 
 .opacity {
@@ -90,7 +91,7 @@ li:has(.active) {
   opacity: 0.2;
 }
 
-.opened span svg {
+.opened div svg {
   transform: rotateZ(-180deg);
 }
 

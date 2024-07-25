@@ -1,3 +1,4 @@
+export { SelectMultiple } from './SelectMultiple';
 export { SearchInput } from './SearchInput';
 export { SelectInput } from './SelectInput';
 export { Header } from './Header';
