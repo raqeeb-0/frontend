@@ -4,6 +4,9 @@ import {
   AppLayout
 } from './layouts';
 import {
+  SaleUpdate,
+  SaleCreate,
+  Sales,
   ProductionOrderUpdate,
   ProductionOrderCreate,
   ProductionOrders,
@@ -143,7 +146,15 @@ export const router = createBrowserRouter([
           },
           {
             path: 'sales',
-            element: <Materials />,
+            element: <Sales />,
+          },
+          {
+            path: 'sales/create',
+            element: <SaleCreate />,
+          },
+          {
+            path: 'sales/:saleId/edit',
+            element: <SaleUpdate />,
           },
           {
             path: 'customers',

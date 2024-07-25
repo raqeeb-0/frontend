@@ -1,3 +1,4 @@
+export * from './Sales';
 export * from './ProductionOrders';
 export * from './ProductsCategories';
 export * from './Products';

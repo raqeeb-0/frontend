@@ -12,36 +12,39 @@ import {
   PageHeader
 } from '../components/common';
 import {
-  useDeleteProductionOrder,
-  useUpdateProductionOrder,
-  useCreateProductionOrder,
-  useGetProductionOrder,
-  useGetProductionOrders
-} from '../hooks/productionOrders';
+  useDeleteSale,
+  useUpdateSale,
+  useCreateSale,
+  useGetSale,
+  useGetSales
+} from '../hooks/sales';
 import {
   useGetProducts
 } from '../hooks/products';
+import {
+  useGetCustomers
+} from '../hooks/customers';
 
 
-export const ProductionOrders = () => {
+export const Sales = () => {
   const {
-    productionOrders,
-    refreshProductionOrders,
-    isLoading: isFetchingProductionOrders
-  } = useGetProductionOrders();
-  /*const {
+    sales,
+    refreshSales,
+    isLoading: isFetchingSales
+  } = useGetSales();
+  const {
     handleDelete,
-    isLoading: isDeletingProductionOrder
-  } = useDeleteProductionOrder();
+    isLoading: isDeletingSale
+  } = useDeleteSale();
 
   const deleteHandler = (e) => {
     handleDelete(
       e.currentTarget.getAttribute('data-id'),
-      refreshProductionOrders
+      refreshSales
     );
-  }*/
+  }
 
-  const isLoading = isFetchingProductionOrders/* || isDeletingProductionOrder*/;
+  const isLoading = isFetchingSales || isDeletingSale;
 
   return (
     <section>
@@ -50,28 +53,29 @@ export const ProductionOrders = () => {
           ?<Loader />
           :<>
             <Header
-              value='Production Orders'
-              isEmptyList={productionOrders.length === 0}
+              value='Sales'
+              isEmptyList={sales.length === 0}
               link={{
-                path: '/app/production-orders/create',
-                name: 'New Order',
+                path: '/app/sales/create',
+                name: 'New Sale',
               }}
             />
             {
-              productionOrders.length === 0
+              sales.length === 0
                 ?<EmptyListPlaceholder
-                  listName='orders'
+                  listName='sales'
                   link={{
-                    path: '/app/production-orders/create',
-                    name: 'Create Order',
+                    path: '/app/sales/create',
+                    name: 'Create Sale',
                   }}
                 />
                 :<>
-                  <SearchInput resourceName='production-orders' />
+                  <SearchInput resourceName='sales' />
                   <ResourcesTable
-                    resourceName='order'
-                    resourcePath='/production-orders'
-                    resources={productionOrders}
+                    resourceName='sale'
+                    resourcePath='/sales'
+                    resources={sales}
+                    handleDelete={deleteHandler}
                   />
                 </>
             }
@@ -81,8 +85,12 @@ export const ProductionOrders = () => {
   );
 }
 
-export const ProductionOrderCreate = () => {
-  const { isLoading, handleCreate } = useCreateProductionOrder();
+export const SaleCreate = () => {
+  const { isLoading, handleCreate } = useCreateSale();
+  const {
+    customers,
+    isLoading: isFetchingCustomers
+  } = useGetCustomers();
   const {
     products,
     isLoading: isFetchingProducts
@@ -92,19 +100,20 @@ export const ProductionOrderCreate = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const payload = Object.fromEntries(formData);
-    payload.productCount = parseInt(payload.productCount);
+    payload.quantity = parseInt(payload.quantity);
+    payload.total = parseInt(payload.total);
     handleCreate(payload);
   }
 
   return (
     <section>
       {
-        isFetchingProducts
+        isFetchingProducts || isFetchingCustomers
           ?<Loader />
           :<>
-            <PageHeader value='New ProductionOrder' />
+            <PageHeader value='New Sale' />
             <Form
-              legend='ProductionOrder Details'
+              legend='Sale Details'
               onSubmit={handleSubmit}
               isLoading={isLoading}
             >
@@ -115,9 +124,21 @@ export const ProductionOrderCreate = () => {
                 disabled={isLoading}
               />
               <FormField
-                label='count'
+                label='Quantity'
                 type='number'
-                name='productCount'
+                name='quantity'
+                disabled={isLoading}
+              />
+              <FormField
+                label='Total'
+                type='number'
+                name='total'
+                disabled={isLoading}
+              />
+              <SelectInput
+                label='Customer'
+                name='customerId'
+                options={customers}
                 disabled={isLoading}
               />
             </Form>
@@ -127,16 +148,16 @@ export const ProductionOrderCreate = () => {
   );
 }
 
-export const ProductionOrderUpdate = () => {
+export const SaleUpdate = () => {
   const {
-    productionOrder,
-    isLoading: isFetchingProductionOrder
-  } = useGetProductionOrder();
+    sale,
+    isLoading: isFetchingSale
+  } = useGetSale();
   const {
     products,
     isLoading: isFetchingProducts
   } = useGetProducts();
-  const { isLoading, handleUpdate } = useUpdateProductionOrder();
+  const { isLoading, handleUpdate } = useUpdateSale();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -148,7 +169,7 @@ export const ProductionOrderUpdate = () => {
   return (
     <section>
       {
-        isFetchingProductionOrder || isFetchingProducts
+        isFetchingSale || isFetchingProducts
           ?<Loader />
           :<>
             <PageHeader value='Update Order Status' />
@@ -160,7 +181,7 @@ export const ProductionOrderUpdate = () => {
               <SelectInput
                 label='Status'
                 name='status'
-                value={productionOrder.status}
+                value={sale.status}
                 options={['PENDING', 'EXECUTING', 'FULFILLED', 'CANCELLED']}
                 disabled={isLoading}
               />
