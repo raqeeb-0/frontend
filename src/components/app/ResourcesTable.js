@@ -49,6 +49,7 @@ export const ResourcesTable = (props) => {
                       <Link
                         to={`/app${resourcePath}/${resource.id}`}
                         className={styles.resourceLink}
+                        onClick={(e) => e.preventDefault()}
                       >
                         { resource[key] }
                       </Link>

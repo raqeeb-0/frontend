@@ -1,8 +1,12 @@
 .page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: calc(100vh - 70px);
+  margin-top: 70px;
+  overflow: hidden auto;
 }
+
+
 
 .main {
   display: flex;
