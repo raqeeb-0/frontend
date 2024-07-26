@@ -1,8 +1,8 @@
+import styles from './styles/FirstHero.module.css';
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import styles from './../styles/firstHero.module.css';
-import { HeroVector } from './HeroVector.js';
 import { Link } from 'react-router-dom';
+import { HeroVector } from './HeroVector.js';
 
 export const FirstHero = () => {
   const containerRef = useRef(null);

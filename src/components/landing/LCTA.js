@@ -1,8 +1,8 @@
+import styles from './styles/LCTA.module.css';
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import styles from './../styles/lcta.module.css';
 
-export const Lcta = () => {
+export const LCTA = () => {
   const containerRef = useRef(null);
 
   useEffect(() => {

@@ -1,7 +1,14 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { createContext, useState, useEffect } from 'react';
-import { isLoggedIn, login, signup, logout } from '../services/auth';
-import { useNotify } from '../hooks/common';
+import { useNotify, useResponseHandler } from '../hooks/common';
+import {
+  resetPassword,
+  forgotPassword,
+  isLoggedIn,
+  login,
+  signup,
+  logout
+} from '../services/auth';
 
 
 const AuthContext = createContext({
@@ -10,12 +17,15 @@ const AuthContext = createContext({
   handleSignup: () => {},
   handleLogin: () => {},
   handleLogout: () => {},
+  handleForgotPassword: () => {},
+  handleResetPassword: () => {},
 });
 
 
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  //const { handleResponse } = useResponseHandler();
   const { setMessage, setType, showNotification } = useNotify();
   const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -82,9 +92,30 @@ const AuthProvider = ({ children }) => {
       });
   }
 
+  const handleForgotPassword = (payload) => {
+    setIsLoading(true);
+    forgotPassword(payload)
+      .then((response) => {
+        handleResponse(response);
+        setIsLoading(false);
+      });
+  }
+
+  const handleResetPassword = (token, payload) => {
+    setIsLoading(true);
+    resetPassword(token, payload)
+      .then((response) => {
+        handleResponse(response);
+        navigate('/auth/login');
+        setIsLoading(false);
+      });
+  }
+
   const value = {
     username,
     isLoading,
+    handleResetPassword,
+    handleForgotPassword,
     handleSignup,
     handleLogin,
     handleLogout

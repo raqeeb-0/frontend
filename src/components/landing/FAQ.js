@@ -1,9 +1,8 @@
+import styles from './styles/FAQ.module.css';
 import { motion } from 'framer-motion';
-import styles from './../styles/faq.module.css';
 import { useAnimation } from 'framer-motion';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 

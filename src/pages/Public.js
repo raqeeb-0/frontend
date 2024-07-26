@@ -1,13 +1,16 @@
-import { FirstHero } from '../components/landing/firstHero/FirstHero.js';
 import styles from './styles/public.module.css';
-import { Features } from '../components/landing/features/features.js';
-import { NdHero } from '../components/landing/secondHero/secondHero.js';
-import { ThirdHero } from '../components/landing/thirdHero/thirdHero.js';
-import { Comments } from '../components/landing/comments/comments.js';
-import { FAQ } from '../components/landing/FAQ/faq.js';
-import { Lcta } from '../components/landing/LCTA/lcta.js';
-import { Footer } from '../components/landing/footer/footer.js';
-import { TopNav } from '../components/landing';
+import {
+  FirstHero,
+  Features,
+  SecondHero,
+  ThirdHero,
+  Comments,
+  FAQ,
+  LCTA,
+  Footer,
+  TopNav
+} from '../components/landing';
+
 
 export const Public = () => {
   return (
@@ -15,11 +18,11 @@ export const Public = () => {
       <TopNav />
       <FirstHero />
       <Features />
-      <NdHero />
+      <SecondHero />
       <ThirdHero />
       <Comments />
       <FAQ />
-      <Lcta />
+      <LCTA />
       <Footer />
     </div>
   );

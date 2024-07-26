@@ -14,13 +14,15 @@ export const ForgotPassword = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const payload = Object.fromEntries(formData);
-    //auth.handleLogin(payload);
+    auth.handleForgotPassword(payload);
   }
 
   return (
     <AuthLayout>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <p>Enter the email associated with your account to change your password.</p>
+        <p>
+          Enter the email associated with your account to change your password.
+        </p>
         <FormField
           label='Email'
           type='text'

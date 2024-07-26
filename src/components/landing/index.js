@@ -1,1 +1,9 @@
+export { FirstHero } from './FirstHero';
+export { Features } from './Features';
+export { SecondHero } from './SecondHero';
+export { ThirdHero } from './ThirdHero';
+export { Comments } from './Comments';
+export { FAQ } from './FAQ';
+export { LCTA } from './LCTA';
+export { Footer } from './Footer';
 export { TopNav } from './TopNav';

@@ -1,9 +1,8 @@
+import styles  from './styles/Features.module.css';
 import { motion } from 'framer-motion';
-import styles  from './../styles/features.module.css';
 import { useAnimation } from 'framer-motion';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useState } from 'react';
 
 export const Features = () => {
 

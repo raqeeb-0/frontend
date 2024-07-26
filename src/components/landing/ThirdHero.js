@@ -1,9 +1,9 @@
+import styles  from './styles/ThirdHero.module.css';
 import { motion } from 'framer-motion';
-import styles  from './../styles/rdHero.module.css';
 import { useAnimation } from 'framer-motion';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useState } from 'react';
+
 
 export const ThirdHero = () => {
   const controls = useAnimation();

@@ -1,4 +1,4 @@
-import styles from './../styles/firstHero.module.css';
+import styles from './styles/FirstHero.module.css';
 
 export const HeroVector = () => {
   return (

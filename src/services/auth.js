@@ -28,3 +28,11 @@ export const signup = (payload) => {
 
 
 export const logout = () => api.get(`${resource}/logout`);
+
+
+export const forgotPassword = (payload) =>
+  api.post(`${resource}/forgotPassword`, payload);
+
+
+export const resetPassword = (token, payload) =>
+  api.post(`${resource}/resetPassword/${token}`, payload);

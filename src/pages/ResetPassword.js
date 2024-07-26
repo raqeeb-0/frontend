@@ -1,4 +1,5 @@
 import styles from './styles/ForgotPassword.module.css';
+import { useParams } from 'react-router-dom';
 import { AuthLayout } from '../layouts';
 import {
   FormField,
@@ -9,12 +10,13 @@ import { useAuth } from '../hooks/common';
 
 export const ResetPassword = () => {
   const auth = useAuth();
+  const { token } = useParams();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const payload = Object.fromEntries(formData);
-    //auth.handleLogin(payload);
+    auth.handleResetPassword(token, payload);
   }
 
   return (

@@ -1,11 +1,11 @@
+import styles  from './styles/SecondHero.module.css';
 import { motion } from 'framer-motion';
-import styles  from './../styles/ndHero.module.css';
 import { useAnimation } from 'framer-motion';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useState } from 'react';
 
-export const NdHero = () => {
+
+export const SecondHero = () => {
   const controls = useAnimation();
   const [ref, inView] = useInView();
   const [hasAnimated, setHasAnimated] = useState(false);
