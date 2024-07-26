@@ -29,7 +29,7 @@ export const useGetMaterials = () => {
             return {
               'id': material.id,
               'name': material.name,
-              'current price': material.currentPrice,
+              'price/unit': material.priceOfSingleUnit,
               'quantity': material.quantity,
               'category': material.categoryName,
               'notes': material.notes,

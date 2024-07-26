@@ -1,13 +1,20 @@
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useLayoutEffect, useContext } from 'react';
 import { useAuth } from '../../hooks/common';
+import { Loader } from '../../components/common';
+import { AuthContext } from '../../contexts/AuthContext';
 
 
 export const RequireAuth = ({ children }) => {
-  const auth = useAuth();
+  const { isLoading, isInit, username } = useAuth();
   const location = useLocation();
 
-  if (!auth.username) {
-    return <Navigate to='/auth/login' state={{ from: location }} replace />;
+  if (!isInit) {
+    return <Loader />;
+  }
+
+  if (!username && !isLoading) {
+    return <Navigate to='/auth/login' state={{ from: location }} />;
   }
 
   return children;

@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { createContext, useState, useEffect } from 'react';
-import { useNotify, useResponseHandler } from '../hooks/common';
+import { useNotify } from '../hooks/common';
 import {
   resetPassword,
   forgotPassword,
@@ -14,6 +14,7 @@ import {
 const AuthContext = createContext({
   username: '',
   isLoading: false,
+  isInit: false,
   handleSignup: () => {},
   handleLogin: () => {},
   handleLogout: () => {},
@@ -25,10 +26,10 @@ const AuthContext = createContext({
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  //const { handleResponse } = useResponseHandler();
   const { setMessage, setType, showNotification } = useNotify();
   const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isInit, setIsInit] = useState(false);
 
 
   const from = location.state?.from?.pathname || '/dashboard';
@@ -39,15 +40,19 @@ const AuthProvider = ({ children }) => {
       setType('error');
       showNotification();
     } else if (response.status === 'fail') {
-      setMessage(response?.message);
-      setType('error');
-      response?.message && showNotification();
+      if ('message' in response) {
+        setMessage(response.message);
+        setType('error');
+        showNotification();
+      }
     } else if (response.status === 'success') {
-      setMessage(response?.message);
-      setType('success');
-      response?.message && showNotification();
       setUsername(response.username);
       redirect && redirect();
+      if ('message' in response) {
+        setMessage(response.message);
+        setType('success');
+        showNotification();
+      }
     } else {
       console.log('Unhandled response');
     }
@@ -59,6 +64,12 @@ const AuthProvider = ({ children }) => {
       .then((response) => {
         handleResponse(response);
         setIsLoading(false);
+        setIsInit(true);
+      })
+      .catch((err) => {
+        console.error('Login check failed:', err);
+        setIsLoading(false)
+        setIsInit(true)
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -114,6 +125,7 @@ const AuthProvider = ({ children }) => {
   const value = {
     username,
     isLoading,
+    isInit,
     handleResetPassword,
     handleForgotPassword,
     handleSignup,
