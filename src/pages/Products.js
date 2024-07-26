@@ -113,11 +113,10 @@ export const ProductCreate = () => {
     const formData = new FormData(e.currentTarget);
     const payload = Object.fromEntries(formData);
     payload['materialInfo'] = materialInfo;
-    payload.price = parseInt(payload.price);
-    payload.percentageOfIndirectCoast = parseInt(
+    payload.percentageOfIndirectCoast = parseFloat(
       payload.percentageOfIndirectCoast
     );
-    payload.percentageOfProfit = parseInt(payload.percentageOfProfit);
+    payload.percentageOfProfit = parseFloat(payload.percentageOfProfit);
     handleCreate(payload);
   }
 
@@ -137,12 +136,6 @@ export const ProductCreate = () => {
                 label='Name'
                 type='text'
                 name='name'
-                disabled={isLoading}
-              />
-              <FormField
-                label='Price'
-                type='number'
-                name='price'
                 disabled={isLoading}
               />
               <FormField

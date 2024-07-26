@@ -48,7 +48,7 @@ export const SideNav = (props) => {
                       className={handleNavLink}
                       title={link.name}
                     >
-                      { link.name }
+                      { link.icon }{ link.name }
                     </NavLink>
                   </li>
                 );

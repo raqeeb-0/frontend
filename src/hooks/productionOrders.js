@@ -29,7 +29,7 @@ export const useGetProductionOrders = () => {
             return {
               'id': productionOrder.id,
               'ID': productionOrder.id,
-              'product': productionOrder.productId,
+              'product': productionOrder.product.name,
               'count': productionOrder.productCount,
               'status': productionOrder.status,
               'created at': productionOrder.createdAt.split('T')[0],

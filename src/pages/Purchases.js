@@ -138,7 +138,7 @@ export const PurchaseCreate = () => {
               <input
                 type='hidden'
                 name='purchaseType'
-                value='MATERIAL'
+                value='Material'
               />
               <SelectInput
                 label='Supplier'

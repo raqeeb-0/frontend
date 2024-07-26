@@ -161,7 +161,7 @@ export const ProductionOrderUpdate = () => {
                 label='Status'
                 name='status'
                 value={productionOrder.status}
-                options={['PENDING', 'EXECUTING', 'FULFILLED', 'CANCELLED']}
+                options={['Pending', 'Executing', 'Fulfilled', 'Cancelled']}
                 disabled={isLoading}
               />
             </Form>

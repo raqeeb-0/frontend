@@ -129,12 +129,6 @@ export const SaleCreate = () => {
                 name='quantity'
                 disabled={isLoading}
               />
-              <FormField
-                label='Total'
-                type='number'
-                name='total'
-                disabled={isLoading}
-              />
               <SelectInput
                 label='Customer'
                 name='customerId'

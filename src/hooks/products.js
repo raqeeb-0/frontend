@@ -26,15 +26,14 @@ export const useGetProducts = () => {
       .then((response) => {
         const success = () => {
           const refinedProducts = response.data.map((product) => {
-            const totalCost = product.price + (product.price * product.percentageIndirectCost / 100);
-            const sellingPrice = totalCost + (totalCost * product.percentageProfit / 100);
             return {
               'id': product.id,
               'name': product.name,
-              'cost price': product.price,
-              'selling price': sellingPrice.toFixed(2),
+              'direct cost': product.costPrice,
+              'indirect cost': product.indirectCost,
+              'selling price': product.sellingPrice,
               'quantity': product.quantity,
-              'category': product.categoryId,
+              'category': product.category.name,
               'created at': product.createdAt.split('T')[0],
             };
           });

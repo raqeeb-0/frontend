@@ -29,7 +29,7 @@ export const useGetSales = () => {
             return {
               'id': sale.id,
               'ID': sale.id,
-              'product': sale.productId,
+              'product': sale.product.name,
               'quantity': sale.quantity,
               'price': sale.price,
               'created at': sale.createdAt.split('T')[0],

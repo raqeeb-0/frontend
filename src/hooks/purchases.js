@@ -29,7 +29,7 @@ export const useGetPurchases = () => {
             return {
               'id': purchase.id,
               'ID': purchase.id,
-              'material': purchase.materialId,
+              'material': purchase.material.name,
               'quantity': purchase.quantity,
               'price': purchase.price,
               'created at': purchase.createdAt.split('T')[0],

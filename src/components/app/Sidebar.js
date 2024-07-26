@@ -9,6 +9,10 @@ import { LuCircleDollarSign } from 'react-icons/lu';
 import { LuUsers2 } from 'react-icons/lu';
 import { LuPackagePlus } from 'react-icons/lu';
 import { LuPackage } from 'react-icons/lu';
+import { LuLayoutGrid } from 'react-icons/lu';
+import { LuLayers } from 'react-icons/lu';
+import { LuBoxes } from 'react-icons/lu';
+import { LuPackageOpen } from 'react-icons/lu';
 
 
 export const Sidebar = ({ isOpen }) => {
@@ -44,10 +48,12 @@ export const Sidebar = ({ isOpen }) => {
     {
       path: '/app/materials/items',
       name: 'Items',
+      icon: <LuLayers />,
     },
     {
       path: '/app/materials/categories',
       name: 'Categories',
+      icon: <LuLayoutGrid />,
     }
   ];
 
@@ -55,10 +61,12 @@ export const Sidebar = ({ isOpen }) => {
     {
       path: '/app/expenses/units',
       name: 'Units',
+      icon: <LuBoxes />,
     },
     {
       path: '/app/expenses/categories',
       name: 'Categories',
+      icon: <LuLayoutGrid />,
     }
   ];
 
@@ -66,10 +74,12 @@ export const Sidebar = ({ isOpen }) => {
     {
       path: '/app/products/items',
       name: 'Items',
+      icon: <LuPackageOpen />,
     },
     {
       path: '/app/products/categories',
       name: 'Categories',
+      icon: <LuLayoutGrid />,
     }
   ];
 
