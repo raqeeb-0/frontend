@@ -14,5 +14,7 @@ export { Public } from './Public';
 export { Dashboard } from './Dashboard';
 export { Root } from './Root';
 export { ErrorPage } from './Error';
+export { ResetPassword } from './ResetPassword';
+export { ForgotPassword } from './ForgotPassword';
 export { Login } from './Login';
 export { Signup } from './Signup';

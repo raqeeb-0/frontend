@@ -43,6 +43,8 @@ import {
   Dashboard,
   Root,
   ErrorPage,
+  ResetPassword,
+  ForgotPassword,
   Login,
   Signup
 } from './pages';
@@ -77,6 +79,14 @@ export const router = createBrowserRouter([
       {
         path: 'auth/login',
         element: <Login />,
+      },
+      {
+        path: 'auth/forgot-password',
+        element: <ForgotPassword />,
+      },
+      {
+        path: 'auth/reset-password',
+        element: <ResetPassword />,
       },
       {
         path: 'app',

@@ -33,14 +33,22 @@ export const Login = () => {
           label='Email'
           type='text'
           name='email'
+          disabled={auth.isLoading}
           placeholder='JohnDoe@gmail.com'
         />
         <FormField
           label='Password'
           type='password'
           name='password'
+          disabled={auth.isLoading}
           placeholder='••••••••'
         />
+        <Link
+          to='/auth/forgot-password'
+          className={styles.forgotPasswordLink}
+        >
+          Forgot password?
+        </Link>
         <Button
           type='submit'
           value='Log in'
