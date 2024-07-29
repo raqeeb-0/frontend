@@ -1,10 +1,50 @@
 .label {
-  display:block;
+  position: relative;
+}
+
+.label span {
+  display: block;
   margin-left: 7px;
+  margin-bottom: 5px;
   font-size: 1.1rem;
   transition: color 0.2s ease;
 }
 
-.focused, .hovered {
+.label:has(input:hover) span, .label:has(input:focus) span {
   color: var(--primary-clr);
+}
+
+.label input {
+  background-color: var(--contrast-background-clr);
+  outline: 1px solid transparent;
+  border: 1px solid var(--font-clr);
+  border-radius: 8px;
+  width: 300px;
+  height: 60px;
+  padding: 10px 20px;
+  font-size: 1.05rem;
+  transition: all 0.2s ease;
+}
+
+.label input:hover {
+  border-color: var(--primary-clr);
+}
+
+.label input:focus {
+  background-color: var(--background-clr);
+  border-color: var(--primary-clr);
+  outline-color: var(--primary-clr);
+}
+
+.label input:disabled {
+  color: var(--font-dimmed-clr);
+}
+
+.label div {
+  position: absolute;
+  top: 46px;
+  right: 20px;
+  font-size: 1.3rem;
+  vertical-align: middle;
+  cursor: pointer;
 }
