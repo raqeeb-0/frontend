@@ -3,18 +3,19 @@
 }
 
 .label span {
-  display: block;
   margin-left: 7px;
   margin-bottom: 5px;
   font-size: 1.1rem;
   transition: color 0.2s ease;
 }
 
-.label:has(input:hover) span, .label:has(input:focus) span {
+.label:has(input:hover) span:first-child,
+.label:has(input:focus) span:first-child {
   color: var(--primary-clr);
 }
 
 .label input {
+  display: block;
   background-color: var(--contrast-background-clr);
   outline: 1px solid transparent;
   border: 1px solid var(--font-clr);
@@ -40,9 +41,20 @@
   color: var(--font-dimmed-clr);
 }
 
+.label:has(input[required]) span:first-child::after {
+  content: '*';
+  color: red;
+  margin-left: 2px;
+}
+
+.label span:last-child {
+  color: red;
+  font-size: 0.9rem;
+}
+
 .label div {
   position: absolute;
-  top: 46px;
+  top: 43px;
   right: 20px;
   font-size: 1.3rem;
   vertical-align: middle;

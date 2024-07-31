@@ -8,22 +8,20 @@ import {
   FormField,
   Button
 } from '../components/auth';
-import { useAuth } from '../hooks/common';
+import { useAuth, useForm } from '../hooks/common';
 
 
 export const Signup = () => {
   const auth = useAuth();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    auth.handleSignup(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <form
+        noValidate
+        onSubmit={(e) => handleSubmit(e, auth.handleSignup)}
+        className={styles.form}
+      >
         <IconBtn
           icon={<FcGoogle style={{fontSize: '1.5rem'}} />}
           value='Sign up with Google'
@@ -33,32 +31,70 @@ export const Signup = () => {
         <FormField
           label='Email'
           type='text'
-          name='email'
           placeholder='JohnDoe@gmail.com'
+          {
+            ...register(
+              'email',
+              {
+                required: {},
+                isEmail: {
+                  message: 'Invalid email',
+                },
+              }
+            )
+          }
         />
         <FormField
           label='Username'
           type='text'
-          name='userName'
           placeholder='johndoe20'
+          {
+            ...register(
+              'userName',
+              {
+                required: {},
+              }
+            )
+          }
         />
         <FormField
           label='Phone Number'
           type='tel'
-          name='phoneNumber'
           placeholder='01xx xxxx xxx'
+          {
+            ...register(
+              'phoneNumber',
+              {
+                required: {},
+              }
+            )
+          }
         />
         <FormField
           label='Password'
           type='password'
-          name='password'
           placeholder='••••••••'
+          {
+            ...register(
+              'password',
+              {
+                required: {},
+              }
+            )
+          }
         />
         <FormField
           label='Confirm Password'
-          type='text'
-          name='confirmPassword'
+          type='password'
           placeholder='••••••••'
+          {
+            ...register(
+              'confirmPassword',
+              {
+                required: {},
+              }
+            )
+          }
         />
         <Button
           type='submit'

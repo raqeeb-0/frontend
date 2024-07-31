@@ -3,7 +3,8 @@ import { PiEyeClosed } from 'react-icons/pi';
 import { useState } from 'react';
 
 
-export const PasswordInput = () => {
+export const PasswordInput = (props) => {
+  const { type, ...rest } = props;
   const [isVisible, setIsVisible] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
 
@@ -25,9 +26,9 @@ export const PasswordInput = () => {
     <>
       <input
         type={isVisible? 'text': 'password'}
-        name='password'
-        placeholder='••••••••'
         onChange={handleChange}
+        autocomplete='on'
+        {...rest}
       />
       {
         !isEmpty &&

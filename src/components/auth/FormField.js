@@ -5,9 +5,8 @@ import { PasswordInput } from './PasswordInput';
 export const FormField = (props) => {
   const {
     label,
-    type,
-    name,
-    placeholder
+    error,
+    ...rest
   } = props;
 
   return (
@@ -16,15 +15,16 @@ export const FormField = (props) => {
         { label }
       </span>
       {
-        type === 'password'
-          ?<PasswordInput />
+        rest.type === 'password'
+          ?<PasswordInput
+             {...rest}
+           />
           :<input
-             type={type}
-             name={name}
-             placeholder={placeholder}
+             {...rest}
              autoComplete='on'
            />
       }
+      { error && <span>{ error }</span> }
     </label>
   );
 }
