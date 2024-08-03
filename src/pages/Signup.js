@@ -12,14 +12,14 @@ import { useAuth, useForm } from '../hooks/common';
 
 
 export const Signup = () => {
-  const auth = useAuth();
+  const { isLoading, handleSignup } = useAuth();
   const { errors, register, handleSubmit } = useForm();
 
   return (
     <AuthLayout>
       <form
         noValidate
-        onSubmit={(e) => handleSubmit(e, auth.handleSignup)}
+        onSubmit={(e) => handleSubmit(e, handleSignup)}
         className={styles.form}
       >
         <IconBtn
@@ -31,14 +31,17 @@ export const Signup = () => {
         <FormField
           label='Email'
           type='text'
+          disabled={isLoading}
           placeholder='JohnDoe@gmail.com'
           {
             ...register(
               'email',
               {
-                required: {},
-                isEmail: {
-                  message: 'Invalid email',
+                required: true,
+                email: true,
+                length: {
+                  min: 15,
+                  max: 50,
                 },
               }
             )
@@ -47,12 +50,18 @@ export const Signup = () => {
         <FormField
           label='Username'
           type='text'
+          disabled={isLoading}
           placeholder='johndoe20'
           {
             ...register(
               'userName',
               {
-                required: {},
+                required: true,
+                length: {
+                  min: 3,
+                  max: 20,
+                },
+                username: true,
               }
             )
           }
@@ -60,12 +69,14 @@ export const Signup = () => {
         <FormField
           label='Phone Number'
           type='tel'
+          disabled={isLoading}
           placeholder='01xx xxxx xxx'
           {
             ...register(
               'phoneNumber',
               {
-                required: {},
+                required: true,
+                phoneNumber: true,
               }
             )
           }
@@ -73,25 +84,17 @@ export const Signup = () => {
         <FormField
           label='Password'
           type='password'
+          disabled={isLoading}
           placeholder='••••••••'
           {
             ...register(
               'password',
               {
-                required: {},
-              }
-            )
-          }
-        />
-        <FormField
-          label='Confirm Password'
-          type='password'
-          placeholder='••••••••'
-          {
-            ...register(
-              'confirmPassword',
-              {
-                required: {},
+                required: true,
+                length: {
+                  min: 8,
+                  max: 50,
+                },
               }
             )
           }
@@ -99,7 +102,7 @@ export const Signup = () => {
         <Button
           type='submit'
           value='Sign up'
-          disabled={auth.isLoading}
+          disabled={isLoading}
         />
       </form>
       <div>

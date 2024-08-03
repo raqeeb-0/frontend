@@ -27,7 +27,7 @@ export const PasswordInput = (props) => {
       <input
         type={isVisible? 'text': 'password'}
         onChange={handleChange}
-        autocomplete='on'
+        autoComplete='on'
         {...rest}
       />
       {

@@ -8,22 +8,20 @@ import {
   FormField,
   Button
 } from '../components/auth';
-import { useAuth } from '../hooks/common';
+import { useAuth, useForm } from '../hooks/common';
 
 
 export const Login = () => {
-  const auth = useAuth();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    auth.handleLogin(payload);
-  }
+  const { isLoading, handleLogin } = useAuth();
+  const { errors, register, handleSubmit } = useForm();
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <form
+        noValidate
+        onSubmit={(e) => handleSubmit(e, handleLogin)}
+        className={styles.form}
+      >
         <IconBtn
           icon={<FcGoogle style={{fontSize: '1.5rem'}} />}
           value='Log in with Google'
@@ -32,16 +30,39 @@ export const Login = () => {
         <FormField
           label='Email'
           type='text'
-          name='email'
-          disabled={auth.isLoading}
+          disabled={isLoading}
           placeholder='JohnDoe@gmail.com'
+          {
+            ...register(
+              'email',
+              {
+                required: true,
+                email: true,
+                length: {
+                  min: 15,
+                  max: 50,
+                },
+              },
+            )
+          }
         />
         <FormField
           label='Password'
           type='password'
-          name='password'
-          disabled={auth.isLoading}
+          disabled={isLoading}
           placeholder='••••••••'
+          {
+            ...register(
+              'password',
+              {
+                required: true,
+                length: {
+                  min: 8,
+                  max: 50,
+                },
+              }
+            )
+          }
         />
         <Link
           to='/auth/forgot-password'
@@ -52,7 +73,7 @@ export const Login = () => {
         <Button
           type='submit'
           value='Log in'
-          disabled={auth.isLoading}
+          disabled={isLoading}
         />
       </form>
       <div>

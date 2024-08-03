@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { NotificationContext } from '../contexts/NotificationContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
-import { validations } from '../services/validation';
+import validations from '../services/validation';
 
 
 export const useOutsideClick = (props) => {
@@ -90,24 +90,20 @@ export const useResponseHandler = () => {
 export const useForm = () => {
   const [errors, setErrors] = useState({});
 
-  const runValidation = (validationFunc, value, options) => {
-    if (typeof(validationFunc) === 'function') {
-      return validationFunc(value, options);
-    } else {
-      console.log('Validation not found');
-    }
-  }
+  const runValidation = (validationFunc, value, options) =>
+    typeof validationFunc === 'function'
+      ? validationFunc(value, options)
+      : console.log('Validation not found');
+
 
   const handleErrors = (form) => {
-    const { elements } = form;
     const errorsObj = {};
 
-    for (const element of elements) {
+    Array.from(form.elements).forEach(element => {
       const dataValidation = element.getAttribute('data-validation');
-
-      if (dataValidation !== null) {
+      if(dataValidation) {
         const validationObj = JSON.parse(dataValidation);
-        
+
         for (const [validation, options] of Object.entries(validationObj)) {
           const validationResult = runValidation(
             validations[validation],
@@ -121,28 +117,21 @@ export const useForm = () => {
           }
         }
       }
+    });
 
-    }
-
-    return errorsObj;
+    return errorsObj; 
   }
 
-  const register = (name, validationRules) => {
-    const newErrors = { ...errors };
-    delete newErrors[name];
-    const result = {
-      name,
-      error: errors[name],
-      onFocus: () => setErrors(newErrors),
-      'data-validation': JSON.stringify(validationRules),
-    }
-
-    if ('required' in validationRules) {
-      result.required = true;
-    }
-
-    return result;
-  }
+  const register = (name, validationRules) => ({
+    name,
+    error: errors[name],
+    'data-validation': JSON.stringify(validationRules),
+    ...(validationRules.required && { required: true }),
+    onFocus: () => setErrors(prevErrors => {
+      const { [name]: _, ...newErrors } = prevErrors;
+      return newErrors;
+    }),
+  })
 
   const handleSubmit = (e, service) => {
     e.preventDefault();

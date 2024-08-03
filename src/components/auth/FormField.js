@@ -1,5 +1,6 @@
 import styles from './styles/FormField.module.css';
 import { PasswordInput } from './PasswordInput';
+import { useState, useEffect, useRef } from 'react';
 
 
 export const FormField = (props) => {
@@ -8,6 +9,16 @@ export const FormField = (props) => {
     error,
     ...rest
   } = props;
+  const [errorHeight, setErrorHeight] = useState(0);
+  const errorRef = useRef();
+
+  useEffect(() => {
+    if (error) {
+      setErrorHeight(errorRef.current.scrollHeight);
+    } else {
+      setErrorHeight(0);
+    }
+  }, [error]);
 
   return (
     <label className={styles.label}>
@@ -24,7 +35,13 @@ export const FormField = (props) => {
              autoComplete='on'
            />
       }
-      { error && <span>{ error }</span> }
+      <span
+        ref={errorRef}
+        className={`${styles.error} ${error? styles.show: styles.hide}`}
+        style={{ height: `${errorHeight}px` }}
+      >
+        { error }
+      </span>
     </label>
   );
 }

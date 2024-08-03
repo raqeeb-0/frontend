@@ -2,7 +2,7 @@
   position: relative;
 }
 
-.label span {
+.label span:first-child {
   margin-left: 7px;
   margin-bottom: 5px;
   font-size: 1.1rem;
@@ -45,11 +45,26 @@
   content: '*';
   color: red;
   margin-left: 2px;
+  font-size: 0.9rem;
 }
 
-.label span:last-child {
+.error {
+  display: block;
   color: red;
+  max-width: 290px;
+  margin-left: 7px;
   font-size: 0.9rem;
+  transition:
+    opacity 0.2s ease,
+    height 0.2s ease;
+}
+
+.show {
+  opacity: 1;
+}
+
+.hide {
+  opacity: 0;
 }
 
 .label div {
