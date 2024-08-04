@@ -9,17 +9,34 @@ import {
   Button
 } from '../components/auth';
 import { useAuth, useForm } from '../hooks/common';
+import { useState, useEffect } from 'react';
 
 
 export const Signup = () => {
   const { isLoading, handleSignup } = useAuth();
-  const { errors, register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm();
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const handlePassword = (e) => setPassword(e.target.value);
+  const handleConfirmPassword = (e) =>
+    setConfirmPassword(e.target.value);
 
   return (
     <AuthLayout>
       <form
         noValidate
-        onSubmit={(e) => handleSubmit(e, handleSignup)}
+        onSubmit={(e) => {
+          if (confirmPassword === '') {
+            setPasswordError('required');
+          }
+
+          if (password !== confirmPassword) {
+            setPasswordError('Passwords do not match');
+          }
+          handleSubmit(e, handleSignup)
+        }}
         className={styles.form}
       >
         <IconBtn
@@ -85,6 +102,7 @@ export const Signup = () => {
           label='Password'
           type='password'
           disabled={isLoading}
+          handlePassword={handlePassword}
           placeholder='••••••••'
           {
             ...register(
@@ -98,6 +116,16 @@ export const Signup = () => {
               }
             )
           }
+        />
+        <FormField
+          label='Confirm Password'
+          type='password'
+          disabled={isLoading}
+          handlePassword={handleConfirmPassword}
+          placeholder='••••••••'
+          error={passwordError}
+          required
+          onFocus={() => setPasswordError('')}
         />
         <Button
           type='submit'

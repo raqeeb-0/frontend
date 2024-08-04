@@ -119,7 +119,7 @@ export const useForm = () => {
       }
     });
 
-    return errorsObj; 
+    return errorsObj;
   }
 
   const register = (name, validationRules) => ({
@@ -146,5 +146,5 @@ export const useForm = () => {
     }
   }
 
-  return { errors, register, handleSubmit };
+  return { register, handleSubmit };
 }

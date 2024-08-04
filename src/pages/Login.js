@@ -13,7 +13,7 @@ import { useAuth, useForm } from '../hooks/common';
 
 export const Login = () => {
   const { isLoading, handleLogin } = useAuth();
-  const { errors, register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm();
 
   return (
     <AuthLayout>

@@ -4,11 +4,14 @@ import { useState } from 'react';
 
 
 export const PasswordInput = (props) => {
-  const { type, ...rest } = props;
+  const { type, handlePassword, ...rest } = props;
   const [isVisible, setIsVisible] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
 
   const handleChange = (e) => {
+    if (typeof handlePassword === 'function') {
+      handlePassword(e);
+    }
     if (e.target.value === '') {
       setIsEmpty(true);
       setIsVisible(false);
