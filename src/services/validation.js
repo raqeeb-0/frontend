@@ -41,8 +41,20 @@ const phoneNumber = (number, options) => {
   return !phoneNumberRegex.test(number) ? message : undefined;
 }
 
+const matched = (value, options) => {
+  const defaultMessage = 'Values do not match';
+  const { value: targetValue, message = defaultMessage } = options;
+
+  if (targetValue === undefined) {
+    return 'Target value not provided';
+  }
+
+  return value !== targetValue ? message : undefined;
+}
+
 
 export default {
+  matched,
   phoneNumber,
   username,
   required,

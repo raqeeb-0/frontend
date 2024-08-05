@@ -4,26 +4,21 @@ import { useState } from 'react';
 
 
 export const PasswordInput = (props) => {
-  const { type, handlePassword, ...rest } = props;
+  const { type: _, handlePassword, ...rest } = props;
   const [isVisible, setIsVisible] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(true);
+  const [isEmptyInput, setIsEmptyInput] = useState(true);
 
   const handleChange = (e) => {
-    if (typeof handlePassword === 'function') {
-      handlePassword(e);
-    }
+    handlePassword?.(e);
     if (e.target.value === '') {
-      setIsEmpty(true);
+      setIsEmptyInput(true);
       setIsVisible(false);
     } else {
-      setIsEmpty(false);
+      setIsEmptyInput(false);
     }
   }
-  const toggleVisibility = (e) => {
-    isVisible
-      ?setIsVisible(false)
-      :setIsVisible(true);
-  }
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
   return (
     <>
@@ -34,14 +29,18 @@ export const PasswordInput = (props) => {
         {...rest}
       />
       {
-        !isEmpty &&
-        <div onClick={toggleVisibility}>
+        !isEmptyInput &&
+        <button
+          type='button'
+          onClick={toggleVisibility}
+          aria-label='Toggle password visibility'
+        >
           {
             isVisible
             ?<PiEyeClosed title='hide' />
             :<PiEyeBold title='show' />
           }
-        </div>
+        </button>
       }
     </>
   );

@@ -67,10 +67,12 @@
   opacity: 0;
 }
 
-.label div {
+.label button {
   position: absolute;
   top: 43px;
   right: 20px;
+  border: none;
+  background: none;
   font-size: 1.3rem;
   vertical-align: middle;
   cursor: pointer;
