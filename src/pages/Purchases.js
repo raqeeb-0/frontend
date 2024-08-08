@@ -24,11 +24,17 @@ import {
 import {
   useGetSuppliers
 } from '../hooks/suppliers';
+import {
+  useGetExpenses
+} from '../hooks/expenses';
+import { useState, useEffect } from 'react';
 
 
 export const Purchases = () => {
   const {
     purchases,
+    purchasesType,
+    handleChange,
     refreshPurchases,
     isLoading: isFetchingPurchases
   } = useGetPurchases();
@@ -71,6 +77,27 @@ export const Purchases = () => {
                 />
                 :<>
                   <SearchInput resourceName='purchases' />
+                  <p> Purchases Type: { purchasesType } </p>
+                  <label>
+                    Material
+                    <input
+                      type='radio'
+                      name='purchaseType'
+                      value='Material'
+                      checked={purchasesType === 'Material'}
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <label>
+                    Expense
+                    <input
+                      type='radio'
+                      name='purchaseType'
+                      value='Expense'
+                      checked={purchasesType === 'Expense'}
+                      onChange={handleChange}
+                    />
+                  </label>
                   <ResourcesTable
                     resourceName='purchase'
                     resourcePath='/purchases'
@@ -95,6 +122,13 @@ export const PurchaseCreate = () => {
     materials,
     isLoading: isFetchingMaterials
   } = useGetMaterials();
+  const {
+    expenses,
+    isLoading: isFetchingExpenses
+  } = useGetExpenses();
+  const [purchaseType, setPurchaseType] = useState('Material');
+
+  const handleChange = (e) => setPurchaseType(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -117,29 +151,56 @@ export const PurchaseCreate = () => {
               onSubmit={handleSubmit}
               isLoading={isLoading}
             >
-              <SelectInput
-                label='Material'
-                name='materialId'
-                options={materials}
-                disabled={isLoading}
-              />
-              <FormField
-                label='Quantity'
-                type='number'
-                name='quantity'
-                disabled={isLoading}
-              />
+              {
+                purchaseType === 'Material'
+                ?<SelectInput
+                  label='Material'
+                  name='materialId'
+                  options={materials}
+                  disabled={isLoading}
+                />
+                :<SelectInput
+                  label='Expense'
+                  name='expenseId'
+                  options={expenses}
+                  disabled={isLoading}
+                />
+              }
+              {
+                purchaseType === 'Material' &&
+                <FormField
+                  label='Quantity'
+                  type='number'
+                  name='quantity'
+                  disabled={isLoading}
+                />
+              }
               <FormField
                 label='Price'
                 type='number'
                 name='price'
                 disabled={isLoading}
               />
-              <input
-                type='hidden'
-                name='purchaseType'
-                value='Material'
-              />
+              <label>
+                Material
+                <input
+                  type='radio'
+                  name='purchaseType'
+                  value='Material'
+                  checked={purchaseType === 'Material'}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                Expense
+                <input
+                  type='radio'
+                  name='purchaseType'
+                  value='Expense'
+                  checked={purchaseType === 'Expense'}
+                  onChange={handleChange}
+                />
+              </label>
               <SelectInput
                 label='Supplier'
                 name='providerId'

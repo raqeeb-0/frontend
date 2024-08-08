@@ -13,6 +13,7 @@ import {
 export const useGetPurchases = () => {
   const { handleResponse } = useResponseHandler();
   const [purchases, setPurchases] = useState([]);
+  const [purchasesType, setPurchasesType] = useState('Material');
   const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(true);
 
@@ -20,30 +21,52 @@ export const useGetPurchases = () => {
     setRefresh(!refresh);
   }
 
+  const handleChange = (e) => setPurchasesType(e.target.value);
+
   useEffect(() => {
     setIsLoading(true);
     getPurchases()
       .then((response) => {
         const success = () => {
-          const refinedPurchases = response.data.map((purchase) => {
-            return {
-              'id': purchase.id,
-              'ID': purchase.id,
-              'material': purchase.material.name,
-              'quantity': purchase.quantity,
-              'price': purchase.price,
-              'created at': purchase.createdAt.split('T')[0],
-            };
-          });
+          const refinedPurchases = response.data
+            .filter((purchase) => purchase.purchaseType === purchasesType)
+            .map((purchase) => {
+              if (purchasesType === 'Material') {
+                return {
+                  'id': purchase.id,
+                  'ID': purchase.id,
+                  'material': purchase.material.name,
+                  'quantity': purchase.quantity,
+                  'price': purchase.price,
+                  'created at': purchase.createdAt.split('T')[0],
+                };
+              }
+              if (purchasesType === 'Expense') {
+                return {
+                  'id': purchase.id,
+                  'ID': purchase.id,
+                  'expense': purchase.expenses.name,
+                  'price': purchase.price,
+                  'created at': purchase.createdAt.split('T')[0],
+                };
+              }
+
+            });
           setPurchases(refinedPurchases);
         }
         handleResponse(response, success);
         setIsLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, [purchasesType, refresh]);
 
-  return { purchases, isLoading, refreshPurchases };
+  return {
+    purchases,
+    purchasesType,
+    handleChange,
+    isLoading,
+    refreshPurchases
+  };
 }
 
 
