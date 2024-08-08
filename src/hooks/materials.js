@@ -32,7 +32,6 @@ export const useGetMaterials = () => {
               'price/unit': material.priceOfSingleUnit,
               'quantity': material.quantity,
               'category': material.categoryName,
-              'notes': material.notes,
               'created at': material.createdAt.split('T')[0],
             };
           });

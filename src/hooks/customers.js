@@ -29,7 +29,6 @@ export const useGetCustomers = () => {
             return {
               'id': customer.id,
               'name': customer.name,
-              'address': customer.address,
               'phone': customer.phone,
               'account receivable': customer.accountReceivable,
             };

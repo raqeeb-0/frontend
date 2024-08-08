@@ -31,7 +31,6 @@ export const useGetExpenses = () => {
               'name': expense.name,
               'current price': expense.currentPrice,
               'category': expense.categoryName,
-              'notes': expense.notes,
               'created at': expense.createdAt.split('T')[0],
             };
           });

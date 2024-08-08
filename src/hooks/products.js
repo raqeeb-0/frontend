@@ -31,6 +31,7 @@ export const useGetProducts = () => {
               'name': product.name,
               'direct cost': product.costPrice,
               'indirect cost': product.indirectCost,
+              'profit': (product.costPrice + product.indirectCost) * product.percentageProfit / 100,
               'selling price': product.sellingPrice,
               'quantity': product.quantity,
               'category': product.category.name,

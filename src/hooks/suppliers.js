@@ -29,7 +29,6 @@ export const useGetSuppliers = () => {
             return {
               'id': supplier.id,
               'name': supplier.name,
-              'address': supplier.address,
               'phone': supplier.phone,
               'account payable': supplier.accountPayable,
             };
