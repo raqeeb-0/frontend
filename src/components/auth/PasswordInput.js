@@ -1,42 +1,74 @@
+import styles from './styles/PasswordInput.module.css';
 import { PiEyeBold } from 'react-icons/pi';
 import { PiEyeClosed } from 'react-icons/pi';
-import { useState } from 'react';
+import { useRef, useReducer, useEffect } from 'react';
+
+export const passwordReducer = (state, action) => {
+  switch (action.type) {
+    case 'toggle_visibility':
+      return {
+        ...state,
+        isVisible: !state.isVisible,
+      };
+    case 'changed_value':
+      return action.value === ''
+        ? {
+            isVisible: false,
+            isEmptyInput: true,
+          }
+        : {
+            ...state,
+            isEmptyInput: false,
+          };
+  }
+  throw new Error('Unsupported action: ' + action.type);
+}
 
 
 export const PasswordInput = (props) => {
-  const { type: _, handlePassword, ...rest } = props;
-  const [isVisible, setIsVisible] = useState(false);
-  const [isEmptyInput, setIsEmptyInput] = useState(true);
+  const {
+    onPasswordValueChange,
+    reducer = passwordReducer,
+    ...rest
+  } = props;
+  const [state, dispatch] = useReducer(reducer, {
+    isVisible: false,
+    isEmptyInput: true,
+  });
+  const inputRef = useRef(null);
 
   const handleChange = (e) => {
-    handlePassword?.(e);
-    if (e.target.value === '') {
-      setIsEmptyInput(true);
-      setIsVisible(false);
-    } else {
-      setIsEmptyInput(false);
-    }
+    onPasswordValueChange?.(e.target.value);
+    dispatch({
+      type: 'changed_value',
+      value: e.target.value
+    });
   }
 
-  const toggleVisibility = () => setIsVisible(!isVisible);
+  const toggleVisibility = () =>
+    dispatch({ type: 'toggle_visibility' });
+
+  useEffect(() => inputRef.current.focus(), [state.isVisible]);
 
   return (
     <>
       <input
-        type={isVisible? 'text': 'password'}
+        ref={inputRef}
+        type={state.isVisible? 'text': 'password'}
         onChange={handleChange}
-        autoComplete='on'
         {...rest}
       />
       {
-        !isEmptyInput &&
+        !state.isEmptyInput &&
         <button
           type='button'
+          tabIndex='-1'
+          className={styles.toggle}
           onClick={toggleVisibility}
           aria-label='Toggle password visibility'
         >
           {
-            isVisible
+            state.isVisible
             ?<PiEyeClosed title='hide' />
             :<PiEyeBold title='show' />
           }

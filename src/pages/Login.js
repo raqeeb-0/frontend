@@ -1,10 +1,10 @@
-import styles from './styles/form.module.css';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { AuthLayout } from '../layouts';
 import {
   IconBtn,
   FormSep,
+  PasswordInput,
   FormField,
   Button
 } from '../components/auth';
@@ -13,60 +13,77 @@ import { useAuth, useForm } from '../hooks/common';
 
 export const Login = () => {
   const { isLoading, handleLogin } = useAuth();
-  const { register, handleSubmit } = useForm();
+  const { errors, register, handleSubmit } = useForm();
+
+  const style = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '15px',
+    marginBottom: '30px',
+  }
 
   return (
     <AuthLayout>
       <form
         noValidate
         onSubmit={(e) => handleSubmit(e, handleLogin)}
-        className={styles.form}
+        style={style}
       >
         <IconBtn
           icon={<FcGoogle style={{fontSize: '1.5rem'}} />}
           value='Log in with Google'
         />
         <FormSep />
-        <FormField
-          label='Email'
-          type='text'
-          disabled={isLoading}
-          placeholder='JohnDoe@gmail.com'
-          {
-            ...register(
-              'email',
-              {
-                required: true,
-                email: true,
-                length: {
-                  min: 15,
-                  max: 50,
-                },
-              },
-            )
-          }
-        />
-        <FormField
-          label='Password'
-          type='password'
-          disabled={isLoading}
-          placeholder='••••••••'
-          {
-            ...register(
-              'password',
-              {
-                required: true,
-                length: {
-                  min: 8,
-                  max: 50,
-                },
-              }
-            )
-          }
-        />
+        <FormField error={errors.email}>
+          <label htmlFor='email'>Email</label>
+          <input
+            id='email'
+            type='text'
+            autoComplete='on'
+            disabled={isLoading}
+            placeholder='JohnDoe@gmail.com'
+            {
+              ...register(
+                'email',
+                {
+                  required: true,
+                  email: true,
+                  length: {
+                    min: 15,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.password}>
+          <label htmlFor='password'>Password</label>
+          <PasswordInput
+            id='password'
+            disabled={isLoading}
+            placeholder='••••••••'
+            {
+              ...register(
+                'password',
+                {
+                  required: true,
+                  length: {
+                    min: 8,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
         <Link
           to='/auth/forgot-password'
-          className={styles.forgotPasswordLink}
+          style={{
+            alignSelf: 'flex-start',
+            marginLeft: '10px',
+          }}
         >
           Forgot password?
         </Link>

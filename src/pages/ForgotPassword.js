@@ -1,4 +1,3 @@
-import styles from './styles/ForgotPassword.module.css';
 import { AuthLayout } from '../layouts';
 import {
   FormField,
@@ -10,37 +9,51 @@ import { useAuth, useForm } from '../hooks/common';
 export const ForgotPassword = () => {
   const { isLoading, handleForgotPassword } = useAuth();
   const { errors, register, handleSubmit } = useForm();
+  const formStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '15px',
+    border: '1px solid var(--primary-clr)',
+    borderRadius: '32px',
+    width: '340px',
+    padding: '40px 20px 50px 20px',
+  }
 
   return (
     <AuthLayout>
       <form
         noValidate
         onSubmit={(e) => handleSubmit(e, handleForgotPassword)}
-        className={styles.form}
+        style={formStyle}
       >
-        <p>
+        <p style={{ marginBottom: '15px' }}>
           Enter the email associated with
           your account to change your password.
         </p>
-        <FormField
-          label='Email'
-          type='text'
-          disabled={isLoading}
-          placeholder='JohnDoe@gmail.com'
-          {
-            ...register(
-              'email',
-              {
-                required: true,
-                email: true,
-                length: {
-                  min: 15,
-                  max: 50,
-                },
-              }
-            )
-          }
-        />
+        <FormField error={errors.email}>
+          <label htmlFor='email'>Email</label>
+          <input
+            id='email'
+            type='text'
+            autoComplete='on'
+            disabled={isLoading}
+            placeholder='JohnDoe@gmail.com'
+            {
+              ...register(
+                'email',
+                {
+                  required: true,
+                  email: true,
+                  length: {
+                    min: 15,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
         <Button
           type='submit'
           value='Next'

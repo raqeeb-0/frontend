@@ -1,4 +1,3 @@
-import styles from './styles/public.module.css';
 import {
   FirstHero,
   Features,
@@ -13,8 +12,14 @@ import {
 
 
 export const Public = () => {
+
+  const style={
+    overflow: 'auto',
+    height: '100vh',
+  }
+
   return (
-    <div className={styles.all}>
+    <div style={style}>
       <TopNav />
       <FirstHero />
       <Features />

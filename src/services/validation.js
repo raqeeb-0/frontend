@@ -36,7 +36,7 @@ const length = (text, options) => {
 const phoneNumber = (number, options) => {
   const defaultMessage = 'Invalid phone number';
   const { message = defaultMessage } = options;
-  const phoneNumberRegex = /^01\d{9}$/;
+  const phoneNumberRegex = /^(\+?\d{1,3}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
 
   return !phoneNumberRegex.test(number) ? message : undefined;
 }

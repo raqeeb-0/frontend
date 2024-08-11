@@ -18,7 +18,7 @@
   background-color: var(--primary-dark-clr);
 }
 
-.btn:focus {
+.btn:active {
   box-shadow: initial;
-  transform: translateY(2px);
+  transform: scale(0.98, 0.98) translateY(1px);
 }

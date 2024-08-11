@@ -124,7 +124,6 @@ export const useForm = () => {
 
   const register = (name, validationRules) => ({
     name,
-    error: errors[name],
     'data-validation': JSON.stringify(validationRules),
     ...(validationRules.required && { required: true }),
     onFocus: () => setErrors(prevErrors => {
@@ -146,5 +145,5 @@ export const useForm = () => {
     }
   }
 
-  return { register, handleSubmit };
+  return { errors, register, handleSubmit };
 }
