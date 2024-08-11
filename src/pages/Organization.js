@@ -1,44 +1,70 @@
 import { DashboardLayout } from '../layouts';
 import { PageHeader, Loader } from '../components/common';
 import {
-  FormField,
   Form
 } from '../components/app';
+import {
+  FormField
+} from '../components/common';
 import {
   useUpdateOrg,
   useCreateOrg,
   useGetOrg
 } from '../hooks/orgs';
+import { useForm } from '../hooks/common';
 
 
 export const OrganizationCreate = () => {
   const { isLoading, handleCreate } = useCreateOrg();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleCreate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
     
   return (
     <DashboardLayout isEmptyList={true}>
       <PageHeader value='New Organization' />
       <Form
         legend='Organization Details'
-        onSubmit={handleSubmit}
+        onSubmit={(e) => handleSubmit(e, handleCreate)}
         isLoading={isLoading}
       >
-        <FormField
-          label='Name'
-          type='text'
-          name='orgName'
-        />
-        <FormField
-          label='Phone number'
-          type='text'
-          name='phoneNumber'
-        />
+        <FormField error={errors.orgName}>
+          <label htmlFor='orgName'>Name</label>
+          <input
+            id='orgName'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isLoading}
+            {
+              ...register(
+                'orgName',
+                {
+                  required: true,
+                  length: {
+                    min: 3,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.phoneNumber}>
+          <label htmlFor='phoneNumber'>Phone number</label>
+          <input
+            id='phoneNumber'
+            type='tel'
+            disabled={isLoading}
+            {
+              ...register(
+                'phoneNumber',
+                {
+                  required: true,
+                  phoneNumber: true,
+                }
+              )
+            }
+          />
+        </FormField>
       </Form>
     </DashboardLayout>
   );
@@ -47,13 +73,7 @@ export const OrganizationCreate = () => {
 export const OrganizationUpdate = () => {
   const { isLoading: isFetchingOrg, org } = useGetOrg();
   const { isLoading, handleUpdate } = useUpdateOrg();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleUpdate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
     
   return (
     <DashboardLayout isEmptyList={true}>
@@ -64,21 +84,50 @@ export const OrganizationUpdate = () => {
             <PageHeader value='Update Organization' />
             <Form
               legend='Organization Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleUpdate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='orgName'
-                value={org.name}
-              />
-              <FormField
-                label='Phone number'
-                type='text'
-                name='phoneNumber'
-                value={org.phoneNumber}
-              />
+              <FormField error={errors.orgName}>
+                <label htmlFor='orgName'>Name</label>
+                <input
+                  id='orgName'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  disabled={isLoading}
+                  defaultValue={org.name}
+                  {
+                    ...register(
+                      'orgName',
+                      {
+                        required: true,
+                        length: {
+                          min: 3,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.phoneNumber}>
+                <label htmlFor='phoneNumber'>Phone number</label>
+                <input
+                  id='phoneNumber'
+                  type='tel'
+                  disabled={isLoading}
+                  defaultValue={org.phoneNumber}
+                  {
+                    ...register(
+                      'phoneNumber',
+                      {
+                        required: true,
+                        phoneNumber: true,
+                      }
+                    )
+                  }
+                />
+              </FormField>
             </Form>
           </>
       }

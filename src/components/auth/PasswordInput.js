@@ -36,6 +36,7 @@ export const PasswordInput = (props) => {
     isEmptyInput: true,
   });
   const inputRef = useRef(null);
+  const isFirstRender = useRef(true);
 
   const handleChange = (e) => {
     onPasswordValueChange?.(e.target.value);
@@ -48,7 +49,14 @@ export const PasswordInput = (props) => {
   const toggleVisibility = () =>
     dispatch({ type: 'toggle_visibility' });
 
-  useEffect(() => inputRef.current.focus(), [state.isVisible]);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    inputRef.current.focus();
+  }, [state.isVisible]);
 
   return (
     <>

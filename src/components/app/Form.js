@@ -6,7 +6,7 @@ export const Form = (props) => {
   const { children, onSubmit, legend, isLoading } = props;
 
   return (
-    <form onSubmit={onSubmit} className={styles.form}>
+    <form noValidate onSubmit={onSubmit} className={styles.form}>
       <legend className={styles.legend}>
         { legend }
       </legend>

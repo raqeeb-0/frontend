@@ -2,9 +2,11 @@ import { useParams } from 'react-router-dom';
 import { AuthLayout } from '../layouts';
 import {
   PasswordInput,
-  FormField,
   Button
 } from '../components/auth';
+import {
+  FormField
+} from '../components/common';
 import { useAuth, useForm } from '../hooks/common';
 import { useState } from 'react';
 
@@ -22,7 +24,6 @@ export const ResetPassword = () => {
   const formStyle = {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     gap: '15px',
     border: '1px solid var(--primary-clr)',
     borderRadius: '32px',

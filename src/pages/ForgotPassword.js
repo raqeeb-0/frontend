@@ -1,8 +1,10 @@
 import { AuthLayout } from '../layouts';
 import {
-  FormField,
   Button
 } from '../components/auth';
+import {
+  FormField
+} from '../components/common';
 import { useAuth, useForm } from '../hooks/common';
 
 
@@ -12,7 +14,6 @@ export const ForgotPassword = () => {
   const formStyle = {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     gap: '15px',
     border: '1px solid var(--primary-clr)',
     borderRadius: '32px',
@@ -36,6 +37,7 @@ export const ForgotPassword = () => {
           <input
             id='email'
             type='text'
+            autoFocus='on'
             autoComplete='on'
             disabled={isLoading}
             placeholder='JohnDoe@gmail.com'

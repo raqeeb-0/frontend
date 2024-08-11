@@ -5,9 +5,11 @@ import {
   IconBtn,
   FormSep,
   PasswordInput,
-  FormField,
   Button
 } from '../components/auth';
+import {
+  FormField
+} from '../components/common';
 import { useAuth, useForm } from '../hooks/common';
 
 
@@ -18,8 +20,8 @@ export const Login = () => {
   const style = {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     gap: '15px',
+    width: '300px',
     marginBottom: '30px',
   }
 
@@ -40,6 +42,7 @@ export const Login = () => {
           <input
             id='email'
             type='text'
+            autoFocus='on'
             autoComplete='on'
             disabled={isLoading}
             placeholder='JohnDoe@gmail.com'

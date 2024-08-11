@@ -5,6 +5,7 @@ export { ActionsMenu } from './ActionsMenu';
 export { PageHeader } from './PageHeader';
 export { IconLink } from './IconLink';
 export { Separator } from './Separator';
+export { FormField } from './FormField';
 export { Logo } from './Logo';
 export { UserMenu } from './UserMenu'
 export { Notification } from './Notification';

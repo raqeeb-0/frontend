@@ -5,9 +5,11 @@ import {
   IconBtn,
   FormSep,
   PasswordInput,
-  FormField,
   Button
 } from '../components/auth';
+import {
+  FormField
+} from '../components/common';
 import { useAuth, useForm } from '../hooks/common';
 import { useState } from 'react';
 
@@ -22,8 +24,8 @@ export const Signup = () => {
   const style = {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     gap: '15px',
+    width: '300px',
     marginBottom: '30px',
   }
 
@@ -45,6 +47,7 @@ export const Signup = () => {
           <input
             id='email'
             type='text'
+            autoFocus='on'
             autoComplete='on'
             disabled={isLoading}
             placeholder='JohnDoe@gmail.com'
