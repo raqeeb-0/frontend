@@ -4,8 +4,10 @@
 }
 
 .group label {
+  display: block;
+  width: fit-content;
   margin-left: 7px;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   font-size: 1.1rem;
   transition: color 0.2s ease;
 }
@@ -14,18 +16,20 @@
   color: var(--primary-clr);
 }
 
-.group:has(label:hover) input {
+.group:has(label:hover) input,
+.group:has(label:hover) select {
   border-color: var(--primary-clr);
 }
 
 .group:has(input:hover) label,
-.group:has(input:focus) label {
+.group:has(input:focus) label,
+.group:has(select:hover) label,
+.group:has(select:focus) label {
   color: var(--primary-clr);
 }
 
-.group input {
+.group input, .group select {
   position: relative;
-  display: block;
   background-color: var(--contrast-background-clr);
   outline: 1px solid transparent;
   border: 1px solid var(--font-clr);
@@ -38,17 +42,17 @@
   transition: all 0.2s ease;
 }
 
-.group input:hover {
+.group input:hover, .group select:hover {
   border-color: var(--primary-clr);
 }
 
-.group input:focus {
+.group input:focus, .group select:focus {
   background-color: var(--background-clr);
   border-color: var(--primary-clr);
   outline-color: var(--primary-clr);
 }
 
-.group input:disabled {
+.group input:disabled, .group select:disabled {
   color: var(--font-dimmed-clr);
 }
 

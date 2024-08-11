@@ -1,7 +1,6 @@
 import {
   Form,
   Header,
-  FormField,
   SelectInput,
   SearchInput,
   ResourcesTable,
@@ -9,6 +8,7 @@ import {
 } from '../components/app';
 import {
   Loader,
+  FormField,
   PageHeader
 } from '../components/common';
 import {
@@ -21,6 +21,7 @@ import {
 import {
   useGetMaterialsCategories
 } from '../hooks/materialsCategories';
+import { useForm } from '../hooks/common';
 
 
 export const Materials = () => {
@@ -88,13 +89,7 @@ export const MaterialCreate = () => {
     categories,
     isLoading: isFetchingCategories
   } = useGetMaterialsCategories();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleCreate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
 
   return (
     <section>
@@ -105,21 +100,80 @@ export const MaterialCreate = () => {
             <PageHeader value='New Material' />
             <Form
               legend='Material Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleCreate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='name'
-                disabled={isLoading}
-              />
-              <SelectInput
-                label='Category'
-                name='categoryId'
-                options={categories}
-                disabled={isLoading}
-              />
+              <FormField error={errors.name}>
+                <label htmlFor='materialName'>Name</label>
+                <input
+                  id='materialName'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'name',
+                      {
+                        required: true,
+                        length: {
+                          min: 2,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.price}>
+                <label htmlFor='price'>Price/Unit</label>
+                <input
+                  id='price'
+                  type='number'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'price',
+                      {
+                        required: true,
+                        length: {
+                          min: 1,
+                          max: 15,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.categoryId}>
+                <label htmlFor='categoryId'>Category</label>
+                <select
+                  id='categoryId'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'categoryId',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>--Please choose an option--</option>
+                  {
+                    categories.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option.id? option.id: option}
+                        >
+                          { option.name? option.name: option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
             </Form>
           </>
       }
@@ -137,13 +191,7 @@ export const MaterialUpdate = () => {
     isLoading: isFetchingCategories
   } = useGetMaterialsCategories();
   const { isLoading, handleUpdate } = useUpdateMaterial();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleUpdate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
     
   return (
     <section>
@@ -154,23 +202,62 @@ export const MaterialUpdate = () => {
             <PageHeader value='Update Material' />
             <Form
               legend='Material Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleUpdate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='name'
-                value={material.name}
-                disabled={isLoading}
-              />
-              <SelectInput
-                label='Category'
-                name='categoryId'
-                value={material.categoryId}
-                options={categories}
-                disabled={isLoading}
-              />
+              <FormField error={errors.name}>
+                <label htmlFor='materialName'>Name</label>
+                <input
+                  id='materialName'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  defaultValue={material.name}
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'name',
+                      {
+                        required: true,
+                        length: {
+                          min: 2,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.categoryId}>
+                <label htmlFor='categoryId'>Category</label>
+                <select
+                  id='categoryId'
+                  disabled={isLoading}
+                  defaultValue={material.categoryId}
+                  {
+                    ...register(
+                      'categoryId',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>--Please choose an option--</option>
+                  {
+                    categories.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option.id? option.id: option}
+                        >
+                          { option.name? option.name: option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
             </Form>
           </>
       }

@@ -12,16 +12,32 @@ export const getMaterial = (materialId) =>
 
 
 export const createMaterial = (payload) => {
-  const { name, categoryId } = payload;
+  const { name, price, categoryId } = payload;
+  const parsedPrice = parseFloat(price);
 
-  return api.post(resource, { name, categoryId });
+  return api.post(
+    resource,
+    {
+      name,
+      categoryId,
+      priceOfSingleUnit: parsedPrice
+    }
+  );
 }
 
 
 export const updateMaterial = (materialId, payload) => {
-  const { name, categoryId } = payload;
+  const { name, price, categoryId } = payload;
+  const parsedPrice = parseFloat(price);
 
-  return api.patch(`${resource}/${materialId}`, { name, categoryId });
+  return api.patch(
+    `${resource}/${materialId}`,
+    {
+      name,
+      categoryId,
+      priceOfSingleUnit: parsedPrice
+    }
+  );
 }
 
 

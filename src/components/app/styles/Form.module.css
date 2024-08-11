@@ -37,11 +37,14 @@
   border: none;
   outline: none;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.button:hover, .button:focus, .button:disabled {
+.button:hover, .button:disabled {
   background-color: var(--primary-dark-clr);
+}
+
+.button:active {
+  box-shadow: initial;
+  transform: scale(0.98, 0.98) translateY(1px);
 }

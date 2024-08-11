@@ -11,25 +11,20 @@ export const SelectInput = (props) => {
   } = props;
 
   return (
-    <label className={styles.label}>
-      <span>
-        { label }
-      </span>
-      <select name={name} defaultValue={value} disabled={disabled}>
-        <option value=''>--Please choose an option--</option>
-        {
-          options.map((option, index) => {
-            return (
-              <option
-                key={index}
-                value={option.id? option.id: option}
-              >
-                { option.name? option.name: option }
-              </option>
-            );
-          })
-        }
-      </select>
-    </label>
+    <select name={name} defaultValue={value} disabled={disabled}>
+      <option value=''>--Please choose an option--</option>
+      {
+        options.map((option, index) => {
+          return (
+            <option
+              key={index}
+              value={option.id? option.id: option}
+            >
+              { option.name? option.name: option }
+            </option>
+          );
+        })
+      }
+    </select>
   );
 }
