@@ -1,13 +1,13 @@
 import {
   Form,
   Header,
-  FormField,
   SearchInput,
   ResourcesTable,
   EmptyListPlaceholder
 } from '../components/app';
 import {
   Loader,
+  FormField,
   PageHeader
 } from '../components/common';
 import {
@@ -17,6 +17,7 @@ import {
   useGetExpensesCategory,
   useGetExpensesCategories
 } from '../hooks/expensesCategories';
+import { useForm } from '../hooks/common';
 
 
 export const ExpensesCategories = () => {
@@ -81,28 +82,38 @@ export const ExpensesCategories = () => {
 
 export const ExpensesCategoryCreate = () => {
   const { isLoading, handleCreate } = useCreateExpensesCategory();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleCreate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
 
   return (
     <section>
       <PageHeader value='New Expense Category' />
       <Form
         legend='Category Details'
-        onSubmit={handleSubmit}
+        onSubmit={(e) => handleSubmit(e, handleCreate)}
         isLoading={isLoading}
       >
-        <FormField
-          label='Name'
-          type='text'
-          name='name'
-          disabled={isLoading}
-        />
+        <FormField error={errors.name}>
+          <label htmlFor='name'>Name</label>
+          <input
+            id='name'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isLoading}
+            {
+              ...register(
+                'name',
+                {
+                  required: true,
+                  length: {
+                    min: 2,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
       </Form>
     </section>
   );
@@ -110,15 +121,12 @@ export const ExpensesCategoryCreate = () => {
 
 
 export const ExpensesCategoryUpdate = () => {
-  const { isLoading: isFetchingCategory, category } = useGetExpensesCategory();
   const { isLoading, handleUpdate } = useUpdateExpensesCategory();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleUpdate(payload);
-  }
+  const {
+    category,
+    isLoading: isFetchingCategory
+  } = useGetExpensesCategory();
+  const { errors, register, handleSubmit } = useForm();
     
   return (
     <section>
@@ -129,16 +137,32 @@ export const ExpensesCategoryUpdate = () => {
             <PageHeader value='Update Expenses Category' />
             <Form
               legend='Category Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleUpdate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='name'
-                disabled={isLoading}
-                value={category.name}
-              />
+              <FormField error={errors.name}>
+                <label htmlFor='name'>Name</label>
+                <input
+                  id='name'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  disabled={isLoading}
+                  defaultValue={category.name}
+                  {
+                    ...register(
+                      'name',
+                      {
+                        required: true,
+                        length: {
+                          min: 2,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
             </Form>
           </>
       }

@@ -1,13 +1,13 @@
 import {
   Form,
   Header,
-  FormField,
   SearchInput,
   ResourcesTable,
   EmptyListPlaceholder
 } from '../components/app';
 import {
   Loader,
+  FormField,
   PageHeader
 } from '../components/common';
 import {
@@ -17,6 +17,7 @@ import {
   useGetProductsCategory,
   useGetProductsCategories
 } from '../hooks/productsCategories';
+import { useForm } from '../hooks/common';
 
 
 export const ProductsCategories = () => {
@@ -81,28 +82,38 @@ export const ProductsCategories = () => {
 
 export const ProductsCategoryCreate = () => {
   const { isLoading, handleCreate } = useCreateProductsCategory();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleCreate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
 
   return (
     <section>
       <PageHeader value='New Product Category' />
       <Form
         legend='Category Details'
-        onSubmit={handleSubmit}
+        onSubmit={(e) => handleSubmit(e, handleCreate)}
         isLoading={isLoading}
       >
-        <FormField
-          label='Name'
-          type='text'
-          name='name'
-          disabled={isLoading}
-        />
+        <FormField error={errors.name}>
+          <label htmlFor='name'>Name</label>
+          <input
+            id='name'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isLoading}
+            {
+              ...register(
+                'name',
+                {
+                  required: true,
+                  length: {
+                    min: 2,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
       </Form>
     </section>
   );
@@ -110,16 +121,13 @@ export const ProductsCategoryCreate = () => {
 
 
 export const ProductsCategoryUpdate = () => {
-  const { isLoading: isFetchingCategory, category } = useGetProductsCategory();
   const { isLoading, handleUpdate } = useUpdateProductsCategory();
+  const {
+    category,
+    isLoading: isFetchingCategory
+  } = useGetProductsCategory();
+  const { errors, register, handleSubmit } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleUpdate(payload);
-  }
-    
   return (
     <section>
       {
@@ -129,16 +137,32 @@ export const ProductsCategoryUpdate = () => {
             <PageHeader value='Update Products Category' />
             <Form
               legend='Category Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleUpdate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='name'
-                disabled={isLoading}
-                value={category.name}
-              />
+              <FormField error={errors.name}>
+                <label htmlFor='name'>Name</label>
+                <input
+                  id='name'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  disabled={isLoading}
+                  defaultValue={category.name}
+                  {
+                    ...register(
+                      'name',
+                      {
+                        required: true,
+                        length: {
+                          min: 2,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
             </Form>
           </>
       }
