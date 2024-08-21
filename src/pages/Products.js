@@ -1,7 +1,6 @@
 import {
   Form,
   Header,
-  FormField,
   SelectInput,
   SearchInput,
   ResourcesTable,
@@ -10,6 +9,7 @@ import {
 } from '../components/app';
 import {
   Loader,
+  FormField,
   PageHeader
 } from '../components/common';
 import {
@@ -25,6 +25,7 @@ import {
 import {
   useGetMaterials
 } from '../hooks/materials';
+import { useForm } from '../hooks/common';
 import { useState } from 'react';
 
 
@@ -97,28 +98,7 @@ export const ProductCreate = () => {
     materials,
     isLoading: isFetchingMaterials
   } = useGetMaterials();
-  const [materialInfo, setMaterialInfo] = useState([]);
-
-  const handleChange = (event, index) => {
-    const newMaterialInfo = [...materialInfo];
-    newMaterialInfo[index] = {
-      materialId: event.currentTarget.getAttribute('data-id'),
-      materialCount: parseInt(event.target.value),
-    }
-    setMaterialInfo(newMaterialInfo);
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    payload['materialInfo'] = materialInfo;
-    payload.percentageOfIndirectCoast = parseFloat(
-      payload.percentageOfIndirectCoast
-    );
-    payload.percentageOfProfit = parseFloat(payload.percentageOfProfit);
-    handleCreate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
 
   return (
     <section>
@@ -129,38 +109,116 @@ export const ProductCreate = () => {
             <PageHeader value='New Product' />
             <Form
               legend='Product Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleCreate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='name'
-                disabled={isLoading}
-              />
-              <FormField
-                label='Indirect Cost (%)'
-                type='number'
-                name='percentageOfIndirectCoast'
-                disabled={isLoading}
-              />
-              <FormField
-                label='Profit (%)'
-                type='number'
-                name='percentageOfProfit'
-                disabled={isLoading}
-              />
-              <SelectInput
-                label='Category'
-                name='categoryId'
-                options={categories}
-                disabled={isLoading}
-              />
+              <FormField error={errors.name}>
+                <label htmlFor='name'>Name</label>
+                <input
+                  id='name'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'name',
+                      {
+                        required: true,
+                        length: {
+                          min: 2,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.indirectCostPercent}>
+                <label htmlFor='indirectCostPercent'>Indirect Cost (%)</label>
+                <input
+                  id='indirectCostPercent'
+                  type='number'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'indirectCostPercent',
+                      {
+                        required: true,
+                        length: {
+                          min: 1,
+                          max: 15,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.profitPercent}>
+                <label htmlFor='profitPercent'>Profit (%)</label>
+                <input
+                  id='profitPercent'
+                  type='number'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'profitPercent',
+                      {
+                        required: true,
+                        length: {
+                          min: 1,
+                          max: 15,
+                        }
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.category}>
+                <label htmlFor='category'>Category</label>
+                <select
+                  id='category'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'category',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>
+                    --Please choose a product category--
+                  </option>
+                  {
+                    categories.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option.id? option.id: option}
+                        >
+                          { option.name? option.name: option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
               <SelectMultiple
                 label='Materials'
+                id='materials'
                 options={materials}
-                handleChange={handleChange}
+                registerObj={
+                  register(
+                    'materialsList',
+                    {
+                      required: true,
+                    }
+                  )
+                }
               />
+              <span>{errors.materialsList}</span>
             </Form>
           </>
       }
@@ -182,82 +240,161 @@ export const ProductUpdate = () => {
     isLoading: isFetchingMaterials
   } = useGetMaterials();
   const { isLoading, handleUpdate } = useUpdateProduct();
-  const [materialInfo, setMaterialInfo] = useState([]);
+  const { errors, register, handleSubmit } = useForm();
+  // const [materialInfo, setMaterialInfo] = useState([]);
 
-  const handleChange = (event, index) => {
-    const newMaterialInfo = [...materialInfo];
-    newMaterialInfo[index] = {
-      materialId: event.currentTarget.getAttribute('data-id'),
-      materialCount: parseInt(event.target.value),
-    }
-    setMaterialInfo(newMaterialInfo);
-  }
+  // const handleChange = (event, index) => {
+  //   const newMaterialInfo = [...materialInfo];
+  //   newMaterialInfo[index] = {
+  //     materialId: event.currentTarget.getAttribute('data-id'),
+  //     materialCount: parseInt(event.target.value),
+  //   }
+  //   setMaterialInfo(newMaterialInfo);
+  // }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    payload['materialInfo'] = materialInfo;
-    payload.price = parseInt(payload.price);
-    payload.percentageOfIndirectCoast = parseInt(
-      payload.percentageOfIndirectCoast
-    );
-    payload.percentageOfProfit = parseInt(payload.percentageOfProfit);
-    handleUpdate(payload);
-  }
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData(e.currentTarget);
+  //   const payload = Object.fromEntries(formData);
+  //   payload['materialInfo'] = materialInfo;
+  //   payload.price = parseInt(payload.price);
+  //   payload.percentageOfIndirectCoast = parseInt(
+  //     payload.percentageOfIndirectCoast
+  //   );
+  //   payload.percentageOfProfit = parseInt(payload.percentageOfProfit);
+  //   handleUpdate(payload);
+  // }
 
   return (
     <section>
       {
-        isFetchingProduct || isFetchingCategories
+        isFetchingProduct || isFetchingCategories || isFetchingMaterials
           ?<Loader />
           :<>
             <PageHeader value='Update Product' />
             <Form
               legend='Product Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleUpdate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='name'
-                value={product.name}
-                disabled={isLoading}
-              />
-              <FormField
-                label='Price'
-                type='number'
-                name='price'
-                value={product.price}
-                disabled={isLoading}
-              />
-              <FormField
-                label='Indirect Cost (%)'
-                type='number'
-                name='percentageOfIndirectCoast'
-                value={product.percentageIndirectCost}
-                disabled={isLoading}
-              />
-              <FormField
-                label='Profit (%)'
-                type='number'
-                name='percentageOfProfit'
-                value={product.percentageProfit}
-                disabled={isLoading}
-              />
-              <SelectInput
-                label='Category'
-                name='categoryId'
-                value={product.categoryId}
-                options={categories}
-                disabled={isLoading}
-              />
+              <FormField error={errors.name}>
+                <label htmlFor='name'>Name</label>
+                <input
+                  id='name'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  disabled={isLoading}
+                  defaultValue={product.name}
+                  {
+                    ...register(
+                      'name',
+                      {
+                        required: true,
+                        length: {
+                          min: 2,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.indirectCostPercent}>
+                <label htmlFor='indirectCostPercent'>Indirect Cost (%)</label>
+                <input
+                  id='indirectCostPercent'
+                  type='number'
+                  disabled={isLoading}
+                  defaultValue={product.percentageIndirectCost}
+                  {
+                    ...register(
+                      'indirectCostPercent',
+                      {
+                        required: true,
+                        length: {
+                          min: 1,
+                          max: 15,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.profitPercent}>
+                <label htmlFor='profitPercent'>Profit (%)</label>
+                <input
+                  id='profitPercent'
+                  type='number'
+                  disabled={isLoading}
+                  defaultValue={product.percentageProfit}
+                  {
+                    ...register(
+                      'profitPercent',
+                      {
+                        required: true,
+                        length: {
+                          min: 1,
+                          max: 15,
+                        }
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.category}>
+                <label htmlFor='category'>Category</label>
+                <select
+                  id='category'
+                  disabled={isLoading}
+                  defaultValue={product.categoryId}
+                  {
+                    ...register(
+                      'category',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>
+                    --Please choose a product category--
+                  </option>
+                  {
+                    categories.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option.id? option.id: option}
+                        >
+                          { option.name? option.name: option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
               <SelectMultiple
                 label='Materials'
+                id='materials'
                 options={materials}
-                handleChange={handleChange}
+                defaultValue={
+                  product.billOfMaterials?.map(item => ({
+                    id: item.material.id,
+                    name: item.material.name,
+                    count: item.materialCount
+                  }))
+                }
+                registerObj={
+                  register(
+                    'materialsList',
+                    {
+                      required: true,
+                    }
+                  )
+                }
               />
+              <span>{errors.materialsList}</span>
             </Form>
           </>
       }

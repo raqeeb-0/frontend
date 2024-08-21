@@ -1,20 +1,32 @@
-.container {
+.group {
   position: relative;
+  margin: 0 10px;
 }
 
-.label > span {
+.group .label {
+  cursor: default;
   display:block;
+  width: fit-content;
   margin-left: 7px;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   font-size: 1.1rem;
   transition: color 0.2s ease;
 }
 
-.label:has(.input:hover) > span, .label:has(.input:focus) > span {
+.group .label:hover {
   color: var(--primary-clr);
 }
 
-.input {
+.group:has(.label:hover) .inputList {
+  border-color: var(--primary-clr);
+}
+
+.group:has(.inputList:hover) .label,
+.group:has(.inputList:focus) .label {
+  color: var(--primary-clr);
+}
+
+.inputList {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -22,48 +34,69 @@
   outline: 1px solid transparent;
   border: 1px solid var(--font-clr);
   border-radius: 8px;
-  min-height: 42px;
+  min-height: 50px;
   padding: 15px 20px;
   transition: all 0.2s ease;
 }
 
-.input > div {
-  margin-right: 25px;
-}
-
-.input:hover {
+.inputList:hover {
   border-color: var(--primary-clr);
 }
 
-.input:focus {
+.inputList:focus {
   background-color: var(--background-clr);
   border-color: var(--primary-clr);
   outline-color: var(--primary-clr);
 }
 
-.numInput {
-  appearance: none;
-  display: inline-block;
-  border-radius: 4px;
-  border: none;
-  outline: 2px solid var(--font-clr);
-  width: 30px;
-  padding: 3px 5px;
-  margin-right: 5px;
-  cursor: text;
+.inputList li {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding-left: 2px;
+  margin-right: 25px;
+  text-wrap: nowrap;
+  overflow: hidden;
 }
 
-.numInput::-webkit-outer-spin-button,
-.numInput::-webkit-inner-spin-button {
+.inputList svg {
+  border-radius: 50px;
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.inputList svg:hover {
+  background-color: var(--primary-light-clr);
+}
+
+.inputList .numInput {
+  appearance: none;
+  border-radius: 4px;
+  border: 1px solid var(--font-clr);
+  outline: 1px solid transparent;
+  padding: 3px 5px;
+  margin-right: 5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: border 0.2s ease, outline 0.2s ease;
+}
+
+.inputList .numInput::-webkit-outer-spin-button,
+.inputList .numInput::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-.numInput:focus {
+.inputList .numInput:focus {
+  border-color: transparent;
   outline-color: var(--primary-clr);
 }
 
-.numInput + span {
+.inputList .label {
   cursor: pointer;
 }
 
@@ -83,10 +116,11 @@
 .list li {
   padding: 10px 25px;
   cursor: pointer;
+  user-select: none;
   transition: background-color 0.2s ease;
 }
 
-.list li:hover {
+.list li:hover, .list li:focus {
   background-color: var(--primary-light-clr);
 }
 

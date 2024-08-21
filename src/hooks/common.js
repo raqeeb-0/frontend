@@ -127,8 +127,9 @@ export const useForm = () => {
     'data-validation': JSON.stringify(validationRules),
     ...(validationRules.required && { required: true }),
     onFocus: () => setErrors(prevErrors => {
-      const { [name]: _, ...newErrors } = prevErrors;
-      return newErrors;
+      const { [name]: error, ...newErrors } = prevErrors;
+
+      return error ? newErrors : prevErrors;
     }),
   })
 
@@ -137,6 +138,7 @@ export const useForm = () => {
     const errorsObj = handleErrors(e.currentTarget);
 
     if (Object.keys(errorsObj).length === 0) {
+      setErrors({});
       const formData = new FormData(e.currentTarget);
       const payload = Object.fromEntries(formData);
       service(payload);
