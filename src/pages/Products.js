@@ -1,7 +1,6 @@
 import {
   Form,
   Header,
-  SelectInput,
   SearchInput,
   ResourcesTable,
   SelectMultiple,
@@ -241,29 +240,6 @@ export const ProductUpdate = () => {
   } = useGetMaterials();
   const { isLoading, handleUpdate } = useUpdateProduct();
   const { errors, register, handleSubmit } = useForm();
-  // const [materialInfo, setMaterialInfo] = useState([]);
-
-  // const handleChange = (event, index) => {
-  //   const newMaterialInfo = [...materialInfo];
-  //   newMaterialInfo[index] = {
-  //     materialId: event.currentTarget.getAttribute('data-id'),
-  //     materialCount: parseInt(event.target.value),
-  //   }
-  //   setMaterialInfo(newMaterialInfo);
-  // }
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const formData = new FormData(e.currentTarget);
-  //   const payload = Object.fromEntries(formData);
-  //   payload['materialInfo'] = materialInfo;
-  //   payload.price = parseInt(payload.price);
-  //   payload.percentageOfIndirectCoast = parseInt(
-  //     payload.percentageOfIndirectCoast
-  //   );
-  //   payload.percentageOfProfit = parseInt(payload.percentageOfProfit);
-  //   handleUpdate(payload);
-  // }
 
   return (
     <section>

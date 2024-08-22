@@ -1,7 +1,6 @@
 import {
   Form,
   Header,
-  SelectInput,
   SearchInput,
   ResourcesTable,
   EmptyListPlaceholder

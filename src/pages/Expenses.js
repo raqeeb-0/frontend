@@ -1,14 +1,13 @@
 import {
   Header,
   Form,
-  FormField,
-  SelectInput,
   SearchInput,
   ResourcesTable,
   EmptyListPlaceholder
 } from '../components/app';
 import {
   Loader,
+  FormField,
   PageHeader
 } from '../components/common';
 import {
@@ -21,6 +20,7 @@ import {
 import {
   useGetExpensesCategories
 } from '../hooks/expensesCategories';
+import { useForm } from '../hooks/common';
 
 
 export const Expenses = () => {
@@ -88,13 +88,7 @@ export const ExpenseCreate = () => {
     categories,
     isLoading: isFetchingCategories
   } = useGetExpensesCategories();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleCreate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
 
   return (
     <section>
@@ -105,21 +99,60 @@ export const ExpenseCreate = () => {
             <PageHeader value='New Expense' />
             <Form
               legend='Expense Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleCreate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='name'
-                disabled={isLoading}
-              />
-              <SelectInput
-                label='Category'
-                name='categoryId'
-                options={categories}
-                disabled={isLoading}
-              />
+              <FormField error={errors.name}>
+                <label htmlFor='name'>Name</label>
+                <input
+                  id='name'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'name',
+                      {
+                        required: true,
+                        length: {
+                          min: 2,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.categoryId}>
+                <label htmlFor='categoryId'>Category</label>
+                <select
+                  id='categoryId'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'categoryId',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>--Please choose an option--</option>
+                  {
+                    categories.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option.id? option.id: option}
+                        >
+                          { option.name? option.name: option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
             </Form>
           </>
       }
@@ -137,13 +170,7 @@ export const ExpenseUpdate = () => {
     isLoading: isFetchingCategories
   } = useGetExpensesCategories();
   const { isLoading, handleUpdate } = useUpdateExpense();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleUpdate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
     
   return (
     <section>
@@ -154,23 +181,62 @@ export const ExpenseUpdate = () => {
             <PageHeader value='Update Expense' />
             <Form
               legend='Expense Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleUpdate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='name'
-                value={expense.name}
-                disabled={isLoading}
-              />
-              <SelectInput
-                label='Category'
-                name='categoryId'
-                value={expense.categoryId}
-                options={categories}
-                disabled={isLoading}
-              />
+              <FormField error={errors.name}>
+                <label htmlFor='name'>Name</label>
+                <input
+                  id='name'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  disabled={isLoading}
+                  defaultValue={expense.name}
+                  {
+                    ...register(
+                      'name',
+                      {
+                        required: true,
+                        length: {
+                          min: 2,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.categoryId}>
+                <label htmlFor='categoryId'>Category</label>
+                <select
+                  id='categoryId'
+                  disabled={isLoading}
+                  defaultValue={expense.categoryId}
+                  {
+                    ...register(
+                      'categoryId',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>--Please choose an option--</option>
+                  {
+                    categories.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option.id? option.id: option}
+                        >
+                          { option.name? option.name: option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
             </Form>
           </>
       }
