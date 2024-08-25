@@ -1,14 +1,13 @@
 import {
   Form,
   Header,
-  FormField,
-  SelectInput,
   SearchInput,
   ResourcesTable,
   EmptyListPlaceholder
 } from '../components/app';
 import {
   Loader,
+  FormField,
   PageHeader
 } from '../components/common';
 import {
@@ -21,6 +20,7 @@ import {
 import {
   useGetProducts
 } from '../hooks/products';
+import { useForm }  from '../hooks/common';
 
 
 export const ProductionOrders = () => {
@@ -87,14 +87,7 @@ export const ProductionOrderCreate = () => {
     products,
     isLoading: isFetchingProducts
   } = useGetProducts();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    payload.productCount = parseInt(payload.productCount);
-    handleCreate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
 
   return (
     <section>
@@ -105,21 +98,60 @@ export const ProductionOrderCreate = () => {
             <PageHeader value='New ProductionOrder' />
             <Form
               legend='ProductionOrder Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleCreate)}
               isLoading={isLoading}
             >
-              <SelectInput
-                label='Product'
-                name='productId'
-                options={products}
-                disabled={isLoading}
-              />
-              <FormField
-                label='count'
-                type='number'
-                name='productCount'
-                disabled={isLoading}
-              />
+              <FormField error={errors.productId}>
+                <label htmlFor='product'>Product</label>
+                <select
+                  id='product'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'productId',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>
+                    --Please choose a product--
+                  </option>
+                  {
+                    products.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option.id? option.id: option}
+                        >
+                          { option.name? option.name: option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
+              <FormField error={errors.count}>
+                <label htmlFor='count'>Count</label>
+                <input
+                  id='count'
+                  type='number'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'count',
+                      {
+                        required: true,
+                        length: {
+                          min: 1,
+                          max: 10,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
             </Form>
           </>
       }
@@ -137,13 +169,10 @@ export const ProductionOrderUpdate = () => {
     isLoading: isFetchingProducts
   } = useGetProducts();
   const { isLoading, handleUpdate } = useUpdateProductionOrder();
+  const { errors, register, handleSubmit } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleUpdate(payload);
-  }
+  const statusOptions =
+    ['Pending', 'Executing', 'Fulfilled', 'Cancelled'];
     
   return (
     <section>
@@ -154,16 +183,40 @@ export const ProductionOrderUpdate = () => {
             <PageHeader value='Update Order Status' />
             <Form
               legend='Order Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleUpdate)}
               isLoading={isLoading}
             >
-              <SelectInput
-                label='Status'
-                name='status'
-                value={productionOrder.status}
-                options={['Pending', 'Executing', 'Fulfilled', 'Cancelled']}
-                disabled={isLoading}
-              />
+              <FormField error={errors.status}>
+                <label htmlFor='status'>Status</label>
+                <select
+                  id='status'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'status',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>
+                    --Please choose a status--
+                  </option>
+                  {
+                    statusOptions.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option}
+                        >
+                          { option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
             </Form>
           </>
       }

@@ -1,14 +1,13 @@
 import {
   Form,
   Header,
-  FormField,
-  SelectInput,
   SearchInput,
   ResourcesTable,
   EmptyListPlaceholder
 } from '../components/app';
 import {
   Loader,
+  FormField,
   PageHeader
 } from '../components/common';
 import {
@@ -18,6 +17,7 @@ import {
   useGetSupplier,
   useGetSuppliers
 } from '../hooks/suppliers';
+import { useForm }  from '../hooks/common';
 
 
 export const Suppliers = () => {
@@ -81,34 +81,55 @@ export const Suppliers = () => {
 
 export const SupplierCreate = () => {
   const { isLoading, handleCreate } = useCreateSupplier();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleCreate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
 
   return (
     <section>
       <PageHeader value='New Supplier' />
       <Form
         legend='Supplier Details'
-        onSubmit={handleSubmit}
+        onSubmit={(e) => handleSubmit(e, handleCreate)}
         isLoading={isLoading}
       >
-        <FormField
-          label='Name'
-          type='text'
-          name='name'
-          disabled={isLoading}
-        />
-        <FormField
-          label='Phone Number'
-          type='text'
-          name='phone'
-          disabled={isLoading}
-        />
+        <FormField error={errors.name}>
+          <label htmlFor='name'>Name</label>
+          <input
+            id='name'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isLoading}
+            {
+              ...register(
+                'name',
+                {
+                  required: true,
+                  length: {
+                    min: 2,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.phone}>
+          <label htmlFor='phone'>Phone number</label>
+          <input
+            id='phone'
+            type='tel'
+            disabled={isLoading}
+            {
+              ...register(
+                'phone',
+                {
+                  required: true,
+                  phoneNumber: true,
+                }
+              )
+            }
+          />
+        </FormField>
       </Form>
     </section>
   );
@@ -120,13 +141,7 @@ export const SupplierUpdate = () => {
     isLoading: isFetchingSupplier
   } = useGetSupplier();
   const { isLoading, handleUpdate } = useUpdateSupplier();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleUpdate(payload);
-  }
+  const { errors, register, handleSubmit } = useForm();
     
   return (
     <section>
@@ -137,23 +152,50 @@ export const SupplierUpdate = () => {
             <PageHeader value='Update Supplier' />
             <Form
               legend='Supplier Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleUpdate)}
               isLoading={isLoading}
             >
-              <FormField
-                label='Name'
-                type='text'
-                name='name'
-                value={supplier.name}
-                disabled={isLoading}
-              />
-              <FormField
-                label='Phone Number'
-                type='text'
-                name='phone'
-                value={supplier.phone}
-                disabled={isLoading}
-              />
+              <FormField error={errors.name}>
+                <label htmlFor='name'>Name</label>
+                <input
+                  id='name'
+                  type='text'
+                  autoFocus='on'
+                  autoComplete='on'
+                  disabled={isLoading}
+                  defaultValue={supplier.name}
+                  {
+                    ...register(
+                      'name',
+                      {
+                        required: true,
+                        length: {
+                          min: 2,
+                          max: 50,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.phone}>
+                <label htmlFor='phone'>Phone number</label>
+                <input
+                  id='phone'
+                  type='tel'
+                  disabled={isLoading}
+                  defaultValue={supplier.phone}
+                  {
+                    ...register(
+                      'phone',
+                      {
+                        required: true,
+                        phoneNumber: true,
+                      }
+                    )
+                  }
+                />
+              </FormField>
             </Form>
           </>
       }

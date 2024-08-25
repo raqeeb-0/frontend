@@ -1,14 +1,13 @@
 import {
   Form,
   Header,
-  FormField,
-  SelectInput,
   SearchInput,
   ResourcesTable,
   EmptyListPlaceholder
 } from '../components/app';
 import {
   Loader,
+  FormField,
   PageHeader
 } from '../components/common';
 import {
@@ -24,6 +23,7 @@ import {
 import {
   useGetCustomers
 } from '../hooks/customers';
+import { useForm } from '../hooks/common';
 
 
 export const Sales = () => {
@@ -95,15 +95,16 @@ export const SaleCreate = () => {
     products,
     isLoading: isFetchingProducts
   } = useGetProducts();
+  const { errors, register, handleSubmit } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    payload.quantity = parseInt(payload.quantity);
-    payload.total = parseInt(payload.total);
-    handleCreate(payload);
-  }
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData(e.currentTarget);
+  //   const payload = Object.fromEntries(formData);
+  //   payload.quantity = parseInt(payload.quantity);
+  //   payload.total = parseInt(payload.total);
+  //   handleCreate(payload);
+  // }
 
   return (
     <section>
@@ -114,27 +115,91 @@ export const SaleCreate = () => {
             <PageHeader value='New Sale' />
             <Form
               legend='Sale Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleCreate)}
               isLoading={isLoading}
             >
-              <SelectInput
-                label='Product'
-                name='productId'
-                options={products}
-                disabled={isLoading}
-              />
-              <FormField
-                label='Quantity'
-                type='number'
-                name='quantity'
-                disabled={isLoading}
-              />
-              <SelectInput
-                label='Customer'
-                name='customerId'
-                options={customers}
-                disabled={isLoading}
-              />
+              <FormField error={errors.productId}>
+                <label htmlFor='product'>Product</label>
+                <select
+                  id='product'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'productId',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>
+                    --Please choose a product--
+                  </option>
+                  {
+                    products.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option.id? option.id: option}
+                        >
+                          { option.name? option.name: option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
+              <FormField error={errors.quantity}>
+                <label htmlFor='quantity'>Quantity</label>
+                <input
+                  id='quantity'
+                  type='number'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'quantity',
+                      {
+                        required: true,
+                        length: {
+                          min: 1,
+                          max: 15,
+                        },
+                      }
+                    )
+                  }
+                />
+              </FormField>
+              <FormField error={errors.customerId}>
+                <label htmlFor='customer'>Customer</label>
+                <select
+                  id='customer'
+                  disabled={isLoading}
+                  {
+                    ...register(
+                      'customerId',
+                      {
+                        required: true,
+                      }
+                    )
+                  }
+                >
+                  <option value=''>
+                    --Please choose a customer--
+                  </option>
+                  {
+                    customers.map((option, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={option.id? option.id: option}
+                        >
+                          { option.name? option.name: option }
+                        </option>
+                      );
+                    })
+                  }
+                </select>
+              </FormField>
             </Form>
           </>
       }
@@ -176,13 +241,13 @@ export const SaleUpdate = () => {
               onSubmit={handleSubmit}
               isLoading={isLoading}
             >
-              <SelectInput
+              {/* <SelectInput
                 label='Product'
                 name='productId'
                 value={sale.productId}
                 options={products}
                 disabled={isLoading}
-              />
+              /> */}
               <FormField
                 label='Quantity'
                 type='number'
@@ -197,13 +262,13 @@ export const SaleUpdate = () => {
                 value={sale.price}
                 disabled={isLoading}
               />
-              <SelectInput
+              {/* <SelectInput
                 label='Customer'
                 name='customerId'
                 value={sale.customerId}
                 options={customers}
                 disabled={isLoading}
-              />
+              /> */}
             </Form>
           </>
       }

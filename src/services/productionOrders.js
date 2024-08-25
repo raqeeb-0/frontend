@@ -12,9 +12,12 @@ export const getProductionOrder = (productionOrderId) =>
 
 
 export const createProductionOrder = (payload) => {
-  const { productId, productCount } = payload;
+  const { productId, count } = payload;
 
-  return api.post(resource, { productId, productCount });
+  return api.post(resource, {
+    productId,
+    productCount: parseInt(count)
+  });
 }
 
 

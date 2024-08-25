@@ -356,8 +356,8 @@ export const ProductUpdate = () => {
                 options={materials}
                 defaultValue={
                   product.billOfMaterials?.map(item => ({
-                    id: item.material.id,
-                    name: item.material.name,
+                    id: item.materialId,
+                    name: item.materialName,
                     count: item.materialCount
                   }))
                 }

@@ -103,9 +103,9 @@ export const MaterialCreate = () => {
               isLoading={isLoading}
             >
               <FormField error={errors.name}>
-                <label htmlFor='materialName'>Name</label>
+                <label htmlFor='name'>Name</label>
                 <input
-                  id='materialName'
+                  id='name'
                   type='text'
                   autoFocus='on'
                   autoComplete='on'
