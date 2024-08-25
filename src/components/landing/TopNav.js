@@ -14,7 +14,7 @@ export const TopNav = () => {
 
   return (
     <header className={styles.header}>
-      <section className={styles.headerSection}>
+      <section>
         <Logo
           imagePath='/logo192name.png'
           to='/'
@@ -53,6 +53,6 @@ export const TopNav = () => {
           }
         </nav>
       </section>
-    </header> 
+    </header>
   );
 }

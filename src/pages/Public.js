@@ -12,12 +12,11 @@ import {
 
 
 export const Public = () => {
-
-  const style={
-    overflow: 'auto',
+  const style = {
+    position: 'relative',
     height: '100vh',
+    overflow: 'auto',
   }
-
   return (
     <div style={style}>
       <TopNav />
