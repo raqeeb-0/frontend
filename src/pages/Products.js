@@ -9,7 +9,8 @@ import {
 import {
   Loader,
   FormField,
-  PageHeader
+  PageHeader,
+  ImageUploader
 } from '../components/common';
 import {
   useDeleteProduct,
@@ -111,6 +112,7 @@ export const ProductCreate = () => {
               onSubmit={(e) => handleSubmit(e, handleCreate)}
               isLoading={isLoading}
             >
+              <ImageUploader />
               <FormField error={errors.name}>
                 <label htmlFor='name'>Name</label>
                 <input

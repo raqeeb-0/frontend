@@ -1,3 +1,4 @@
+export { ImageUploader } from './ImageUploader';
 export { Hamburger } from './Hamburger';
 export { Loader } from './Loader';
 export { ButtonLoader } from './ButtonLoader';

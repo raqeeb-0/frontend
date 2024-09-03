@@ -1,7 +1,6 @@
 import {
   Form,
   Header,
-  FormField,
   SelectInput,
   SearchInput,
   ResourcesTable,
@@ -9,6 +8,7 @@ import {
 } from '../components/app';
 import {
   Loader,
+  FormField,
   PageHeader
 } from '../components/common';
 import {
@@ -27,6 +27,7 @@ import {
 import {
   useGetExpenses
 } from '../hooks/expenses';
+import { useForm } from '../hooks/common';
 import { useState, useEffect } from 'react';
 
 
@@ -126,18 +127,19 @@ export const PurchaseCreate = () => {
     expenses,
     isLoading: isFetchingExpenses
   } = useGetExpenses();
+  const { errors, register, handleSubmit } = useForm();
   const [purchaseType, setPurchaseType] = useState('Material');
 
   const handleChange = (e) => setPurchaseType(e.target.value);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    payload.quantity = parseInt(payload.quantity);
-    payload.price = parseInt(payload.price);
-    handleCreate(payload);
-  }
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData(e.currentTarget);
+  //   const payload = Object.fromEntries(formData);
+  //   payload.quantity = parseInt(payload.quantity);
+  //   payload.price = parseInt(payload.price);
+  //   handleCreate(payload);
+  // }
 
   return (
     <section>
@@ -148,7 +150,7 @@ export const PurchaseCreate = () => {
             <PageHeader value='New Purchase' />
             <Form
               legend='Purchase Details'
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, handleCreate)}
               isLoading={isLoading}
             >
               {
@@ -228,15 +230,16 @@ export const PurchaseUpdate = () => {
     isLoading: isFetchingSuppliers
   } = useGetSuppliers();
   const { isLoading, handleUpdate } = useUpdatePurchase();
+  const { errors, register, handleSubmit } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    payload.quantity = parseInt(payload.quantity);
-    payload.price = parseInt(payload.price);
-    handleUpdate(payload);
-  }
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData(e.currentTarget);
+  //   const payload = Object.fromEntries(formData);
+  //   payload.quantity = parseInt(payload.quantity);
+  //   payload.price = parseInt(payload.price);
+  //   handleUpdate(payload);
+  // }
     
   return (
     <section>
