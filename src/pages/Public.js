@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import {
   FirstHero,
   Features,
@@ -12,14 +13,15 @@ import {
 
 
 export const Public = () => {
+  const pageRef = useRef(null);
   const style = {
     position: 'relative',
     height: '100vh',
     overflow: 'auto',
   }
   return (
-    <div style={style}>
-      <TopNav />
+    <div style={style} ref={pageRef}>
+      <TopNav pageRef={pageRef} />
       <FirstHero />
       <Features />
       <SecondHero />

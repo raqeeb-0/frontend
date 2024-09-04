@@ -5,16 +5,27 @@
 .header {
   position: fixed;
   top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: transparent;
-  width: 100%;
-  z-index: 100;
+  width: 90%;
+  z-index: 5;
+  transition: all 0.2s ease;
+}
+
+.navScrolled {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .header section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
 }
 
@@ -26,8 +37,10 @@
 .navLink {
   color: var(--font-clr);
   border-radius: 40px;
-  padding: 10px 53px;
+  width: 180px;
+  padding: 10px 0px;
   white-space: nowrap;
+  text-align: center;
   text-decoration: none;
   transition: all 0.2s ease;
 }
@@ -35,6 +48,10 @@
 .navLink:hover {
   /* color: var(--primary-clr); */
   background-color: var(--shadow-clr);
+}
+
+.disabled {
+  pointer-events: none;
 }
 
 .callToAction {
