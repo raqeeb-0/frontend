@@ -1,5 +1,5 @@
-class FetchAdapter {
-  constructor(baseUrl) {
+export class FetchAdapter {
+  constructor(baseUrl = process.env.REACT_APP_API_URL) {
     this.baseUrl = baseUrl;
     this.options = {
       credentials: 'include',
@@ -9,14 +9,16 @@ class FetchAdapter {
     };
   }
 
-  const fetchWithStatus = async (
+  async #fetchWithStatus(
     endpoint,
     customOptions = {},
-    delaySwitch = false
-  ) => {
+    delaySwitch = true
+  ) {
+
     const delay = Math.floor(Math.random() * 2000) + 1000;
     delaySwitch &&
       await new Promise(resolve => setTimeout(resolve, delay));
+
     try {
       const response = await fetch(`${this.baseUrl}/${endpoint}`, {
         ...this.options,
@@ -26,7 +28,7 @@ class FetchAdapter {
 
       return {
         status: response.status,
-        data: data,
+        data: data.data,
       };
     } catch (err) {
       return {
@@ -37,25 +39,25 @@ class FetchAdapter {
   }
 
   get(endpoint) {
-    return this.fetchWithStatus(endpoint);
+    return this.#fetchWithStatus(endpoint);
   }
 
   post(endpoint, data) {
-    return this.fetchWithStatus(endpoint, {
+    return this.#fetchWithStatus(endpoint, {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   patch(endpoint, data) {
-    return this.fetchWithStatus(endpoint, {
+    return this.#fetchWithStatus(endpoint, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
   }
 
   delete(endpoint) {
-    return this.fetchWithStatus(endpoint, {
+    return this.#fetchWithStatus(endpoint, {
       method: 'DELETE',
     });
   }
