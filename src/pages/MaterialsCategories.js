@@ -10,95 +10,85 @@ import {
   FormField,
   PageHeader
 } from '../components/common';
-import {
-  useDeleteMaterialsCategory,
-  useUpdateMaterialsCategory,
-  useCreateMaterialsCategory,
-  useGetMaterialsCategory,
-  useGetMaterialsCategories
-} from '../hooks/materialsCategories';
 import { useForm } from '../hooks/common';
-import { DataRepository } from '../repositories/dataRepository';
-import { useState, useEffect } from 'react';
+import {
+  useGet,
+  useCreate,
+  useUpdate,
+  useDelete
+} from '../hooks/useAPI';
+import {
+  useNavigate,
+  useParams
+} from 'react-router-dom';
 
 
-const materialCategoriesRepo = new DataRepository('org/m/categories');
+const materialCategoriesEndpoint = 'org/m/categories';
 
 export const MaterialsCategories = () => {
-  /*const {
-    categories,
-    refreshCategories,
-    isLoading: isFetchingCategories
-  } = useGetMaterialsCategories();
   const {
-    handleDelete,
-    isLoading: isDeletingCategory
-  } = useDeleteMaterialsCategory();
+    refresh,
+    isLoading,
+    data: categories
+  } = useGet(materialCategoriesEndpoint);
 
-  const deleteHandler = (e) => {
-    handleDelete(
-      e.currentTarget.getAttribute('data-id'),
-      refreshCategories
+  const { handleDelete, isDeleting } = useDelete(
+    materialCategoriesEndpoint,
+    refresh
+  );
+
+  if (isLoading || isDeleting) {
+    return (
+      <section>
+        <Loader />
+      </section>
     );
   }
 
-  const isLoading = isFetchingCategories || isDeletingCategory;*/
-  const [isLoading, setIsLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchCategories = async () => {
-      const response = await materialCategoriesRepo.getAllItems();
-      console.log(response.data);
-      setCategories(response.data);
-      setIsLoading(false);
-    };
-    fetchCategories();
-  }, []);
+  if (categories.length === 0) {
+    return (
+      <section>
+        <EmptyListPlaceholder
+          listName='material categories'
+          link={{
+            path: '/app/materials/categories/create',
+            name: 'Create Category',
+          }}
+        />
+      </section>
+    );
+  }
 
   return (
     <section>
-      {
-        isLoading
-          ? <Loader />
-          : <>
-              <Header
-                value='Materials Categories'
-                isEmptyList={categories.length === 0}
-                link={{
-                  path: '/app/materials/categories/create',
-                  name: 'New Category',
-                }}
-              />
-              {
-                categories.length === 0
-                  ? <EmptyListPlaceholder
-                      listName='material categories'
-                      link={{
-                        path: '/app/materials/categories/create',
-                        name: 'Create Category',
-                      }}
-                    />
-                  : <>
-                      <SearchInput resourceName='categories' />
-                      <ResourcesTable
-                        resourceName='category'
-                        resourcePath='/materials/categories'
-                        resources={categories}
-                      />
-                    </>
-              }
-            </>
-      }
+      <Header
+        value='Materials Categories'
+        isEmptyList={categories.length === 0}
+        link={{
+          path: '/app/materials/categories/create',
+          name: 'New Category',
+        }}
+      />
+      <SearchInput resourceName='categories' />
+      <ResourcesTable
+        resourceName='category'
+        resourcePath='/materials/categories'
+        resources={categories}
+        handleDelete={handleDelete}
+      />
     </section>
   );
 }
 
 
 export const MaterialsCategoryCreate = () => {
-  const { isLoading, handleCreate } = useCreateMaterialsCategory();
   const { errors, register, handleSubmit } = useForm();
+
+  const navigate = useNavigate();
+  const { handleCreate, isCreating } = useCreate(
+    materialCategoriesEndpoint,
+    () => navigate('/app/materials/categories')
+  );
 
   return (
     <section>
@@ -106,7 +96,7 @@ export const MaterialsCategoryCreate = () => {
       <Form
         legend='Category Details'
         onSubmit={(e) => handleSubmit(e, handleCreate)}
-        isLoading={isLoading}
+        isLoading={isCreating}
       >
         <FormField error={errors.name}>
           <label htmlFor='name'>Name</label>
@@ -115,7 +105,7 @@ export const MaterialsCategoryCreate = () => {
             type='text'
             autoFocus='on'
             autoComplete='on'
-            disabled={isLoading}
+            disabled={isCreating}
             {
               ...register(
                 'name',
@@ -137,51 +127,59 @@ export const MaterialsCategoryCreate = () => {
 
 
 export const MaterialsCategoryUpdate = () => {
-  const { isLoading, handleUpdate } = useUpdateMaterialsCategory();
-  const {
-    category,
-    isLoading: isFetchingCategory
-  } = useGetMaterialsCategory();
   const { errors, register, handleSubmit } = useForm();
+
+  const { categoryId } = useParams();
+  const { data: category, isLoading } = useGet(
+    `${materialCategoriesEndpoint}/${categoryId}`
+  );
+
+  const navigate = useNavigate();
+  const { handleUpdate, isUpdating } = useUpdate(
+    `${materialCategoriesEndpoint}/${categoryId}`,
+    () => navigate('/app/materials/categories')
+  );
+
+  if (isLoading) {
+    return (
+      <section>
+        <Loader />
+      </section>
+    );
+  }
     
   return (
     <section>
-      {
-        isFetchingCategory
-          ?<Loader />
-          :<>
-            <PageHeader value='Update Materials Category' />
-            <Form
-              legend='Category Details'
-              onSubmit={(e) => handleSubmit(e, handleUpdate)}
-              isLoading={isLoading}
-            >
-              <FormField error={errors.name}>
-                <label htmlFor='name'>Name</label>
-                <input
-                  id='name'
-                  type='text'
-                  autoFocus='on'
-                  autoComplete='on'
-                  disabled={isLoading}
-                  defaultValue={category.name}
-                  {
-                    ...register(
-                      'name',
-                      {
-                        required: true,
-                        length: {
-                          min: 2,
-                          max: 50,
-                        },
-                      }
-                    )
-                  }
-                />
-              </FormField>
-            </Form>
-          </>
-      }
+      <PageHeader value='Update Materials Category' />
+      <Form
+        legend='Category Details'
+        onSubmit={(e) => handleSubmit(e, handleUpdate)}
+        isLoading={isUpdating}
+      >
+        <FormField error={errors.name}>
+          <label htmlFor='name'>Name</label>
+          <input
+            id='name'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isUpdating}
+            defaultValue={category.name}
+            {
+              ...register(
+                'name',
+                {
+                  required: true,
+                  length: {
+                    min: 2,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+      </Form>
     </section>
   );
 }

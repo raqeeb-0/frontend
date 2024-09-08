@@ -8,6 +8,7 @@ const NotificationContext = createContext({
   setType: () => {},
   refresh: 0,
   showNotification: () => {},
+  notify: () => {},
 });
 
 const NotificationProvider = ({ children }) => {
@@ -19,6 +20,12 @@ const NotificationProvider = ({ children }) => {
     setRefresh(refresh + 1);
   }
 
+  const notify = (message = '', type = 'success') => {
+    setMessage(message);
+    setType(type);
+    showNotification();
+  }
+
   const value = {
     message,
     setMessage,
@@ -26,6 +33,7 @@ const NotificationProvider = ({ children }) => {
     setType,
     refresh,
     showNotification,
+    notify,
   }
 
   return (

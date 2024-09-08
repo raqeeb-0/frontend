@@ -12,7 +12,7 @@ export class FetchAdapter {
   async #fetchWithStatus(
     endpoint,
     customOptions = {},
-    delaySwitch = true
+    delaySwitch = false
   ) {
 
     const delay = Math.floor(Math.random() * 2000) + 1000;
@@ -28,11 +28,14 @@ export class FetchAdapter {
 
       return {
         status: response.status,
+        ok: response.ok,
         data: data.data,
+        error: data.message,
       };
     } catch (err) {
       return {
         status: null,
+        ok: false,
         error: err.message,
       };
     }
