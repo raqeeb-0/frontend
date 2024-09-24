@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { BiLogOut } from 'react-icons/bi';
 import { ButtonLoader } from './ButtonLoader';
-import { useAuth, useOutsideClick } from '../../hooks/common';
+import { useAuth, useOutsideClick } from '../../hooks';
 
 
 export const UserMenu = () => {

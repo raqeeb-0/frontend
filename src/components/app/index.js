@@ -1,8 +1,9 @@
+export { OptionsList } from './OptionsList';
+export { ErrorContainer } from './ErrorContainer';
 export { SelectMultiple } from './SelectMultiple';
 export { SearchInput } from './SearchInput';
 export { SelectInput } from './SelectInput';
 export { Header } from './Header';
-export { Modal } from './Modal';
 export { ResourcesTable } from './ResourcesTable';
 export { Page } from './Page';
 export { TopNavApp } from './TopNavApp';

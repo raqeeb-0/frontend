@@ -1,18 +1,18 @@
 import styles from './styles/SelectMultiple.module.css';
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { useOutsideClick } from '../../hooks/common';
+import {
+  useBlockHeight,
+  useOutsideClick
+} from '../../hooks';
 import { LuXCircle } from 'react-icons/lu';
+import { SelectList } from './SelectList';
 
 
 const NumInput = (props) => {
   const { index, data, handleChange, handleDelete } = props;
-  const [value, setValue] = useState(String(data.count) || '');
+  const [value, setValue] = useState(String(data.quantity) || '');
   const MINWIDTH = 4;
   const MAXWIDTH = 16;
-
-  // useEffect(() => {
-  //   setValue(String(data.count));
-  // }, [data.count]);
 
   return (
     <>
@@ -42,49 +42,57 @@ const NumInput = (props) => {
 }
 
 export const SelectMultiple = (props) => {
-  const { id, registerObj, label, options, defaultValue } = props;
-  const [selectedOptions, setSelectedOptions] = useState(defaultValue || []);
-  const [isVisible, setIsVisible] = useState(false);
+  const {
+    id,
+    error,
+    registerObj,
+    label,
+    options,
+    defaultValue
+  } = props;
+  const [selectedOptions, setSelectedOptions] =
+    useState(defaultValue || []);
+  const [isListActive, setIsListActive] = useState(false);
   const inputRef = useRef();
   const containerRef = useRef();
-  const activeStatus = isVisible ? styles.active : styles.inactive;
-
-  useEffect(() => {
-    // console.log(defaultValue);
-  }, [defaultValue]);
-
-  useEffect(() => {
-    // console.log("rerender toggled");
+  const errorRef = useRef();
+  const { height: errorHeight } = useBlockHeight({
+    blockInnerText: error,
+    ref: errorRef,
   });
 
   const handleChange = (e, index) => {
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions[index] = {
       ...selectedOptions[index],
-      count: parseFloat(e.target.value),
+      quantity: parseFloat(e.target.value),
     }
     setSelectedOptions(newSelectedOptions);
   }
 
   useOutsideClick({
     ref: containerRef,
-    handler: () => setIsVisible(false)
+    handler: () => setIsListActive(false)
   });
 
-  const handleListClick = (e) => {
+  useEffect(() => {
+    if (options.length === selectedOptions.length) {
+      inputRef.current.focus();
+    }
+  }, [selectedOptions]);
+
+  const handleInputClick = (e) => {
     e.stopPropagation();
-    isVisible
-    ? setIsVisible(false)
-    : setIsVisible(true);
+    setIsListActive(!isListActive);
   }
 
-  const handleListKeyDown = (e) => {
-    if (e.key === 'Tab' && isVisible) {
+  const handleInputKeyDown = (e) => {
+    if (e.key === 'Escape' && isListActive) {
       e.preventDefault();
-      setIsVisible(false);
+      setIsListActive(false);
     }
     if (e.key === 'Enter') {
-      handleListClick(e);
+      handleInputClick(e);
     }
   }
 
@@ -93,22 +101,6 @@ export const SelectMultiple = (props) => {
     const newSelectedOptions = selectedOptions.filter((currentOption) =>
       currentOption.id !== option.id);
     setSelectedOptions(newSelectedOptions);
-  }
-
-  const handleListItemClick = (option) => {
-    const newSelectedOptions = [...selectedOptions];
-    newSelectedOptions.push({
-      id: option.id,
-      name: option.name,
-      count: ''
-    });
-    setSelectedOptions(newSelectedOptions);
-  }
-
-  const handleListItemKeyDown = (e, option) => {
-    if (e.key === 'Enter') {
-      handleListItemClick(option);
-    }
   }
 
   const refinedOptions = useMemo(() => {
@@ -120,18 +112,11 @@ export const SelectMultiple = (props) => {
       });
   }, [options]);
 
-  const filteredOptions = useMemo(() => {
-    return refinedOptions.filter(option =>
-      !selectedOptions.find(selected => selected.id === option.id)
-    );
-  }, [refinedOptions, selectedOptions]);
-
   return (
-    <>
     <div className={styles.group} ref={containerRef}>
       <span
         htmlFor={id} ref={inputRef}
-        onClick={handleListClick}
+        onClick={handleInputClick}
         className={styles.label}
       >
         { label }
@@ -148,9 +133,9 @@ export const SelectMultiple = (props) => {
       <ul
         id={id}
         className={styles.inputList}
-        onClick={handleListClick}
+        onClick={handleInputClick}
         onFocus={registerObj.onFocus}
-        onKeyDown={handleListKeyDown}
+        onKeyDown={handleInputKeyDown}
         aria-label={label}
         ref={inputRef}
         tabIndex={0}
@@ -171,25 +156,21 @@ export const SelectMultiple = (props) => {
             })
         }
       </ul>
-      <ul className={`${styles.list} ${activeStatus}`}>
-        {
-          filteredOptions.length === 0
-          ? <li style={{ textAlign: 'center' }}>List is empty</li>
-          : filteredOptions.map((option, index) => {
-              return (
-                <li
-                  key={index}
-                  value={option.id}
-                  onClick={() => handleListItemClick(option, index)}
-                  onKeyDown={(e) => handleListItemKeyDown(e, option)}
-                >
-                  { option.name }
-                </li>
-              );
-            })
-        }
-      </ul>
+      <SelectList
+        isActive={isListActive}
+        setIsActive={setIsListActive}
+        inputRef={inputRef}
+        items={refinedOptions}
+        selectedItems={selectedOptions}
+        setSelectedItems={setSelectedOptions}
+      />
+      <span
+        ref={errorRef}
+        className={`${styles.error} ${error? styles.show: styles.hide}`}
+        style={{ height: `${errorHeight}px` }}
+      >
+        { error }
+      </span>
     </div>
-    </>
   );
 }

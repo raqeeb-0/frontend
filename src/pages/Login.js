@@ -10,7 +10,7 @@ import {
 import {
   FormField
 } from '../components/common';
-import { useAuth, useForm } from '../hooks/common';
+import { useAuth, useForm } from '../hooks';
 
 
 export const Login = () => {

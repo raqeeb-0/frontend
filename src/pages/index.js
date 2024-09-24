@@ -1,4 +1,5 @@
-export * from './Purchases';
+export * from './ExpensePurchases';
+export * from './MaterialPurchases';
 export * from './Sales';
 export * from './ProductionOrders';
 export * from './ProductsCategories';
@@ -11,7 +12,6 @@ export * from './MaterialsCategories';
 export * from './Materials';
 export * from './Organization';
 export { Public } from './Public';
-export { Dashboard } from './Dashboard';
 export { Root } from './Root';
 export { ErrorPage } from './Error';
 export { ResetPassword } from './ResetPassword';

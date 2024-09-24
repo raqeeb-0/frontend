@@ -2,7 +2,9 @@ import {
   Form,
   Header,
   SearchInput,
+  OptionsList,
   ResourcesTable,
+  ErrorContainer,
   EmptyListPlaceholder
 } from '../components/app';
 import {
@@ -10,216 +12,245 @@ import {
   FormField,
   PageHeader
 } from '../components/common';
+import { useForm }  from '../hooks';
 import {
-  useDeleteProductionOrder,
-  useUpdateProductionOrder,
-  useCreateProductionOrder,
-  useGetProductionOrder,
-  useGetProductionOrders
-} from '../hooks/productionOrders';
+  PRODUCT_API,
+  PRODUCTION_ORDER_API
+} from '../lib/endpoints';
 import {
-  useGetProducts
-} from '../hooks/products';
-import { useForm }  from '../hooks/common';
+  useGet,
+  useCreate,
+  useUpdate
+} from '../hooks/useAPI';
+import {
+  useNavigate,
+  useParams
+} from 'react-router-dom';
+import { useMemo } from 'react';
 
 
 export const ProductionOrders = () => {
   const {
-    productionOrders,
-    refreshProductionOrders,
-    isLoading: isFetchingProductionOrders
-  } = useGetProductionOrders();
-  /*const {
-    handleDelete,
-    isLoading: isDeletingProductionOrder
-  } = useDeleteProductionOrder();
+    error,
+    refresh,
+    isLoading: isFetchingProductionOrders,
+    data
+  } = useGet(PRODUCTION_ORDER_API);
 
-  const deleteHandler = (e) => {
-    handleDelete(
-      e.currentTarget.getAttribute('data-id'),
-      refreshProductionOrders
+  const productionOrders = useMemo(() => {
+    return data ? data.map((productionOrder) => ({
+      'id': productionOrder.id,
+      'ID': productionOrder.id,
+      'product': productionOrder.product.name,
+      'count': productionOrder.count,
+      'status': productionOrder.status,
+      'create at': productionOrder.createdAt.split('T')[0],
+    })): [];
+  }, [data]);
+
+  if (isFetchingProductionOrders) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
     );
-  }*/
+  }
 
-  const isLoading = isFetchingProductionOrders/* || isDeletingProductionOrder*/;
+  if (productionOrders.length === 0) {
+    return (
+      <section>
+        <EmptyListPlaceholder
+          listName='orders'
+          link={{
+            path: '/app/production-orders/create',
+            name: 'Create Order',
+          }}
+        />
+      </section>
+    )
+  }
 
   return (
     <section>
-      {
-        isLoading
-          ?<Loader />
-          :<>
-            <Header
-              value='Production Orders'
-              isEmptyList={productionOrders.length === 0}
-              link={{
-                path: '/app/production-orders/create',
-                name: 'New Order',
-              }}
-            />
-            {
-              productionOrders.length === 0
-                ?<EmptyListPlaceholder
-                  listName='orders'
-                  link={{
-                    path: '/app/production-orders/create',
-                    name: 'Create Order',
-                  }}
-                />
-                :<>
-                  <SearchInput resourceName='production-orders' />
-                  <ResourcesTable
-                    resourceName='order'
-                    resourcePath='/production-orders'
-                    resources={productionOrders}
-                  />
-                </>
-            }
-          </>
-      }
+      <Header
+        value='Production Orders'
+        isEmptyList={productionOrders.length === 0}
+        link={{
+          path: '/app/production-orders/create',
+          name: 'New Order',
+        }}
+      />
+      <SearchInput resourceName='production-orders' />
+      <ResourcesTable
+        resourceName='order'
+        resourcePath='/production-orders'
+        resources={productionOrders}
+      />
     </section>
   );
 }
 
 export const ProductionOrderCreate = () => {
-  const { isLoading, handleCreate } = useCreateProductionOrder();
   const {
-    products,
-    isLoading: isFetchingProducts
-  } = useGetProducts();
+    error,
+    refresh,
+    isLoading: isFetchingProducts,
+    data: products
+  } = useGet(PRODUCT_API);
+
   const { errors, register, handleSubmit } = useForm();
+
+  const navigate = useNavigate();
+  const { isCreating, handleCreate } = useCreate(
+    PRODUCTION_ORDER_API,
+    () => navigate('/app/production-orders')
+  );
+
+  if (isFetchingProducts) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
+    );
+  }
 
   return (
     <section>
-      {
-        isFetchingProducts
-          ?<Loader />
-          :<>
-            <PageHeader value='New ProductionOrder' />
-            <Form
-              legend='ProductionOrder Details'
-              onSubmit={(e) => handleSubmit(e, handleCreate)}
-              isLoading={isLoading}
-            >
-              <FormField error={errors.productId}>
-                <label htmlFor='product'>Product</label>
-                <select
-                  id='product'
-                  disabled={isLoading}
-                  {
-                    ...register(
-                      'productId',
-                      {
-                        required: true,
-                      }
-                    )
-                  }
-                >
-                  <option value=''>
-                    --Please choose a product--
-                  </option>
-                  {
-                    products.map((option, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={option.id? option.id: option}
-                        >
-                          { option.name? option.name: option }
-                        </option>
-                      );
-                    })
-                  }
-                </select>
-              </FormField>
-              <FormField error={errors.count}>
-                <label htmlFor='count'>Count</label>
-                <input
-                  id='count'
-                  type='number'
-                  disabled={isLoading}
-                  {
-                    ...register(
-                      'count',
-                      {
-                        required: true,
-                        length: {
-                          min: 1,
-                          max: 10,
-                        },
-                      }
-                    )
-                  }
-                />
-              </FormField>
-            </Form>
-          </>
-      }
+      <PageHeader value='New ProductionOrder' />
+      <Form
+        legend='ProductionOrder Details'
+        onSubmit={(e) => handleSubmit(e, handleCreate)}
+        isLoading={isCreating}
+      >
+        <FormField error={errors.productId}>
+          <label htmlFor='product'>Product</label>
+          <select
+            id='product'
+            disabled={isCreating}
+            {
+              ...register(
+                'productId',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a product--
+            </option>
+            <OptionsList options={products} />
+          </select>
+        </FormField>
+        <FormField error={errors.count}>
+          <label htmlFor='count'>Count</label>
+          <input
+            id='count'
+            type='number'
+            disabled={isCreating}
+            {
+              ...register(
+                'count',
+                {
+                  required: true,
+                  length: {
+                    min: 1,
+                    max: 10,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+      </Form>
     </section>
   );
 }
 
 export const ProductionOrderUpdate = () => {
-  const {
-    productionOrder,
-    isLoading: isFetchingProductionOrder
-  } = useGetProductionOrder();
-  const {
-    products,
-    isLoading: isFetchingProducts
-  } = useGetProducts();
-  const { isLoading, handleUpdate } = useUpdateProductionOrder();
+  // const {
+  //   error: productsFetchError,
+  //   refresh: refreshProducts,
+  //   isLoading: isFetchingProducts,
+  //   data: products
+  // } = useGet(PRODUCT_API);
+
+  const { productionOrderId } = useParams();
+  // const {
+  //   error: productionOrderFetchError,
+  //   refresh: refreshProductionOrder,
+  //   isLoading: isFetchingProductionOrder,
+  //   data: productionOrder
+  // } = useGet(`${PRODUCTION_ORDER_API}/${productionOrderId}`);
+
   const { errors, register, handleSubmit } = useForm();
 
+  const navigate = useNavigate();
+  const { isUpdating, handleUpdate } = useUpdate(
+    `${PRODUCTION_ORDER_API}/${productionOrderId}`,
+    () => navigate('/app/production-orders')
+  );
+
+  // const refresh = () => {
+  //   refreshProducts();
+  //   refreshProductionOrder();
+  // }
+
+  // if (isFetchingProducts || isFetchingProductionOrder) {
+  //   return <Loader />;
+  // }
+
+  // if (productsFetchError || productionOrderFetchError) {
+  //   return (
+  //     <ErrorContainer
+  //       error={productsFetchError || productionOrderFetchError}
+  //       refresh={refresh}
+  //     />
+  //   );
+  // }
+
   const statusOptions =
-    ['Pending', 'Executing', 'Fulfilled', 'Cancelled'];
+    ['pending', 'executing', 'fulfilled', 'cancelled'];
     
   return (
     <section>
-      {
-        isFetchingProductionOrder || isFetchingProducts
-          ?<Loader />
-          :<>
-            <PageHeader value='Update Order Status' />
-            <Form
-              legend='Order Details'
-              onSubmit={(e) => handleSubmit(e, handleUpdate)}
-              isLoading={isLoading}
-            >
-              <FormField error={errors.status}>
-                <label htmlFor='status'>Status</label>
-                <select
-                  id='status'
-                  disabled={isLoading}
-                  {
-                    ...register(
-                      'status',
-                      {
-                        required: true,
-                      }
-                    )
-                  }
-                >
-                  <option value=''>
-                    --Please choose a status--
-                  </option>
-                  {
-                    statusOptions.map((option, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={option}
-                        >
-                          { option }
-                        </option>
-                      );
-                    })
-                  }
-                </select>
-              </FormField>
-            </Form>
-          </>
-      }
+      <PageHeader value='Edit Order Status' />
+      <Form
+        legend='Order Details'
+        onSubmit={(e) => handleSubmit(e, handleUpdate)}
+        isLoading={isUpdating}
+      >
+        <FormField error={errors.status}>
+          <label htmlFor='status'>Status</label>
+          <select
+            id='status'
+            disabled={isUpdating}
+            {
+              ...register(
+                'status',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a status--
+            </option>
+            <OptionsList options={statusOptions} />
+          </select>
+        </FormField>
+      </Form>
     </section>
   );
 }

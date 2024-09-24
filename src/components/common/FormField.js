@@ -1,5 +1,6 @@
 import styles from './styles/FormField.module.css';
 import { useState, useEffect, useRef } from 'react';
+import { useBlockHeight } from '../../hooks';
 
 
 export const FormField = (props) => {
@@ -7,16 +8,12 @@ export const FormField = (props) => {
     error,
     children
   } = props;
-  const [errorHeight, setErrorHeight] = useState(0);
   const errorRef = useRef();
 
-  useEffect(() => {
-    if (error) {
-      setErrorHeight(errorRef.current.scrollHeight);
-    } else {
-      setErrorHeight(0);
-    }
-  }, [error]);
+  const { height: errorHeight } = useBlockHeight({
+    blockInnerText: error,
+    ref: errorRef,
+  });
 
   return (
     <div className={styles.group}>

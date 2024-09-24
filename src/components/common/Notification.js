@@ -1,7 +1,7 @@
 import styles from './styles/Notification.module.css';
 import { IoClose } from 'react-icons/io5';
 import { useState, useEffect } from 'react';
-import { useNotify } from '../../hooks/common';
+import { useNotify } from '../../hooks';
 
 
 export const Notification = () => {

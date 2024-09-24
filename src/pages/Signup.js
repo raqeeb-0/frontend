@@ -10,7 +10,7 @@ import {
 import {
   FormField
 } from '../components/common';
-import { useAuth, useForm } from '../hooks/common';
+import { useAuth, useForm } from '../hooks';
 import { useState } from 'react';
 
 
@@ -66,7 +66,7 @@ export const Signup = () => {
             }
           />
         </FormField>
-        <FormField error={errors.userName}>
+        <FormField error={errors.username}>
           <label htmlFor='username'>Username</label>
           <input
             id='username'
@@ -76,7 +76,7 @@ export const Signup = () => {
             placeholder='johndoe20'
             {
               ...register(
-                'userName',
+                'username',
                 {
                   required: true,
                   length: {
@@ -89,16 +89,16 @@ export const Signup = () => {
             }
           />
         </FormField>
-        <FormField error={errors.phoneNumber}>
-          <label htmlFor='phoneNumber'>Phone Number</label>
+        <FormField error={errors.phone}>
+          <label htmlFor='phone'>Phone Number</label>
           <input
-            id='phoneNumber'
+            id='phone'
             type='tel'
             disabled={isLoading}
             placeholder='01xx xxxx xxx'
             {
               ...register(
-                'phoneNumber',
+                'phone',
                 {
                   required: true,
                   phoneNumber: true,

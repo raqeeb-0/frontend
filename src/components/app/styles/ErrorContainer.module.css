@@ -1,0 +1,35 @@
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0 auto;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.box strong {
+  font-size: 1.5rem;
+}
+
+.box em {
+  font-size: 1.3rem;
+}
+
+.box button {
+  all: unset;
+  margin-top: 20px;
+}
+
+.box button svg {
+  border-radius: 50px;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 5px;
+  overflow: visible;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.box button svg:hover {
+  background-color: var(--shadow-clr);
+}

@@ -16,7 +16,7 @@ export const TopNavDashboard = (props) => {
         <section className={styles.headerSection}>
           <Logo
             imagePath='/logo192name.png'
-            to='/dashboard'
+            to='/organizations/overview'
           />
           <nav className={styles.nav}>
             {

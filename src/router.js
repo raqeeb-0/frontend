@@ -4,9 +4,12 @@ import {
   AppLayout
 } from './layouts';
 import {
-  PurchaseUpdate,
-  PurchaseCreate,
-  Purchases,
+  ExpensePurchaseUpdate,
+  MaterialPurchaseUpdate,
+  ExpensePurchaseCreate,
+  MaterialPurchaseCreate,
+  ExpensePurchases,
+  MaterialPurchases,
   SaleUpdate,
   SaleCreate,
   Sales,
@@ -39,8 +42,8 @@ import {
   Materials,
   OrganizationUpdate,
   OrganizationCreate,
+  Organization,
   Public,
-  Dashboard,
   Root,
   ErrorPage,
   ResetPassword,
@@ -61,15 +64,15 @@ export const router = createBrowserRouter([
         element: <Public />,
       },
       {
-        path: 'dashboard',
-        element: <Dashboard />,
+        path: 'organizations/overview',
+        element: <Organization />,
       },
       {
         path: 'organizations/create',
         element: <OrganizationCreate />
       },
       {
-        path: 'organizations/:orgId/edit',
+        path: 'organizations/:organizationId/edit',
         element: <OrganizationUpdate />
       },
       {
@@ -118,16 +121,28 @@ export const router = createBrowserRouter([
             element: <MaterialsCategoryUpdate />,
           },
           {
-            path: 'purchases',
-            element: <Purchases />,
+            path: 'expense-purchases',
+            element: <ExpensePurchases />,
           },
           {
-            path: 'purchases/create',
-            element: <PurchaseCreate />,
+            path: 'expense-purchases/create',
+            element: <ExpensePurchaseCreate />,
           },
           {
-            path: 'purchases/:purchaseId/edit',
-            element: <PurchaseUpdate />,
+            path: 'expense-purchases/:purchaseId/edit',
+            element: <ExpensePurchaseUpdate />,
+          },
+          {
+            path: 'material-purchases',
+            element: <MaterialPurchases />,
+          },
+          {
+            path: 'material-purchases/create',
+            element: <MaterialPurchaseCreate />,
+          },
+          {
+            path: 'material-purchases/:purchaseId/edit',
+            element: <MaterialPurchaseUpdate />,
           },
           {
             path: 'suppliers',

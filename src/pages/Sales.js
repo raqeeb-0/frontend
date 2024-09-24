@@ -2,7 +2,9 @@ import {
   Form,
   Header,
   SearchInput,
+  OptionsList,
   ResourcesTable,
+  ErrorContainer,
   EmptyListPlaceholder
 } from '../components/app';
 import {
@@ -10,268 +12,332 @@ import {
   FormField,
   PageHeader
 } from '../components/common';
+import { useForm } from '../hooks';
 import {
-  useDeleteSale,
-  useUpdateSale,
-  useCreateSale,
-  useGetSale,
-  useGetSales
-} from '../hooks/sales';
+  SALE_API,
+  PRODUCT_API,
+  CUSTOMER_API
+} from '../lib/endpoints';
 import {
-  useGetProducts
-} from '../hooks/products';
+  useGet,
+  useCreate,
+  useUpdate,
+  useDelete
+} from '../hooks/useAPI';
 import {
-  useGetCustomers
-} from '../hooks/customers';
-import { useForm } from '../hooks/common';
+  useNavigate,
+  useParams
+} from 'react-router-dom';
+import { useMemo } from 'react';
 
 
 export const Sales = () => {
   const {
-    sales,
-    refreshSales,
-    isLoading: isFetchingSales
-  } = useGetSales();
-  const {
-    handleDelete,
-    isLoading: isDeletingSale
-  } = useDeleteSale();
+    error,
+    refresh,
+    isLoading: isFetchingSales,
+    data
+  } = useGet(SALE_API);
 
-  const deleteHandler = (e) => {
-    handleDelete(
-      e.currentTarget.getAttribute('data-id'),
-      refreshSales
+  const { handleDelete, isDeleting } = useDelete(
+    SALE_API,
+    refresh
+  );
+
+  const sales = useMemo(() => {
+    return data ? data.map((sale) => ({
+      'id': sale.id,
+      'ID': sale.id,
+      'product': sale.product.name,
+      'quantity': sale.quantity,
+      'price': sale.price,
+      'create at': sale.createdAt.split('T')[0],
+    })) : [];
+  }, [data]);
+
+  if (isFetchingSales || isDeleting) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
     );
   }
 
-  const isLoading = isFetchingSales || isDeletingSale;
+  if (sales.length === 0) {
+    return (
+      <section>
+        <EmptyListPlaceholder
+          listName='sales'
+          link={{
+            path: '/app/sales/create',
+            name: 'Create Sale',
+          }}
+        />
+      </section>
+    );
+  }
 
   return (
     <section>
-      {
-        isLoading
-          ?<Loader />
-          :<>
-            <Header
-              value='Sales'
-              isEmptyList={sales.length === 0}
-              link={{
-                path: '/app/sales/create',
-                name: 'New Sale',
-              }}
-            />
-            {
-              sales.length === 0
-                ?<EmptyListPlaceholder
-                  listName='sales'
-                  link={{
-                    path: '/app/sales/create',
-                    name: 'Create Sale',
-                  }}
-                />
-                :<>
-                  <SearchInput resourceName='sales' />
-                  <ResourcesTable
-                    resourceName='sale'
-                    resourcePath='/sales'
-                    resources={sales}
-                    handleDelete={deleteHandler}
-                  />
-                </>
-            }
-          </>
-      }
+      <Header
+        value='Sales'
+        isEmptyList={sales.length === 0}
+        link={{
+          path: '/app/sales/create',
+          name: 'New Sale',
+        }}
+      />
+      <SearchInput resourceName='sales' />
+      <ResourcesTable
+        resourceName='sale'
+        resourcePath='/sales'
+        resources={sales}
+        handleDelete={handleDelete}
+      />
     </section>
   );
 }
 
 export const SaleCreate = () => {
-  const { isLoading, handleCreate } = useCreateSale();
   const {
-    customers,
-    isLoading: isFetchingCustomers
-  } = useGetCustomers();
+    error: productsFetchError,
+    refresh: refreshProducts,
+    isLoading: isFetchingProducts,
+    data: products
+  } = useGet(PRODUCT_API);
   const {
-    products,
-    isLoading: isFetchingProducts
-  } = useGetProducts();
+    error: customersFetchError,
+    refresh: refreshCustomers,
+    isLoading: isFetchingCustomers,
+    data: customers
+  } = useGet(CUSTOMER_API);
+
   const { errors, register, handleSubmit } = useForm();
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const formData = new FormData(e.currentTarget);
-  //   const payload = Object.fromEntries(formData);
-  //   payload.quantity = parseInt(payload.quantity);
-  //   payload.total = parseInt(payload.total);
-  //   handleCreate(payload);
-  // }
+  const navigate = useNavigate();
+  const { isCreating, handleCreate } = useCreate(
+    SALE_API,
+    () => navigate('/app/sales')
+  );
+
+  const refresh = () => {
+    refreshProducts();
+    refreshCustomers();
+  }
+
+  if (isFetchingCustomers || isFetchingProducts) {
+    return <Loader />;
+  }
+
+  if (productsFetchError || customersFetchError) {
+    return (
+      <ErrorContainer
+        error={productsFetchError || customersFetchError}
+        refresh={refresh}
+      />
+    );
+  }
 
   return (
     <section>
-      {
-        isFetchingProducts || isFetchingCustomers
-          ?<Loader />
-          :<>
-            <PageHeader value='New Sale' />
-            <Form
-              legend='Sale Details'
-              onSubmit={(e) => handleSubmit(e, handleCreate)}
-              isLoading={isLoading}
-            >
-              <FormField error={errors.productId}>
-                <label htmlFor='product'>Product</label>
-                <select
-                  id='product'
-                  disabled={isLoading}
-                  {
-                    ...register(
-                      'productId',
-                      {
-                        required: true,
-                      }
-                    )
-                  }
-                >
-                  <option value=''>
-                    --Please choose a product--
-                  </option>
-                  {
-                    products.map((option, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={option.id? option.id: option}
-                        >
-                          { option.name? option.name: option }
-                        </option>
-                      );
-                    })
-                  }
-                </select>
-              </FormField>
-              <FormField error={errors.quantity}>
-                <label htmlFor='quantity'>Quantity</label>
-                <input
-                  id='quantity'
-                  type='number'
-                  disabled={isLoading}
-                  {
-                    ...register(
-                      'quantity',
-                      {
-                        required: true,
-                        length: {
-                          min: 1,
-                          max: 15,
-                        },
-                      }
-                    )
-                  }
-                />
-              </FormField>
-              <FormField error={errors.customerId}>
-                <label htmlFor='customer'>Customer</label>
-                <select
-                  id='customer'
-                  disabled={isLoading}
-                  {
-                    ...register(
-                      'customerId',
-                      {
-                        required: true,
-                      }
-                    )
-                  }
-                >
-                  <option value=''>
-                    --Please choose a customer--
-                  </option>
-                  {
-                    customers.map((option, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={option.id? option.id: option}
-                        >
-                          { option.name? option.name: option }
-                        </option>
-                      );
-                    })
-                  }
-                </select>
-              </FormField>
-            </Form>
-          </>
-      }
+      <PageHeader value='New Sale' />
+      <Form
+        legend='Sale Details'
+        onSubmit={(e) => handleSubmit(e, handleCreate)}
+        isLoading={isCreating}
+      >
+        <FormField error={errors.productId}>
+          <label htmlFor='product'>Product</label>
+          <select
+            id='product'
+            disabled={isCreating}
+            {
+              ...register(
+                'productId',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a product--
+            </option>
+            <OptionsList options={products} />
+          </select>
+        </FormField>
+        <FormField error={errors.quantity}>
+          <label htmlFor='quantity'>Quantity</label>
+          <input
+            id='quantity'
+            type='number'
+            disabled={isCreating}
+            {
+              ...register(
+                'quantity',
+                {
+                  required: true,
+                  length: {
+                    min: 1,
+                    max: 15,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.customerId}>
+          <label htmlFor='customer'>Customer</label>
+          <select
+            id='customer'
+            disabled={isCreating}
+            {
+              ...register(
+                'customerId',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a customer--
+            </option>
+            <OptionsList options={customers} />
+          </select>
+        </FormField>
+      </Form>
     </section>
   );
 }
 
 export const SaleUpdate = () => {
   const {
-    sale,
-    isLoading: isFetchingSale
-  } = useGetSale();
+    error: productsFetchError,
+    refresh: refreshProducts,
+    isLoading: isFetchingProducts,
+    data: products
+  } = useGet(PRODUCT_API);
   const {
-    products,
-    isLoading: isFetchingProducts
-  } = useGetProducts();
-  const {
-    customers,
-    isLoading: isFetchingCustomers
-  } = useGetCustomers();
-  const { isLoading, handleUpdate } = useUpdateSale();
+    error: customersFetchError,
+    refresh: refreshCustomers,
+    isLoading: isFetchingCustomers,
+    data: customers
+  } = useGet(CUSTOMER_API);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData);
-    handleUpdate(payload);
+  const { saleId } = useParams();
+  const {
+    error: saleFetchError,
+    refresh: refreshSale,
+    isLoading: isFetchingSale,
+    data: sale
+  } = useGet(`${SALE_API}/${saleId}`);
+
+  const { errors, register, handleSubmit } = useForm();
+
+  const navigate = useNavigate();
+  const { isUpdating, handleUpdate } = useUpdate(
+    `${SALE_API}/${saleId}`,
+    () => navigate('/app/sales')
+  );
+
+  const refresh = () => {
+    refreshCustomers();
+    refreshProducts();
+    refreshSale()
   }
-    
+
+  if (isFetchingCustomers || isFetchingProducts || isFetchingSale) {
+    return <Loader />;
+  }
+
+  const error = productsFetchError || customersFetchError || saleFetchError;
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
+    );
+  }
+
   return (
     <section>
-      {
-        isFetchingSale || isFetchingProducts || isFetchingCustomers
-          ?<Loader />
-          :<>
-            <PageHeader value='Update Order Status' />
-            <Form
-              legend='Order Details'
-              onSubmit={handleSubmit}
-              isLoading={isLoading}
-            >
-              {/* <SelectInput
-                label='Product'
-                name='productId'
-                value={sale.productId}
-                options={products}
-                disabled={isLoading}
-              /> */}
-              <FormField
-                label='Quantity'
-                type='number'
-                name='quantity'
-                value={sale.quantity}
-                disabled={isLoading}
-              />
-              <FormField
-                label='Total'
-                type='number'
-                name='total'
-                value={sale.price}
-                disabled={isLoading}
-              />
-              {/* <SelectInput
-                label='Customer'
-                name='customerId'
-                value={sale.customerId}
-                options={customers}
-                disabled={isLoading}
-              /> */}
-            </Form>
-          </>
-      }
+      <PageHeader value='Edit Sale' />
+      <Form
+        legend='Sale Details'
+        onSubmit={(e) => handleSubmit(e, handleUpdate)}
+        isLoading={isUpdating}
+      >
+        <FormField error={errors.productId}>
+          <label htmlFor='product'>Product</label>
+          <select
+            id='product'
+            disabled={isUpdating}
+            defaultValue={sale.product.id}
+            {
+              ...register(
+                'productId',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a product--
+            </option>
+            <OptionsList options={products} />
+          </select>
+        </FormField>
+        <FormField error={errors.quantity}>
+          <label htmlFor='quantity'>Quantity</label>
+          <input
+            id='quantity'
+            type='number'
+            disabled={isUpdating}
+            defaultValue={sale.quantity}
+            {
+              ...register(
+                'quantity',
+                {
+                  required: true,
+                  length: {
+                    min: 1,
+                    max: 15,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.customerId}>
+          <label htmlFor='customer'>Customer</label>
+          <select
+            id='customer'
+            disabled={isUpdating}
+            defaultValue={sale.customer.id}
+            {
+              ...register(
+                'customerId',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a customer--
+            </option>
+            <OptionsList options={customers} />
+          </select>
+        </FormField>
+      </Form>
     </section>
   );
 }

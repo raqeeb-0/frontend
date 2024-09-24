@@ -4,8 +4,7 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { MdEdit } from 'react-icons/md';
 import { MdOutlineDelete } from 'react-icons/md';
-//import { TbDeviceAnalytics } from 'react-icons/tb';
-import { useOutsideClick } from '../../hooks/common';
+import { useOutsideClick } from '../../hooks';
 
 
 export function ActionsMenu({ updatePath, data, handleDelete }) {
@@ -34,14 +33,6 @@ export function ActionsMenu({ updatePath, data, handleDelete }) {
           <MdMoreHoriz />
       </span>
       <div className={`${styles.actionMenu} ${isActiveMenu}`} >
-        {/*<Link
-          to='#'
-          className={styles.link}
-          style={{filter: 'blur(2px)'}}
-          title='Currently Not Working'
-        >
-          <TbDeviceAnalytics className={styles.icon} /> Analytics
-        </Link>*/}
         <Link to={updatePath} className={styles.link}>
           <MdEdit className={styles.icon} /> Edit
         </Link>

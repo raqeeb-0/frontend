@@ -3,6 +3,7 @@ import {
   Header,
   SearchInput,
   ResourcesTable,
+  ErrorContainer,
   EmptyListPlaceholder
 } from '../components/app';
 import {
@@ -10,78 +11,99 @@ import {
   FormField,
   PageHeader
 } from '../components/common';
+import { useForm }  from '../hooks';
+import { SUPPLIER_API } from '../lib/endpoints';
 import {
-  useDeleteSupplier,
-  useUpdateSupplier,
-  useCreateSupplier,
-  useGetSupplier,
-  useGetSuppliers
-} from '../hooks/suppliers';
-import { useForm }  from '../hooks/common';
+  useGet,
+  useCreate,
+  useUpdate,
+  useDelete
+} from '../hooks/useAPI';
+import {
+  useNavigate,
+  useParams
+} from 'react-router-dom';
+import { useMemo } from 'react';
 
 
 export const Suppliers = () => {
   const {
-    suppliers,
-    refreshSuppliers,
-    isLoading: isFetchingSuppliers
-  } = useGetSuppliers();
-  const {
-    handleDelete,
-    isLoading: isDeletingSupplier
-  } = useDeleteSupplier();
+    error,
+    refresh,
+    isLoading: isFetchingSuppliers,
+    data
+  } = useGet(SUPPLIER_API);
 
-  const deleteHandler = (e) => {
-    handleDelete(
-      e.currentTarget.getAttribute('data-id'),
-      refreshSuppliers
+  const { handleDelete, isDeleting } = useDelete(
+    SUPPLIER_API,
+    refresh
+  );
+
+  const suppliers = useMemo(() => {
+    return data ? data.map((supplier) => ({
+      'id': supplier.id,
+      'name': supplier.name,
+      'account payable': supplier.accountPayable,
+      'joined at': supplier.createdAt.split('T')[0],
+    })) : [];
+  }, [data]);
+
+  if (isFetchingSuppliers || isDeleting) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
     );
   }
 
-  const isLoading = isFetchingSuppliers || isDeletingSupplier;
+  if (suppliers.length === 0) {
+    return (
+      <section>
+        <EmptyListPlaceholder
+          listName='suppliers'
+          link={{
+            path: '/app/suppliers/create',
+            name: 'Create Supplier',
+          }}
+        />
+      </section>
+    )
+  }
 
   return (
     <section>
-      {
-        isLoading
-          ?<Loader />
-          :<>
-            <Header
-              value='Suppliers'
-              isEmptyList={suppliers.length === 0}
-              link={{
-                path: '/app/suppliers/create',
-                name: 'New Supplier',
-              }}
-            />
-            {
-              suppliers.length === 0
-                ?<EmptyListPlaceholder
-                  listName='suppliers'
-                  link={{
-                    path: '/app/suppliers/create',
-                    name: 'Create Supplier',
-                  }}
-                />
-                :<>
-                  <SearchInput resourceName='suppliers' />
-                  <ResourcesTable
-                    resourceName='supplier'
-                    resourcePath='/suppliers'
-                    resources={suppliers}
-                    handleDelete={deleteHandler}
-                  />
-                </>
-            }
-          </>
-      }
+      <Header
+        value='Suppliers'
+        isEmptyList={suppliers.length === 0}
+        link={{
+          path: '/app/suppliers/create',
+          name: 'New Supplier',
+        }}
+      />
+      <SearchInput resourceName='suppliers' />
+      <ResourcesTable
+        resourceName='supplier'
+        resourcePath='/suppliers'
+        resources={suppliers}
+        handleDelete={handleDelete}
+      />
     </section>
   );
 }
 
 export const SupplierCreate = () => {
-  const { isLoading, handleCreate } = useCreateSupplier();
   const { errors, register, handleSubmit } = useForm();
+
+  const navigate = useNavigate();
+  const { isCreating, handleCreate } = useCreate(
+    SUPPLIER_API,
+    () => navigate('/app/suppliers')
+  );
 
   return (
     <section>
@@ -89,7 +111,7 @@ export const SupplierCreate = () => {
       <Form
         legend='Supplier Details'
         onSubmit={(e) => handleSubmit(e, handleCreate)}
-        isLoading={isLoading}
+        isLoading={isCreating}
       >
         <FormField error={errors.name}>
           <label htmlFor='name'>Name</label>
@@ -98,7 +120,7 @@ export const SupplierCreate = () => {
             type='text'
             autoFocus='on'
             autoComplete='on'
-            disabled={isLoading}
+            disabled={isCreating}
             {
               ...register(
                 'name',
@@ -118,7 +140,7 @@ export const SupplierCreate = () => {
           <input
             id='phone'
             type='tel'
-            disabled={isLoading}
+            disabled={isCreating}
             {
               ...register(
                 'phone',
@@ -136,69 +158,85 @@ export const SupplierCreate = () => {
 }
 
 export const SupplierUpdate = () => {
+  const { supplierId } = useParams();
   const {
-    supplier,
-    isLoading: isFetchingSupplier
-  } = useGetSupplier();
-  const { isLoading, handleUpdate } = useUpdateSupplier();
+    error,
+    refresh,
+    isLoading: isFetchingSupplier,
+    data: supplier
+  } = useGet(`${SUPPLIER_API}/${supplierId}`);
+
   const { errors, register, handleSubmit } = useForm();
-    
+
+  const navigate = useNavigate();
+  const { isUpdating, handleUpdate } = useUpdate(
+    `${SUPPLIER_API}/${supplierId}`,
+    () => navigate('/app/suppliers')
+  );
+
+  if (isFetchingSupplier) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
+    );
+  }
+
   return (
     <section>
-      {
-        isFetchingSupplier
-          ?<Loader />
-          :<>
-            <PageHeader value='Update Supplier' />
-            <Form
-              legend='Supplier Details'
-              onSubmit={(e) => handleSubmit(e, handleUpdate)}
-              isLoading={isLoading}
-            >
-              <FormField error={errors.name}>
-                <label htmlFor='name'>Name</label>
-                <input
-                  id='name'
-                  type='text'
-                  autoFocus='on'
-                  autoComplete='on'
-                  disabled={isLoading}
-                  defaultValue={supplier.name}
-                  {
-                    ...register(
-                      'name',
-                      {
-                        required: true,
-                        length: {
-                          min: 2,
-                          max: 50,
-                        },
-                      }
-                    )
-                  }
-                />
-              </FormField>
-              <FormField error={errors.phone}>
-                <label htmlFor='phone'>Phone number</label>
-                <input
-                  id='phone'
-                  type='tel'
-                  disabled={isLoading}
-                  defaultValue={supplier.phone}
-                  {
-                    ...register(
-                      'phone',
-                      {
-                        required: true,
-                        phoneNumber: true,
-                      }
-                    )
-                  }
-                />
-              </FormField>
-            </Form>
-          </>
-      }
+      <PageHeader value='Edit Supplier' />
+      <Form
+        legend='Supplier Details'
+        onSubmit={(e) => handleSubmit(e, handleUpdate)}
+        isLoading={isUpdating}
+      >
+        <FormField error={errors.name}>
+          <label htmlFor='name'>Name</label>
+          <input
+            id='name'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isUpdating}
+            defaultValue={supplier.name}
+            {
+              ...register(
+                'name',
+                {
+                  required: true,
+                  length: {
+                    min: 2,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.phone}>
+          <label htmlFor='phone'>Phone number</label>
+          <input
+            id='phone'
+            type='tel'
+            disabled={isUpdating}
+            defaultValue={supplier.phone}
+            {
+              ...register(
+                'phone',
+                {
+                  required: true,
+                  phoneNumber: true,
+                }
+              )
+            }
+          />
+        </FormField>
+      </Form>
     </section>
   );
 }

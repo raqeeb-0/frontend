@@ -1,6 +1,5 @@
 export class FetchAdapter {
-  constructor(baseUrl = process.env.REACT_APP_API_URL) {
-    this.baseUrl = baseUrl;
+  constructor() {
     this.options = {
       credentials: 'include',
       headers: {
@@ -16,11 +15,12 @@ export class FetchAdapter {
   ) {
 
     const delay = Math.floor(Math.random() * 2000) + 1000;
+
     delaySwitch &&
       await new Promise(resolve => setTimeout(resolve, delay));
 
     try {
-      const response = await fetch(`${this.baseUrl}/${endpoint}`, {
+      const response = await fetch(endpoint, {
         ...this.options,
         ...customOptions,
       });
@@ -29,14 +29,21 @@ export class FetchAdapter {
       return {
         status: response.status,
         ok: response.ok,
-        data: data.data,
-        error: data.message,
+        data: data,
+        error: data.error,
       };
     } catch (err) {
+      if (err.message === 'Failed to fetch') {
+        err.message = 'Couldn\'t connect to the server';
+      }
+
       return {
         status: null,
         ok: false,
-        error: err.message,
+        data: null,
+        error: {
+          message: err.message,
+        }
       };
     }
   }

@@ -1,0 +1,36 @@
+.list {
+  position: absolute;
+  background-color: var(--contrast-background-clr);
+  border: 1px solid var(--primary-clr);
+  width: 100%;
+  max-height: 150px;
+  margin-bottom: 100px;
+  border-radius: 8px;
+  overflow-y: auto;
+  z-index: 100;
+  transition: all 0.2s ease;
+}
+
+.list li {
+  padding: 10px 25px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.list li:hover, .list li:focus, .list li:focus-within {
+  outline: none;
+  background-color: var(--primary-light-clr);
+}
+
+.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.inactive {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+}

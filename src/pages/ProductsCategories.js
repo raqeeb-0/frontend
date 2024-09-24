@@ -3,6 +3,7 @@ import {
   Header,
   SearchInput,
   ResourcesTable,
+  ErrorContainer,
   EmptyListPlaceholder
 } from '../components/app';
 import {
@@ -10,79 +11,99 @@ import {
   FormField,
   PageHeader
 } from '../components/common';
+import { useForm } from '../hooks';
+import { PRODUCT_CATEGORY_API } from '../lib/endpoints';
 import {
-  useDeleteProductsCategory,
-  useUpdateProductsCategory,
-  useCreateProductsCategory,
-  useGetProductsCategory,
-  useGetProductsCategories
-} from '../hooks/productsCategories';
-import { useForm } from '../hooks/common';
+  useGet,
+  useCreate,
+  useUpdate,
+  useDelete
+} from '../hooks/useAPI';
+import {
+  useNavigate,
+  useParams
+} from 'react-router-dom';
+import { useMemo } from 'react';
 
 
 export const ProductsCategories = () => {
   const {
-    categories,
-    refreshCategories,
-    isLoading: isFetchingCategories
-  } = useGetProductsCategories();
-  const {
-    handleDelete,
-    isLoading: isDeletingCategory
-  } = useDeleteProductsCategory();
+    error,
+    refresh,
+    isLoading: isFetchingCategories,
+    data
+  } = useGet(PRODUCT_CATEGORY_API);
 
-  const deleteHandler = (e) => {
-    handleDelete(
-      e.currentTarget.getAttribute('data-id'),
-      refreshCategories
+  const { handleDelete, isDeleting } = useDelete(
+    PRODUCT_CATEGORY_API,
+    refresh
+  );
+
+  const categories = useMemo(() => {
+    return data ? data.map((category) => ({
+      'id': category.id,
+      'name': category.name,
+      'created at': category.createdAt.split('T')[0],
+    })) : [];
+  }, [data]);
+
+  if (isFetchingCategories || isDeleting) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
+    )
+  }
+
+  if (categories.length === 0) {
+    return (
+      <section>
+        <EmptyListPlaceholder
+          listName='product categories'
+          link={{
+            path: '/app/products/categories/create',
+            name: 'Create Category',
+          }}
+        />
+      </section>
     );
   }
 
-  const isLoading = isFetchingCategories || isDeletingCategory;
-
   return (
     <section>
-      {
-        isLoading
-          ?<Loader />
-          :<>
-            <Header
-              value='Products Categories'
-              isEmptyList={categories.length === 0}
-              link={{
-                path: '/app/products/categories/create',
-                name: 'New Category',
-              }}
-            />
-            {
-              categories.length === 0
-                ?<EmptyListPlaceholder
-                  listName='product categories'
-                  link={{
-                    path: '/app/products/categories/create',
-                    name: 'Create Category',
-                  }}
-                />
-                :<>
-                  <SearchInput resourceName='categories' />
-                  <ResourcesTable
-                    resourceName='category'
-                    resourcePath='/products/categories'
-                    resources={categories}
-                    handleDelete={deleteHandler}
-                  />
-                </>
-            }
-          </>
-      }
+      <Header
+        value='Products Categories'
+        isEmptyList={categories.length === 0}
+        link={{
+          path: '/app/products/categories/create',
+          name: 'New Category',
+        }}
+      />
+      <SearchInput resourceName='categories' />
+      <ResourcesTable
+        resourceName='category'
+        resourcePath='/products/categories'
+        resources={categories}
+        handleDelete={handleDelete}
+      />
     </section>
   );
 }
 
 
 export const ProductsCategoryCreate = () => {
-  const { isLoading, handleCreate } = useCreateProductsCategory();
   const { errors, register, handleSubmit } = useForm();
+
+  const navigate = useNavigate();
+  const { handleCreate, isCreating } = useCreate(
+    PRODUCT_CATEGORY_API,
+    () => navigate('/app/products/categories')
+  );
 
   return (
     <section>
@@ -90,7 +111,7 @@ export const ProductsCategoryCreate = () => {
       <Form
         legend='Category Details'
         onSubmit={(e) => handleSubmit(e, handleCreate)}
-        isLoading={isLoading}
+        isLoading={isCreating}
       >
         <FormField error={errors.name}>
           <label htmlFor='name'>Name</label>
@@ -99,7 +120,7 @@ export const ProductsCategoryCreate = () => {
             type='text'
             autoFocus='on'
             autoComplete='on'
-            disabled={isLoading}
+            disabled={isCreating}
             {
               ...register(
                 'name',
@@ -121,51 +142,67 @@ export const ProductsCategoryCreate = () => {
 
 
 export const ProductsCategoryUpdate = () => {
-  const { isLoading, handleUpdate } = useUpdateProductsCategory();
+  const { categoryId } = useParams();
   const {
-    category,
-    isLoading: isFetchingCategory
-  } = useGetProductsCategory();
+    error,
+    refresh,
+    isLoading: isFetchingCategory,
+    data: category
+  } = useGet(`${PRODUCT_CATEGORY_API}/${categoryId}`);
+
   const { errors, register, handleSubmit } = useForm();
+
+  const navigate = useNavigate();
+  const { handleUpdate, isUpdating } = useUpdate(
+    `${PRODUCT_CATEGORY_API}/${categoryId}`,
+    () => navigate('/app/products/categories')
+  );
+
+  if (isFetchingCategory) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
+    );
+  }
 
   return (
     <section>
-      {
-        isFetchingCategory
-          ?<Loader />
-          :<>
-            <PageHeader value='Update Products Category' />
-            <Form
-              legend='Category Details'
-              onSubmit={(e) => handleSubmit(e, handleUpdate)}
-              isLoading={isLoading}
-            >
-              <FormField error={errors.name}>
-                <label htmlFor='name'>Name</label>
-                <input
-                  id='name'
-                  type='text'
-                  autoFocus='on'
-                  autoComplete='on'
-                  disabled={isLoading}
-                  defaultValue={category.name}
-                  {
-                    ...register(
-                      'name',
-                      {
-                        required: true,
-                        length: {
-                          min: 2,
-                          max: 50,
-                        },
-                      }
-                    )
-                  }
-                />
-              </FormField>
-            </Form>
-          </>
-      }
+      <PageHeader value='Edit Products Category' />
+      <Form
+        legend='Category Details'
+        onSubmit={(e) => handleSubmit(e, handleUpdate)}
+        isLoading={isUpdating}
+      >
+        <FormField error={errors.name}>
+          <label htmlFor='name'>Name</label>
+          <input
+            id='name'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isUpdating}
+            defaultValue={category.name}
+            {
+              ...register(
+                'name',
+                {
+                  required: true,
+                  length: {
+                    min: 2,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+      </Form>
     </section>
   );
 }

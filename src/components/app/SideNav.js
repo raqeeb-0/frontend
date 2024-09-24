@@ -1,62 +1,69 @@
 import styles from './styles/SideNav.module.css';
 import { NavLink } from 'react-router-dom';
-import { IoIosArrowDown } from 'react-icons/io';
-import { useState } from 'react';
+import { LuChevronDown } from 'react-icons/lu';
+import { useState, useEffect, useRef } from 'react';
 
 
 export const SideNav = (props) => {
-  const { panelList, panelLink } = props;
-  const [isOpen, setIsOpen] = useState(false);
+  const { panelList, panelHeader, isActive, onClick } = props;
 
-  const togglePanel = () => isOpen? setIsOpen(false): setIsOpen(true);
+  const [panelHeight, setPanelHeight] = useState(0);
+  const panelRef = useRef();
+  const firstLinkRef = useRef();
 
-  const handlePanelLink = ({ isActive }) => {
-    const activeClass = isActive? styles.active: '';
-    const openedClass = isOpen? styles.opened: '';
-    return `${openedClass} ${activeClass}`;
-  }
+  useEffect(() => {
+    if (isActive && firstLinkRef.current) {
+      setPanelHeight(panelRef.current.scrollHeight);
+      firstLinkRef.current.click();
+    } else {
+      setPanelHeight(0);
+    }
+  }, [isActive]);
 
-  const handleNavLink = ({ isActive }) => {
+  const handleNavLinkStyle = ({ isActive }) => {
     const activeClass = isActive? styles.active: '';
     return `${activeClass} ${styles.link}`;
   }
 
-  const opacityState = isOpen? styles.opacity100: styles.opacity20;
-
-  const panelState = isOpen? '': styles.closed;
+  const assignRef = (index) => !index && { ref: firstLinkRef };
 
   return (
-    <>
-      <div className={styles.panelLink}>
-        <NavLink
-          to={panelLink.path}
-          className={handlePanelLink}
-          onClick={(e) => {e.preventDefault(); togglePanel();}}
-        >
-          { panelLink.icon }{ panelLink.name } <div><IoIosArrowDown /></div>
-        </NavLink>
+    <div className={`${styles.container} ${isActive? styles.activeContainer : ''}`}>
+      <div
+        className={styles.panelHeader}
+        title={panelHeader.title}
+        onClick={onClick}
+      >
+        <span>{ panelHeader.icon }</span>
+        <span>{ panelHeader.title }</span>
+        <span className={`${isActive ? styles.rotate : ''}`}>
+          <LuChevronDown />
+        </span>
       </div>
-      <div className={`${styles.opacity} ${opacityState}`}>
-        <div className={`${panelState}`}>
-          <ul className={styles.list}>
-            {
-              panelList?.map((link, index) => {
-                return (
-                  <li key={index}>
-                    <NavLink
-                      to={link.path}
-                      className={handleNavLink}
-                      title={link.name}
-                    >
-                      { link.icon }{ link.name }
-                    </NavLink>
-                  </li>
-                );
-              })
-            }
-          </ul>
-        </div>
+      <div
+        ref={panelRef}
+        className={styles.panel}
+        style={{ height: `${panelHeight}px`}}
+      >
+        <ul className={styles.list}>
+          {
+            panelList?.map((link, index) => {
+              return (
+                <li key={index}>
+                  <NavLink
+                    to={link.path}
+                    className={handleNavLinkStyle}
+                    title={link.name}
+                    {...assignRef(index)}
+                  >
+                    { link.icon }{ link.name }
+                  </NavLink>
+                </li>
+              );
+            })
+          }
+        </ul>
       </div>
-    </>
+    </div>
   );
 }

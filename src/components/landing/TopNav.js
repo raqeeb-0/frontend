@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom';
 import {
   ButtonLoader,
   Separator,
-  Logo,
-  UserMenu
+  Logo
 } from '../common';
-import { useAuth } from '../../hooks/common';
+import { useAuth } from '../../hooks';
 import { useState, useEffect } from 'react';
 
 
@@ -15,7 +14,6 @@ export const TopNav = ({ pageRef }) => {
   const { username, isLoading, handleLogout } = useAuth();
   const [navBackground, setNavBackground] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isInstallable, setIsInstallable] = useState(false);
 
   useEffect(() => {
     const pageElement = pageRef.current;
@@ -38,7 +36,6 @@ export const TopNav = ({ pageRef }) => {
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      setIsInstallable(true);
     };
 
     window.addEventListener(
@@ -64,10 +61,7 @@ export const TopNav = ({ pageRef }) => {
           } else {
             console.log('User dismissed the install prompt');
           }
-          // Clear the deferred prompt
           setDeferredPrompt(null);
-          // Hide the install button
-          setIsInstallable(false);
         });
     }
   };
@@ -118,7 +112,7 @@ export const TopNav = ({ pageRef }) => {
             }
           </Link>
           <Link
-            to={username ? '/dashboard' : '/auth/signup'}
+            to={username ? '/organizations/overview' : '/auth/signup'}
             className={`${styles.navLink} ${
               isLoading ? styles.disabled : ''
             }`}

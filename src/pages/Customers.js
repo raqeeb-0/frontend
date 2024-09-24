@@ -3,6 +3,7 @@ import {
   Header,
   SearchInput,
   ResourcesTable,
+  ErrorContainer,
   EmptyListPlaceholder
 } from '../components/app';
 import {
@@ -10,78 +11,99 @@ import {
   FormField,
   PageHeader
 } from '../components/common';
+import { useForm }  from '../hooks';
+import { CUSTOMER_API } from '../lib/endpoints';
 import {
-  useDeleteCustomer,
-  useUpdateCustomer,
-  useCreateCustomer,
-  useGetCustomer,
-  useGetCustomers
-} from '../hooks/customers';
-import { useForm }  from '../hooks/common';
+  useGet,
+  useCreate,
+  useUpdate,
+  useDelete
+} from '../hooks/useAPI';
+import {
+  useNavigate,
+  useParams
+} from 'react-router-dom';
+import { useMemo } from 'react';
 
 
 export const Customers = () => {
   const {
-    customers,
-    refreshCustomers,
-    isLoading: isFetchingCustomers
-  } = useGetCustomers();
-  const {
-    handleDelete,
-    isLoading: isDeletingCustomer
-  } = useDeleteCustomer();
+    error,
+    refresh,
+    isLoading: isFetchingCustomers,
+    data
+  } = useGet(CUSTOMER_API);
 
-  const deleteHandler = (e) => {
-    handleDelete(
-      e.currentTarget.getAttribute('data-id'),
-      refreshCustomers
+  const { handleDelete, isDeleting } = useDelete(
+    CUSTOMER_API,
+    refresh
+  );
+
+  const customers = useMemo(() => {
+    return data ? data.map((customer) => ({
+      'id': customer.id,
+      'name': customer.name,
+      'account receivable': customer.accountReceivable,
+      'joined at': customer.createdAt.split('T')[0],
+    })) : [];
+  }, [data]);
+
+  if (isFetchingCustomers || isDeleting) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
     );
   }
 
-  const isLoading = isFetchingCustomers || isDeletingCustomer;
+  if (customers.length === 0) {
+    return (
+      <section>
+        <EmptyListPlaceholder
+          listName='customers'
+          link={{
+            path: '/app/customers/create',
+            name: 'Create Customer',
+          }}
+        />
+      </section>
+    )
+  }
 
   return (
     <section>
-      {
-        isLoading
-          ?<Loader />
-          :<>
-            <Header
-              value='Customers'
-              isEmptyList={customers.length === 0}
-              link={{
-                path: '/app/customers/create',
-                name: 'New Customer',
-              }}
-            />
-            {
-              customers.length === 0
-                ?<EmptyListPlaceholder
-                  listName='customers'
-                  link={{
-                    path: '/app/customers/create',
-                    name: 'Create Customer',
-                  }}
-                />
-                :<>
-                  <SearchInput resourceName='customers' />
-                  <ResourcesTable
-                    resourceName='customer'
-                    resourcePath='/customers'
-                    resources={customers}
-                    handleDelete={deleteHandler}
-                  />
-                </>
-            }
-          </>
-      }
+      <Header
+        value='Customers'
+        isEmptyList={customers.length === 0}
+        link={{
+          path: '/app/customers/create',
+          name: 'New Customer',
+        }}
+      />
+      <SearchInput resourceName='customers' />
+      <ResourcesTable
+        resourceName='customer'
+        resourcePath='/customers'
+        resources={customers}
+        handleDelete={handleDelete}
+      />
     </section>
   );
 }
 
 export const CustomerCreate = () => {
-  const { isLoading, handleCreate } = useCreateCustomer();
   const { errors, register, handleSubmit } = useForm();
+
+  const navigate = useNavigate();
+  const { handleCreate, isCreating } = useCreate(
+    CUSTOMER_API,
+    () => navigate('/app/customers')
+  );
 
   return (
     <section>
@@ -89,7 +111,7 @@ export const CustomerCreate = () => {
       <Form
         legend='Customer Details'
         onSubmit={(e) => handleSubmit(e, handleCreate)}
-        isLoading={isLoading}
+        isLoading={isCreating}
       >
         <FormField error={errors.name}>
           <label htmlFor='name'>Name</label>
@@ -98,7 +120,7 @@ export const CustomerCreate = () => {
             type='text'
             autoFocus='on'
             autoComplete='on'
-            disabled={isLoading}
+            disabled={isCreating}
             {
               ...register(
                 'name',
@@ -118,7 +140,7 @@ export const CustomerCreate = () => {
           <input
             id='phone'
             type='tel'
-            disabled={isLoading}
+            disabled={isCreating}
             {
               ...register(
                 'phone',
@@ -136,69 +158,85 @@ export const CustomerCreate = () => {
 }
 
 export const CustomerUpdate = () => {
+  const { customerId } = useParams();
   const {
-    customer,
-    isLoading: isFetchingCustomer
-  } = useGetCustomer();
-  const { isLoading, handleUpdate } = useUpdateCustomer();
+    error,
+    refresh,
+    isLoading: isFetchingCustomer,
+    data: customer
+  } = useGet(`${CUSTOMER_API}/${customerId}`);
+
   const { errors, register, handleSubmit } = useForm();
-    
+
+  const navigate = useNavigate();
+  const { handleUpdate, isUpdating } = useUpdate(
+    `${CUSTOMER_API}/${customerId}`,
+    () => navigate('/app/customers')
+  );
+
+  if (isFetchingCustomer) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
+    );
+  }
+
   return (
     <section>
-      {
-        isFetchingCustomer
-          ?<Loader />
-          :<>
-            <PageHeader value='Update Customer' />
-            <Form
-              legend='Customer Details'
-              onSubmit={(e) => handleSubmit(e, handleUpdate)}
-              isLoading={isLoading}
-            >
-              <FormField error={errors.name}>
-                <label htmlFor='name'>Name</label>
-                <input
-                  id='name'
-                  type='text'
-                  autoFocus='on'
-                  autoComplete='on'
-                  disabled={isLoading}
-                  defaultValue={customer.name}
-                  {
-                    ...register(
-                      'name',
-                      {
-                        required: true,
-                        length: {
-                          min: 2,
-                          max: 50,
-                        },
-                      }
-                    )
-                  }
-                />
-              </FormField>
-              <FormField error={errors.phone}>
-                <label htmlFor='phone'>Phone number</label>
-                <input
-                  id='phone'
-                  type='tel'
-                  disabled={isLoading}
-                  defaultValue={customer.phone}
-                  {
-                    ...register(
-                      'phone',
-                      {
-                        required: true,
-                        phoneNumber: true,
-                      }
-                    )
-                  }
-                />
-              </FormField>
-            </Form>
-          </>
-      }
+      <PageHeader value='Edit Customer' />
+      <Form
+        legend='Customer Details'
+        onSubmit={(e) => handleSubmit(e, handleUpdate)}
+        isLoading={isUpdating}
+      >
+        <FormField error={errors.name}>
+          <label htmlFor='name'>Name</label>
+          <input
+            id='name'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isUpdating}
+            defaultValue={customer.name}
+            {
+              ...register(
+                'name',
+                {
+                  required: true,
+                  length: {
+                    min: 2,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.phone}>
+          <label htmlFor='phone'>Phone number</label>
+          <input
+            id='phone'
+            type='tel'
+            disabled={isUpdating}
+            defaultValue={customer.phone}
+            {
+              ...register(
+                'phone',
+                {
+                  required: true,
+                  phoneNumber: true,
+                }
+              )
+            }
+          />
+        </FormField>
+      </Form>
     </section>
   );
 }

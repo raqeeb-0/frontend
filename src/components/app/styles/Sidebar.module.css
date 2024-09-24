@@ -47,7 +47,8 @@
   transition: color 0.2s ease;
 }
 
-.link:hover {
+.link:hover, .link:focus {
+  outline: none;
   color: var(--primary-clr);
   text-decoration: underline;
 }
@@ -66,8 +67,6 @@
 .list li:has(>a) {
   padding: 15px;
   padding-left: 0;
-  text-overflow: ellipsis;
-  overflow: hidden;
   transition: background-color 0.2s ease;
 }
 

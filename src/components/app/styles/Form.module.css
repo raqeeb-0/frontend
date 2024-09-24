@@ -40,7 +40,7 @@
   transition: all 0.2s ease;
 }
 
-.button:hover, .button:disabled {
+.button:hover, .button:disabled, .button:focus {
   background-color: var(--primary-dark-clr);
 }
 

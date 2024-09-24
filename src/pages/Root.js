@@ -1,6 +1,8 @@
 import { Outlet } from 'react-router-dom';
-import { AuthProvider } from '../contexts/AuthContext';
-import { NotificationProvider } from '../contexts/NotificationContext';
+import {
+  AuthProvider,
+  NotificationProvider
+} from '../providers';
 import { Notification } from '../components/common';
 
 

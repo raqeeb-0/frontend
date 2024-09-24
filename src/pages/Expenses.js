@@ -2,7 +2,9 @@ import {
   Header,
   Form,
   SearchInput,
+  OptionsList,
   ResourcesTable,
+  ErrorContainer,
   EmptyListPlaceholder
 } from '../components/app';
 import {
@@ -10,236 +12,274 @@ import {
   FormField,
   PageHeader
 } from '../components/common';
+import { useForm } from '../hooks';
 import {
-  useDeleteExpense,
-  useUpdateExpense,
-  useCreateExpense,
-  useGetExpense,
-  useGetExpenses
-} from '../hooks/expenses';
+  EXPENSE_API,
+  EXPENSE_CATEGORY_API
+} from '../lib/endpoints';
 import {
-  useGetExpensesCategories
-} from '../hooks/expensesCategories';
-import { useForm } from '../hooks/common';
+  useGet,
+  useCreate,
+  useUpdate,
+  useDelete
+} from '../hooks/useAPI';
+import {
+  useNavigate,
+  useParams
+} from 'react-router-dom';
+import { useMemo } from 'react';
 
 
 export const Expenses = () => {
   const {
-    expenses,
-    refreshExpenses,
-    isLoading: isFetchingExpenses
-  } = useGetExpenses();
-  const {
-    handleDelete,
-    isLoading: isDeletingExpense
-  } = useDeleteExpense();
+    error,
+    refresh,
+    isLoading: isFetchingExpenses,
+    data
+  } = useGet(EXPENSE_API);
 
-  const deleteHandler = (e) => {
-    handleDelete(
-      e.currentTarget.getAttribute('data-id'),
-      refreshExpenses
+  const { handleDelete, isDeleting } = useDelete(
+    EXPENSE_API,
+    refresh
+  );
+
+  const expenses = useMemo(() => {
+    return data ? data.map((expense) => ({
+      'id': expense.id,
+      'name': expense.name,
+      'last purchase price': expense.price,
+      'category': expense.category.name,
+      'created at': expense.createdAt.split('T')[0],
+    })) : [];
+  }, [data]);
+
+  if (isFetchingExpenses || isDeleting) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
     );
   }
 
-  const isLoading = isFetchingExpenses || isDeletingExpense;
+  if (expenses.length === 0) {
+    return (
+      <section>
+        <EmptyListPlaceholder
+          listName='expenses'
+          link={{
+            path: '/app/expenses/units/create',
+            name: 'Create Expense',
+          }}
+        />
+      </section>
+    )
+  }
 
   return (
     <section>
-      {
-        isLoading
-          ?<Loader />
-          :<>
-            <Header
-              value='Expenses'
-              isEmptyList={expenses.length === 0}
-              link={{
-                path: '/app/expenses/units/create',
-                name: 'New Expense',
-              }}
-            />
-            {
-              expenses.length === 0
-                ?<EmptyListPlaceholder
-                  listName='expenses'
-                  link={{
-                    path: '/app/expenses/units/create',
-                    name: 'Create Expense',
-                  }}
-                />
-                :<>
-                  <SearchInput resourceName='expenses' />
-                  <ResourcesTable
-                    resourceName='expense'
-                    resourcePath='/expenses/units'
-                    resources={expenses}
-                    handleDelete={deleteHandler}
-                  />
-                </>
-            }
-          </>
-      }
+      <Header
+        value='Expenses'
+        isEmptyList={expenses.length === 0}
+        link={{
+          path: '/app/expenses/units/create',
+          name: 'New Expense',
+        }}
+      />
+      <SearchInput resourceName='expenses' />
+      <ResourcesTable
+        resourceName='expense'
+        resourcePath='/expenses/units'
+        resources={expenses}
+        handleDelete={handleDelete}
+      />
     </section>
   );
 }
 
 export const ExpenseCreate = () => {
-  const { isLoading, handleCreate } = useCreateExpense();
   const {
-    categories,
-    isLoading: isFetchingCategories
-  } = useGetExpensesCategories();
+    error,
+    refresh,
+    isLoading: isFetchingCategories,
+    data: categories
+  } = useGet(EXPENSE_CATEGORY_API);
+
   const { errors, register, handleSubmit } = useForm();
+
+  const navigate = useNavigate();
+  const { isCreating, handleCreate } = useCreate(
+    EXPENSE_API,
+    () => navigate('/app/expenses/units')
+  );
+
+  if (isFetchingCategories) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
+    );
+  }
 
   return (
     <section>
-      {
-        isFetchingCategories
-          ?<Loader />
-          :<>
-            <PageHeader value='New Expense' />
-            <Form
-              legend='Expense Details'
-              onSubmit={(e) => handleSubmit(e, handleCreate)}
-              isLoading={isLoading}
-            >
-              <FormField error={errors.name}>
-                <label htmlFor='name'>Name</label>
-                <input
-                  id='name'
-                  type='text'
-                  autoFocus='on'
-                  autoComplete='on'
-                  disabled={isLoading}
-                  {
-                    ...register(
-                      'name',
-                      {
-                        required: true,
-                        length: {
-                          min: 2,
-                          max: 50,
-                        },
-                      }
-                    )
-                  }
-                />
-              </FormField>
-              <FormField error={errors.categoryId}>
-                <label htmlFor='categoryId'>Category</label>
-                <select
-                  id='categoryId'
-                  disabled={isLoading}
-                  {
-                    ...register(
-                      'categoryId',
-                      {
-                        required: true,
-                      }
-                    )
-                  }
-                >
-                  <option value=''>--Please choose an option--</option>
-                  {
-                    categories.map((option, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={option.id? option.id: option}
-                        >
-                          { option.name? option.name: option }
-                        </option>
-                      );
-                    })
-                  }
-                </select>
-              </FormField>
-            </Form>
-          </>
-      }
+      <PageHeader value='New Expense' />
+      <Form
+        legend='Expense Details'
+        onSubmit={(e) => handleSubmit(e, handleCreate)}
+        isLoading={isCreating}
+      >
+        <FormField error={errors.name}>
+          <label htmlFor='name'>Name</label>
+          <input
+            id='name'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isCreating}
+            {
+              ...register(
+                'name',
+                {
+                  required: true,
+                  length: {
+                    min: 2,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.categoryId}>
+          <label htmlFor='categoryId'>Category</label>
+          <select
+            id='categoryId'
+            disabled={isCreating}
+            {
+              ...register(
+                'categoryId',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a category--
+            </option>
+            <OptionsList options={categories} />
+          </select>
+        </FormField>
+      </Form>
     </section>
   );
 }
 
 export const ExpenseUpdate = () => {
   const {
-    expense,
-    isLoading: isFetchingExpense
-  } = useGetExpense();
+    error: categoriesFetchError,
+    refresh: refreshCategories,
+    isLoading: isFetchingCategories,
+    data: categories
+  } = useGet(EXPENSE_CATEGORY_API);
+
+  const { expenseId } = useParams();
   const {
-    categories,
-    isLoading: isFetchingCategories
-  } = useGetExpensesCategories();
-  const { isLoading, handleUpdate } = useUpdateExpense();
+    error: expenseFetchError,
+    refresh: refreshExpense,
+    isLoading: isFetchingExpense,
+    data: expense
+  } = useGet(`${EXPENSE_API}/${expenseId}`);
+
   const { errors, register, handleSubmit } = useForm();
-    
+
+  const navigate = useNavigate();
+  const { isUpdating, handleUpdate } = useUpdate(
+    `${EXPENSE_API}/${expenseId}`,
+    () => navigate('/app/expenses/units')
+  );
+
+  const refresh = () => {
+    refreshCategories();
+    refreshExpense();
+  }
+
+  if (isFetchingCategories || isFetchingExpense) {
+    return <Loader />;
+  }
+
+  if (categoriesFetchError || expenseFetchError) {
+    return (
+      <ErrorContainer
+        error={categoriesFetchError || expenseFetchError}
+        refresh={refresh}
+      />
+    );
+  }
+
   return (
     <section>
-      {
-        isFetchingExpense || isFetchingCategories
-          ?<Loader />
-          :<>
-            <PageHeader value='Update Expense' />
-            <Form
-              legend='Expense Details'
-              onSubmit={(e) => handleSubmit(e, handleUpdate)}
-              isLoading={isLoading}
-            >
-              <FormField error={errors.name}>
-                <label htmlFor='name'>Name</label>
-                <input
-                  id='name'
-                  type='text'
-                  autoFocus='on'
-                  autoComplete='on'
-                  disabled={isLoading}
-                  defaultValue={expense.name}
-                  {
-                    ...register(
-                      'name',
-                      {
-                        required: true,
-                        length: {
-                          min: 2,
-                          max: 50,
-                        },
-                      }
-                    )
-                  }
-                />
-              </FormField>
-              <FormField error={errors.categoryId}>
-                <label htmlFor='categoryId'>Category</label>
-                <select
-                  id='categoryId'
-                  disabled={isLoading}
-                  defaultValue={expense.categoryId}
-                  {
-                    ...register(
-                      'categoryId',
-                      {
-                        required: true,
-                      }
-                    )
-                  }
-                >
-                  <option value=''>--Please choose an option--</option>
-                  {
-                    categories.map((option, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={option.id? option.id: option}
-                        >
-                          { option.name? option.name: option }
-                        </option>
-                      );
-                    })
-                  }
-                </select>
-              </FormField>
-            </Form>
-          </>
-      }
+      <PageHeader value='Edit Expense' />
+      <Form
+        legend='Expense Details'
+        onSubmit={(e) => handleSubmit(e, handleUpdate)}
+        isLoading={isUpdating}
+      >
+        <FormField error={errors.name}>
+          <label htmlFor='name'>Name</label>
+          <input
+            id='name'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
+            disabled={isUpdating}
+            defaultValue={expense.name}
+            {
+              ...register(
+                'name',
+                {
+                  required: true,
+                  length: {
+                    min: 2,
+                    max: 50,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.categoryId}>
+          <label htmlFor='categoryId'>Category</label>
+          <select
+            id='categoryId'
+            disabled={isUpdating}
+            defaultValue={expense.category.id}
+            {
+              ...register(
+                'categoryId',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a category--
+            </option>
+            <OptionsList options={categories} />
+          </select>
+        </FormField>
+      </Form>
     </section>
   );
 }

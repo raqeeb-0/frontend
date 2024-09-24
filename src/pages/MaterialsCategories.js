@@ -3,6 +3,7 @@ import {
   Header,
   SearchInput,
   ResourcesTable,
+  ErrorContainer,
   EmptyListPlaceholder
 } from '../components/app';
 import {
@@ -10,7 +11,8 @@ import {
   FormField,
   PageHeader
 } from '../components/common';
-import { useForm } from '../hooks/common';
+import { useForm } from '../hooks';
+import { MATERIAL_CATEGORY_API } from '../lib/endpoints';
 import {
   useGet,
   useCreate,
@@ -21,28 +23,41 @@ import {
   useNavigate,
   useParams
 } from 'react-router-dom';
+import { useMemo } from 'react';
 
-
-const materialCategoriesEndpoint = 'org/m/categories';
 
 export const MaterialsCategories = () => {
   const {
+    error,
     refresh,
-    isLoading,
-    data: categories
-  } = useGet(materialCategoriesEndpoint);
+    isLoading: isFetchingCategories,
+    data
+  } = useGet(MATERIAL_CATEGORY_API);
 
   const { handleDelete, isDeleting } = useDelete(
-    materialCategoriesEndpoint,
+    MATERIAL_CATEGORY_API,
     refresh
   );
 
-  if (isLoading || isDeleting) {
+  const categories = useMemo(() => {
+    return data ? data.map((category) => ({
+      'id': category.id,
+      'name': category.name,
+      'created at': category.createdAt.split('T')[0],
+    })) : [];
+  }, [data]);
+
+  if (isFetchingCategories || isDeleting) {
+    return <Loader />;
+  }
+
+  if (error) {
     return (
-      <section>
-        <Loader />
-      </section>
-    );
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
+    )
   }
 
   if (categories.length === 0) {
@@ -86,7 +101,7 @@ export const MaterialsCategoryCreate = () => {
 
   const navigate = useNavigate();
   const { handleCreate, isCreating } = useCreate(
-    materialCategoriesEndpoint,
+    MATERIAL_CATEGORY_API,
     () => navigate('/app/materials/categories')
   );
 
@@ -127,30 +142,38 @@ export const MaterialsCategoryCreate = () => {
 
 
 export const MaterialsCategoryUpdate = () => {
-  const { errors, register, handleSubmit } = useForm();
-
   const { categoryId } = useParams();
-  const { data: category, isLoading } = useGet(
-    `${materialCategoriesEndpoint}/${categoryId}`
-  );
+  const {
+    error,
+    refresh,
+    isLoading: isFetchingCategory,
+    data: category
+  } = useGet(`${MATERIAL_CATEGORY_API}/${categoryId}`);
+
+  const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { handleUpdate, isUpdating } = useUpdate(
-    `${materialCategoriesEndpoint}/${categoryId}`,
+    `${MATERIAL_CATEGORY_API}/${categoryId}`,
     () => navigate('/app/materials/categories')
   );
 
-  if (isLoading) {
+  if (isFetchingCategory) {
+    return <Loader />;
+  }
+
+  if (error) {
     return (
-      <section>
-        <Loader />
-      </section>
+      <ErrorContainer
+        error={error}
+        refresh={refresh}
+      />
     );
   }
-    
+
   return (
     <section>
-      <PageHeader value='Update Materials Category' />
+      <PageHeader value='Edit Materials Category' />
       <Form
         legend='Category Details'
         onSubmit={(e) => handleSubmit(e, handleUpdate)}
