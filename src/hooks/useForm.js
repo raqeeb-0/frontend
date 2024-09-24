@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import validations from '../services/validation';
+import validations from '../lib/validation';
 
 
 export const useForm = () => {
