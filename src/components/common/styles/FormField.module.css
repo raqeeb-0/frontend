@@ -7,8 +7,9 @@
   display: block;
   width: fit-content;
   margin-left: 7px;
-  margin-bottom: 3px;
+  margin-bottom: 15px;
   font-size: 1.1rem;
+  font-weight: 600;
   transition: color 0.2s ease;
 }
 
@@ -33,8 +34,7 @@
   background-color: var(--contrast-background-clr);
   outline: 1px solid transparent;
   border: 1px solid var(--font-clr);
-  border-radius: 8px;
-  width: 300px;
+  border-radius: 5px;
   width: 100%;
   height: 50px;
   padding: 10px 20px;

@@ -120,6 +120,10 @@ export const Sidebar = ({ isOpen }) => {
     setActivePanel(activePanel === panelIndex ? null : panelIndex);
   }
 
+  const handlePanelFocus = (panelIndex) => {
+    setActivePanel(panelIndex);
+  }
+
   const handleNavLinkStyle = ({ isActive }) => {
     const activeClass = isActive? styles.active: '';
     return `${activeClass} ${styles.link}`;
@@ -147,6 +151,7 @@ export const Sidebar = ({ isOpen }) => {
             panelList={purchasing}
             isActive={activePanel === 0}
             onClick={() => handlePanelClick(0)}
+            onFocus={() => handlePanelFocus(0)}
           />
         </li>
         {
@@ -178,6 +183,7 @@ export const Sidebar = ({ isOpen }) => {
                   panelList={panel.list}
                   isActive={activePanel === idx}
                   onClick={() => handlePanelClick(idx)}
+                  onFocus={() => handlePanelFocus(idx)}
                 />
               </li>
             )

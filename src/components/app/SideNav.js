@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 
 
 export const SideNav = (props) => {
-  const { panelList, panelHeader, isActive, onClick } = props;
+  const { panelList, panelHeader, isActive, onClick, onFocus } = props;
 
   const [panelHeight, setPanelHeight] = useState(0);
   const panelRef = useRef();
@@ -54,6 +54,7 @@ export const SideNav = (props) => {
                     to={link.path}
                     className={handleNavLinkStyle}
                     title={link.name}
+                    onFocus={onFocus}
                     {...assignRef(index)}
                   >
                     { link.icon }{ link.name }

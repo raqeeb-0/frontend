@@ -10,14 +10,16 @@ export const Form = (props) => {
       <legend className={styles.legend}>
         { legend }
       </legend>
-      <div className={styles.formGrid}>
-        { children }
+      <div className={styles.container}>
+        <div className={styles.grid}>
+          { children }
+        </div>
       </div>
       <button
         className={styles.button}
         disabled={isLoading}
       >
-        { isLoading? <ButtonLoader />: 'Submit' }
+        { isLoading ? <ButtonLoader /> : 'Submit' }
       </button>
     </form>
   );

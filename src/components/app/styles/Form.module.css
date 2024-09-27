@@ -1,5 +1,5 @@
 .form {
-  width: clamp(319px, 100%, 800px);
+  width: 100%;
 }
 
 .legend {
@@ -12,15 +12,24 @@
   font-weight: bold;
 }
 
-.formGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.container {
   border: 1px solid var(--primary-light-clr);
   border-top: none;
   border-radius: 0 0 16px 16px;
   padding: 40px;
   transition: background-color 0.2s ease;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 40px 20px;
+  width: 90%;
+}
+
+.grid:has(#imageUploader) {
+  grid-template-columns: repeat(3, auto);
+  width: 100%;
 }
 
 .button {

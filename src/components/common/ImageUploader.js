@@ -21,6 +21,7 @@ export function ImageUploader() {
       readImageFile(file);
     } else {
       setImageSrc(null);
+      setImageObj(null);
     }
   };
 
