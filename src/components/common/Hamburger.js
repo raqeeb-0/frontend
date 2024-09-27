@@ -1,14 +1,14 @@
 import styles from './styles/Hamburger.module.css';
 
 
-export function Hamburger({ isSidebarOpen, toggleSidebar }) {
+export function Hamburger({ isOpen, toggle }) {
   return (
     <label className={styles.hamburger}>
       <input
         type='checkbox'
         name='sidebar_state'
-        checked={isSidebarOpen}
-        onChange={toggleSidebar}
+        checked={isOpen}
+        onChange={toggle}
       />
       <svg viewBox="0 0 32 32">
         <path

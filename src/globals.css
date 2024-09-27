@@ -5,10 +5,6 @@
   scroll-behavior: smooth;
 }
 
-body {
-  overflow: hidden;
-}
-
 #root {
   --primary-clr: #00687B;
   --primary-dark-clr: #005766;
@@ -23,6 +19,7 @@ body {
   --shadow-clr: #0000001a;
   --contrast-background-clr: #F7F7F9;
   --available: #2DCA8C;
+  --neutral: #808080;
 
   --error: #F91226;
   --light-error: #FFF0F1;
@@ -31,10 +28,14 @@ body {
   --success: #388E3C;
   --light-success: #EEFAF2;
 
+  --theme-transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+
   background-color: var(--background-clr);
   color: var(--font-clr);
   transition: background-color 0.2s ease;
-  font-family: 'Inter', 'Segoe UI', 'Tahoma';
+  font-family: 'Inter', 'Segoe UI', 'Poppins', 'Tahoma';
 }
 
 button {
@@ -50,10 +51,29 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #808080;
+  background-color: var(--neutral);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--font-clr);
+}
+
+::-moz-selection {
+  background-color: var(--neutral);
+}
+
+::selection {
+  background-color: var(--neutral);
+}
+
+a, button, label {
+  -webkit-tap-highlight-color: var(--shadow-clr);
+}
+
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

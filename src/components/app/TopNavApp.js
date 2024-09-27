@@ -11,8 +11,8 @@ export const TopNavApp = (props) => {
   return (
     <header className={styles.topnav}>
       <Hamburger
-        isSidebarOpen={isSidebarOpen}
-        toggleSidebar={toggleSidebar}
+        isOpen={isSidebarOpen}
+        toggle={toggleSidebar}
       />
       <UserMenu />
     </header>

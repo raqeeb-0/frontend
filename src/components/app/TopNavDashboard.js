@@ -2,10 +2,10 @@ import styles from './styles/TopNavDashboard.module.css';
 import {
   IconLink,
   Separator,
-  Logo,
   UserMenu
 } from '../common';
 import { MdAddCircleOutline } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 
 export const TopNavDashboard = (props) => {
@@ -14,10 +14,15 @@ export const TopNavDashboard = (props) => {
   return (
       <header className={styles.header}>
         <section className={styles.headerSection}>
-          <Logo
-            imagePath='/logo192name.png'
-            to='/organizations/overview'
-          />
+          <Link to='/organizations/overview'>
+            <img
+              src='/logo192name.png'
+              style={{ objectFit: 'cover' }}
+              width={128}
+              height={64}
+              alt='Logo'
+            />
+          </Link>
           <nav className={styles.nav}>
             {
               !isEmptyList &&

@@ -1,14 +1,13 @@
-import styles from './styles/FirstHero.module.css';
+import styles from './styles/HeroImage.module.css';
 
-export const HeroVector = () => {
+export const HeroImage = () => {
   return (
-    <div className={styles.heroVectorContainer}>
+    <div className={styles.wrapper}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className={styles.heroVector}
+        className={styles.vector}
         data-name="Layer 1"
-        width="1029.56255"
-        height="548.69495"
+
         viewBox="0 0 1029.56255 548.69495"
         xmlnsXlink="http://www.w3.org/1999/xlink"
       >

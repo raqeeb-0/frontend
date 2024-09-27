@@ -1,70 +1,103 @@
-.header {
-  background-color: var(--contrast-background-clr);
-}
-
-.header {
+.container {
   position: fixed;
-  top: 50px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
   background-color: transparent;
-  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
   z-index: 5;
   transition: all 0.2s ease;
 }
 
-.navScrolled {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
+.glass {
+  background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
-.header section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-  margin: 0 auto;
+.hamburger {
+  display: none;
 }
 
-.nav {
+.loader {
+  width: 150px;
+  text-align: center;
+}
+
+.container ul {
+  list-style: none;
   display: flex;
   align-items: center;
 }
 
-.navLink {
+.container ul a {
   color: var(--font-clr);
   border-radius: 40px;
-  width: 180px;
-  padding: 10px 0px;
+  padding: 10px 50px;
   white-space: nowrap;
-  text-align: center;
   text-decoration: none;
+  text-align: center;
   transition: all 0.2s ease;
 }
 
-.navLink:hover {
-  /* color: var(--primary-clr); */
+.container ul a:hover {
   background-color: var(--shadow-clr);
 }
 
-.disabled {
-  pointer-events: none;
-}
-
-.callToAction {
+.cta {
   border: 1px solid var(--font-clr);
-  /* color: var(--background-clr);
-  background-color: var(--primary-clr); */
 }
 
-/* .callToAction:hover {
-  color: var(--background-clr);
-  background-color: var(--primary-dark-clr);
-} */
+@media (max-width: 768px) {
+  .container {
+    align-items: flex-start;
+    padding: 0;
+    padding-right: 20px;
+  }
+  
+  .span {
+    height: 100vh;
+  }
 
-.loaderContainer {
-  margin: 0 100px;
+  .container ul {
+    position: absolute;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    height: 100vh;
+    padding-top: 100px;
+    padding-left: 20px;
+    z-index: -1;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.5s ease;
+  }
+
+  .container .open {
+    transform: scaleY(1);
+  }
+
+  .container ul a {
+    padding: 0;
+    font-size: 1.5rem;
+  }
+
+  .container ul a:hover {
+    background-color: transparent;
+  }
+
+  .hamburger {
+    display: block;
+    margin-top: 15px;
+  }
+
+  .separator {
+    display: none;
+  }
 }

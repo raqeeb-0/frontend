@@ -1,0 +1,15 @@
+.waves {
+  line-height: 0;
+}
+
+.waves svg {
+  all: unset;
+}
+
+.waves svg path {
+  fill: var(--primary-clr);
+}
+
+.turnOver {
+  transform: rotate(180deg);
+}

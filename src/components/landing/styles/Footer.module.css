@@ -1,95 +1,154 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-*{
-	margin:0;
-	padding:0;
-	box-sizing: border-box;
+.container {
+	background-image:
+		-webkit-linear-gradient(
+			180deg,
+			var(--primary-clr) 0%,
+			var(--primary-dark-clr) 100%
+		);
+	background-image:
+		linear-gradient(
+			180deg,
+			var(--primary-clr) 0%,
+			var(--primary-dark-clr) 100%
+		);
+	padding: 70px 180px;
 }
-.container{
-	max-width: 1170px;
-	margin:auto;
-}
-.row{
+
+.container section {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: space-between;
 }
-ul{
-	list-style: none;
+
+.container article {
+	width: 15%;
+	padding: 0 15px;
 }
-.footer{
-	background-color: #1A082D;
-    padding: 70px 0;
-}
-.footerCol{
-   width: 25%;
-   padding: 0 15px;
-}
-.footerCol h4{
-	font-size: 18px;
-	color: #ffffff;
-	text-transform: capitalize;
+
+.container h3 {
+	position: relative;
+	color: var(--background-clr);
 	margin-bottom: 35px;
 	font-weight: 500;
-	position: relative;
+	text-transform: capitalize;
 }
-.footerCol h4::before{
+
+.container article h3::before {
 	content: '';
 	position: absolute;
 	left:0;
 	bottom: -10px;
-	background-color: #e91e63;
-	height: 2px;
-	box-sizing: border-box;
+	background-color: var(--font-clr);
 	width: 50px;
+	height: 2px;
 }
-.footerCol ul li:not(:last-child){
+
+/* ======================================== */
+.container article ul{
+	list-style: none;
+}
+
+.container article ul li:not(:last-child) {
 	margin-bottom: 10px;
 }
-.footerCol ul li a{
-	font-size: 16px;
-	text-transform: capitalize;
-	color: #ffffff;
-	text-decoration: none;
-	font-weight: 300;
-	color: #bbbbbb;
+
+.container article ul li a {
+	position: relative;
 	display: block;
-	transition: all 0.3s ease;
+	color: var(--background-clr);
+	width: fit-content;
+	opacity: 0.7;
+	text-decoration: none;
+	text-transform: capitalize;
+	transition: all 0.2s ease;
 }
-.footerCol ul li a:hover{
-	color: #ffffff;
-	padding-left: 8px;
+
+.container article ul li a::before {
+	content: '';
+	position: absolute;
+	left:0;
+	bottom: -3px;
+	background-color: var(--font-clr);
+	width: 100%;
+	height: 2px;
+	transform: scaleX(0);
+	transition: all 0.2s ease;
 }
-.socialLinks a{
-	display: inline-block;
+
+.container article ul li a:hover {
+	opacity: 1;
+}
+
+.container article ul li a:hover::before {
+	transform: scaleX(1);
+}
+/* ======================================== */
+
+
+/* ======================================== */
+.container article p {
+  color: var(--background-clr);
+  margin-top: 10px;
+}
+/* ======================================== */
+
+
+/* ======================================== */
+.social h3 {
+	margin-bottom: 20px;
+}
+
+.social div {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	width: 200px;
+	margin-bottom: 30px;
+}
+
+.social a {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--background-clr);
+	color: var(--font-clr);
 	height: 40px;
 	width: 40px;
-	background-color: rgba(255,255,255,0.2);
-	margin:0 10px 10px 0;
-	text-align: center;
-	line-height: 40px;
+	opacity: 0.7;
+	font-size: 1.5rem;
 	border-radius: 50%;
-	color: #ffffff;
-	transition: all 0.5s ease;
-}
-.footerCol .socialLinks a:hover{
-	color: #24262b;
-	background-color: #ffffff;
-}
-.footerCol p{
-  font-size: 16px;
-  color: #ffffff;
-  margin-top: 20px;
+	transition: all 0.2s ease;
 }
 
+.social a:hover {
+	opacity: 1;
+}
 
-/*responsive*/
-@media(max-width: 767px){
-  .footerCol{
-    width: 50%;
-    margin-bottom: 30px;
+.social svg {
+	all: unset;
 }
-}
-@media(max-width: 574px){
-  .footerCol{
+/* ======================================== */
+
+
+@media(max-width: 768px){
+	.container {
+		padding: 70px 20px;
+	}
+
+  .container article {
     width: 100%;
-}
+    margin-bottom: 50px;
+	}
+
+	.container article h3 {
+		margin-bottom: 20px;
+	}
+
+	.container article h3::before {
+		bottom: -8px;
+	}
+
+	.container article ul li a::before {
+		display: none;
+	}
 }

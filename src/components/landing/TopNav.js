@@ -2,131 +2,89 @@ import styles from './styles/TopNav.module.css';
 import { Link } from 'react-router-dom';
 import {
   ButtonLoader,
-  Separator,
-  Logo
+  Hamburger,
+  Separator
 } from '../common';
 import { useAuth } from '../../hooks';
 import { useState, useEffect } from 'react';
+import { DownloadPWALink } from './DownloadPWALink';
 
 
-export const TopNav = ({ pageRef }) => {
-  const PAGESCROLL = 50;
+export const TopNav = () => {
   const { username, isLoading, handleLogout } = useAuth();
-  const [navBackground, setNavBackground] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const pageElement = pageRef.current;
     const handleScroll = () => {
-      if (pageElement.scrollTop > PAGESCROLL) {
-        setNavBackground(true);
+      if (window.pageYOffset > 50) {
+        setIsScrolled(true);
       } else {
-        setNavBackground(false);
+        setIsScrolled(false);
       }
     };
 
-    pageElement.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      pageElement.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-
-    window.addEventListener(
-      'beforeinstallprompt', handleBeforeInstallPrompt
-    );
-
-    return () => {
-      window.removeEventListener(
-        'beforeinstallprompt', handleBeforeInstallPrompt
-      );
-    };
-  }, []);
-
-  const handleInstallClick = (e) => {
+  const logout = (e) => {
     e.preventDefault();
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
+    handleLogout();
+  }
 
-      deferredPrompt.userChoice
-        .then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-          } else {
-            console.log('User dismissed the install prompt');
-          }
-          setDeferredPrompt(null);
-        });
-    }
-  };
+  const glassCSS = isScrolled || isNavOpen ? styles.glass : '';
+
+  const spanCSS = isNavOpen ? styles.span : '';
+
+  const openCSS = isNavOpen ? styles.open : '';
 
   return (
-    <header className={`${styles.header} ${
-      navBackground ? styles.navScrolled : ''
-    }`}>
-      <section>
-        <Logo
-          imagePath='/logo192name.png'
-          to='/'
+    <header className={`${styles.container} ${glassCSS} ${spanCSS}`}>
+      <Link to='/'>
+        <img
+          src='/logo192name.png'
+          style={{ objectFit: 'cover' }}
+          width={128}
+          height={64}
+          alt='Logo'
         />
-        <nav className={styles.nav}>
-          <Link
-            to='/support'
-            className={styles.navLink}
-            onClick={(e) => e.preventDefault()}
-          >
-            Support
-          </Link>
-          <Link
-            to='/download'
-            className={styles.navLink}
-            onClick={handleInstallClick}
-          >
-            Download
-          </Link>
-          <Separator />
-          <Link
-            to={username ? '/auth/logout' : '/auth/login'}
-            className={`${styles.navLink} ${
-              isLoading ? styles.disabled : ''
-            }`}
-            onClick={(e) => {
-              if (username) {
-                e.preventDefault();
-                handleLogout();
-              }
-            }}
-          >
+      </Link>
+      <nav>
+        <ul className={openCSS}>
+          <li><DownloadPWALink /></li>
+          <li><a href='#features'>Features</a></li>
+          <li><a href='#top'>Home</a></li>
+          <div className={styles.separator}><Separator /></div>
+          <li>
             {
               isLoading
-              ? <ButtonLoader loaderStyle='dark' />
+              ? <div className={styles.loader}><ButtonLoader loaderStyle='dark' /></div>
               : username
-              ? 'Log out'
-              : 'Log in'
+                ? <Link to='/auth/logout' onClick={logout}>Log out</Link>
+                : <Link to='/auth/login'>Log in</Link>
             }
-          </Link>
-          <Link
-            to={username ? '/organizations/overview' : '/auth/signup'}
-            className={`${styles.navLink} ${
-              isLoading ? styles.disabled : ''
-            }`}
-          >
+          </li>
+          <li>
             {
               isLoading
-              ? <ButtonLoader loaderStyle='dark' />
+              ? <div className={styles.loader}><ButtonLoader loaderStyle='dark' /></div>
               : username
-              ? 'Dashboard'
-              : 'Get Started'
+                ? <Link to='/organizations/overview'>Dashboard</Link>
+                : <Link to='/auth/signup'>Sign up</Link>
             }
-          </Link>
-        </nav>
-      </section>
+          </li>
+        </ul>
+      </nav>
+      <div className={styles.hamburger}>
+        <Hamburger
+          isOpen={isNavOpen}
+          toggle={() => setIsNavOpen(!isNavOpen)}
+        />
+      </div>
     </header>
   );
 }

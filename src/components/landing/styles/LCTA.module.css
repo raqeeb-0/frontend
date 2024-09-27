@@ -1,147 +1,50 @@
-.lcta {
-  padding: 80px 20px;
+.content {
+  max-width: 800px;
+  margin: 0 auto;
   text-align: center;
 }
 
-
-.lctaContent {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.lctaHeading {
-  font-size: 36px;
-  color: #1A082D;
+.content h2 {
+  color: var(--font-clr);
   margin-bottom: 20px;
+  font-size: 2rem;
 }
 
-.lctaSubHeading {
-  font-size: 20px;
-  color: #1A082D;
-  margin-bottom: 40px;
+.content p {
+  color: var(--font-clr);
+  margin-bottom: 20px;
+  font-size: 1.15rem;
   font-weight: 600;
 }
 
-.lctaButtons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+.cta {
+  all: unset;
+  display: inline-block;
+  color: var(--background-clr);
+  background-color: var(--primary-clr);
+  border-radius: 50px;
+  padding: 15px 25px;
+  margin-bottom: 20px;
+  transition: var(--theme-transition);
+  font-size: 1.25rem;
+  text-transform: capitalize;
   cursor: pointer;
 }
 
-.lctaButton {
-  padding: 12px 24px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #1A082D;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.cta:hover, .cta:focus {
+  background-color: var(--primary-dark-clr);
 }
 
-.lctaButton:hover {
-  background-color: #522e79;
-}
-.topWave {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.topWave svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 109px;
-}
-
-.topWaveFill {
-  fill: #1A082D;
-}
-.bottomWave {
-  position: relative;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  transform: rotate(180deg);
-}
-
-.bottomWave svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 109px;
-}
-
-.bottomWaveFill {
-  fill: #1A082D;
-}
-
-
-/** For tablet devices **/
-@media (min-width: 768px) and (max-width: 1023px) {
-  .bottomWave svg {
-    width: calc(100% + 1.3px);
-    height: 104px;
-  }
-  .topWave svg {
-      width: calc(100% + 1.3px);
-      height: 104px;
-  }
-  .lcta {
-    padding: 60px 15px;
+@media (max-width: 768px) {
+  .content h2 {
+    font-size: 1.2rem;
   }
 
-  .lctaHeading {
-    font-size: 30px;
+  .content p {
+    font-size: 0.9rem;
   }
 
-  .lctaSubHeading {
-    font-size: 16px;
-  }
-
-  .lctaButton {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-}
-
-/** For mobile devices **/
-@media (max-width: 767px) {
-  .bottomWave svg {
-    width: calc(100% + 1.3px);
-    height: 86px;
-  }
-  .topWave svg {
-      width: calc(100% + 1.3px);
-      height: 86px;
-  }
-  .lcta {
-    padding: 40px 10px;
-  }
-
-  .lctaHeading {
-    font-size: 24px;
-  }
-
-  .lctaSubHeading {
-    font-size: 14px;
-    margin-bottom: 30px;
-  }
-
-  .lctaButtons {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .lctaButton {
-    width: 100%;
-    padding: 12px 0;
+  .cta {
+    font-size: 1rem;
   }
 }

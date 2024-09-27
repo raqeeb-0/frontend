@@ -1,0 +1,21 @@
+.wrapper {
+  height: fit-content;
+  perspective: 2000px;
+  transform-style: preserve-3d;
+}
+
+.vector{
+  width: 100%;
+  transform: rotateX(-9deg) rotateY(-20deg);
+  transition: transform 0.2s ease;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    align-self: start;
+  }
+
+  .vector {
+    transform: rotateX(0) rotateY(0);
+  }
+}

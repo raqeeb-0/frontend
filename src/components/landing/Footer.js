@@ -1,46 +1,48 @@
 import styles from './styles/Footer.module.css';
+import { Link } from 'react-router-dom';
+import { LuGithub } from 'react-icons/lu';
+import { LuLinkedin } from 'react-icons/lu';
+
 
 export const Footer = () => {
   return (
-    <footer className={styles.footer}>
-    <div className={styles.container}>
-      <div className={styles.row}>
-        <div className={styles.footerCol}>
-          <h4>company</h4>
+    <footer className={styles.container}>
+      <section className={styles.section}>
+        <article>
+          <h3>company</h3>
           <ul>
-            <li><a href="#">about us</a></li>
-            <li><a href="#">our services</a></li>
-            <li><a href="#">privacy policy</a></li>
-            <li><a href="#">affiliate program</a></li>
+            <li><Link to='#'>about us</Link></li>
+            <li><Link to='#'>our services</Link></li>
+            <li><Link to='#'>privacy policy</Link></li>
           </ul>
-        </div>
-        <div className={styles.footerCol}>
-          <h4>Quick Links</h4>
+        </article>
+        <article>
+          <h3>quick links</h3>
           <ul>
-            <li><a href="/home">Home</a></li>
-            <li><a href="/features">Features</a></li>
-            <li><a href="/pricing">Pricing</a></li>
-            <li><a href="/contact">Contact Us</a></li>
+            <li><a href='#top'>Home</a></li>
+            <li><a href='#features'>Features</a></li>
+            <li><Link to='#'>Contact Us</Link></li>
           </ul>
-        </div>
-        <div className={styles.footerCol}>
-          <h4>Contact Information</h4>
-          <p><strong>Email:</strong> support@raqeeb.com</p>
-          <p><strong>Phone:</strong> +20 1276 556 853</p>
-          <p><strong>Address:</strong> in front of Koleyt El-Bana Victoria College Degla, Damietta,Egypt </p>
-        </div>
-        <div className={styles.footerCol}>
-          <h4>follow us</h4>
-          <div className={styles.socialLinks}>
-            {/* <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-linkedin-in"></i></a> */}
+        </article>
+        <article>
+          <h3>contact information</h3>
+          <p><strong>Email:</strong> ammarelbadry1@gmail.com</p>
+        </article>
+        <article className={styles.social}>
+          <h3>follow us</h3>
+          <div>
+            <a href='https://github.com/raqeeb-0' target='_blank' title='Raqeeb Github Org.'>
+              <LuGithub />
+            </a>
           </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  )
+          <h3>developer</h3>
+          <div>
+            <a href='https://www.linkedin.com/in/ammarelbadry1' target='_blank' title='Ammar'>
+              <LuLinkedin />
+            </a>
+          </div>
+        </article>
+      </section>
+    </footer>
+  );
 }
