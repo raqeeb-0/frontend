@@ -2,11 +2,12 @@ import {
   lowercaseFirstLetter,
   uppercaseFirstLetter
 } from '../lib/utils';
-import { useNotify } from './';
+import { useNotify, useAuth } from './';
 
 
 export const useResponseErrorHandler = () => {
   const { notify } = useNotify();
+  const { handleLogout } = useAuth();
 
   const handleResponseError = ({ status, error }) => {
     let errorMsg = error.message || 'Something went wrong!';
@@ -16,6 +17,10 @@ export const useResponseErrorHandler = () => {
       error.message = lowercaseFirstLetter(error.message);
 
       errorMsg = `${error.field} ${error.message}`;
+    }
+
+    if (status === 401) {
+      handleLogout();
     }
 
     console.log(errorMsg);

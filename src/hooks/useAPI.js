@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import { AUTH_API } from '../lib/endpoints';
 import { FetchAdapter } from '../adapters/fetchAdapter';
 import { useResponseErrorHandler } from './useResponseErrorHandler';
 
 
-const apiAdapter = new FetchAdapter();
+const apiAdapter = new FetchAdapter(AUTH_API.REFRESH_TOKEN);
 
 export const useGet = (endpoint) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +19,10 @@ export const useGet = (endpoint) => {
     setError(null);
     setIsLoading(true);
     const fetchData = async () => {
-      const response = await apiAdapter.get(endpoint);
+      const response = await apiAdapter.get(
+        endpoint,
+        localStorage.getItem('token')
+      );
 
       if (response.ok) {
         setData(response.data);
@@ -48,7 +52,11 @@ export const useCreate = (endpoint, callback) => {
 
   const handleCreate = async (payload) => {
     setIsCreating(true);
-    const response = await apiAdapter.post(endpoint, payload);
+    const response = await apiAdapter.post(
+      endpoint,
+      payload,
+      localStorage.getItem('token')
+    );
 
     if (response.ok) {
       setData(response.data);
@@ -75,7 +83,11 @@ export const useUpdate = (endpoint, callback) => {
 
   const handleUpdate = async (payload) => {
     setIsUpdating(true);
-    const response = await apiAdapter.patch(endpoint, payload);
+    const response = await apiAdapter.patch(
+      endpoint,
+      payload,
+      localStorage.getItem('token')
+    );
 
     console.log(response);
     if (response.ok) {
@@ -104,7 +116,10 @@ export const useDelete = (endpoint, callback) => {
   const handleDelete = async (e) => {
     setIsDeleting(true);
     const id = e.currentTarget.getAttribute('data-id');
-    const response = await apiAdapter.delete(`${endpoint}/${id}`);
+    const response = await apiAdapter.delete(
+      `${endpoint}/${id}`,
+      localStorage.getItem('token')
+    );
 
     if (response.ok) {
       setData(response.data);

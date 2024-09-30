@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FetchAdapter } from '../adapters/fetchAdapter';
 import { AUTH_API } from '../lib/endpoints';
 import { useResponseErrorHandler } from '../hooks';
@@ -15,40 +15,36 @@ export const AuthProvider = ({ children }) => {
   const { notify } = useNotify();
   const { handleResponseError } = useResponseErrorHandler();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState('');
-  const [isInit, setIsInit] = useState(false);
+  const isInit = useRef(false);
   
   const from = location.state?.from.pathname || '/organizations/overview';
 
   useEffect(() => {
-    setIsLoading(true);
-    const checkAuthStatus = async () => {
-      const response = await apiAdapter.get(AUTH_API.IS_LOGGEDIN);
-      
-      if (response.ok) {
-        const { username } = response.data;
-        setIsAuthenticated(true);
-        setUsername(username);
-        // NOTE: Implement redirect when the current path
-        // is not the root path
-      } else {
-        response.status === null &&
-        notify(response.error.message, 'error');
-      }
-      setIsInit(true);
-      setIsLoading(false);
+    const token = localStorage.getItem('token');
+    const refreshToken = localStorage.getItem('refresh_token');
+    const username = localStorage.getItem('username');
+
+    if (token || refreshToken || username) {
+      setIsAuthenticated(true);
+      setUsername(username);
     }
 
-    checkAuthStatus();
+    isInit.current = true;
   }, []);
 
   const handleSignup = async (payload) => {
     setIsLoading(true);
     const response = await apiAdapter.post(AUTH_API.SIGNUP, payload);
     if (response.ok) {
+      const { token, refreshToken, username } = response.data;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('refresh_token', refreshToken);
+      localStorage.setItem('username', username);
       setIsAuthenticated(true);
-      setUsername(response.data.username);
+      setUsername(username);
       navigate(from, { replace: true });
     } else {
       const { status, error } = response;
@@ -64,9 +60,15 @@ export const AuthProvider = ({ children }) => {
   const handleLogin = async (payload) => {
     setIsLoading(true);
     const response = await apiAdapter.post(AUTH_API.LOGIN, payload);
+    console.log(response);
     if (response.ok) {
+      const { token, refreshToken, username } = response.data;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('refresh_token', refreshToken);
+      localStorage.setItem('username', username);
       setIsAuthenticated(true);
-      setUsername(response.data.username);
+      setUsername(username);
       navigate(from, { replace: true });
     } else {
       const { status, error } = response;
@@ -80,20 +82,11 @@ export const AuthProvider = ({ children }) => {
   }
 
   const handleLogout = async () => {
-    setIsLoading(true);
-    const response = await apiAdapter.get(AUTH_API.LOGOUT);
-    if (response.ok) {
-      setIsAuthenticated(false);
-      setUsername('');
-    } else {
-      const { status, error } = response;
-
-      handleResponseError({
-        status: status,
-        error: error
-      });
-    }
-    setIsLoading(false);
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('username');
+    setIsAuthenticated(false);
+    setUsername('');
   }
 
   const handleForgotPassword = async (payload) => {
@@ -136,7 +129,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     username,
     isLoading,
-    isInit,
+    isInit: isInit.current,
     isAuthenticated,
     handleResetPassword,
     handleForgotPassword,

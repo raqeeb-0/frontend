@@ -4,8 +4,7 @@ export const BASE_URL = process.env.REACT_APP_API_URL + process.env.REACT_APP_AP
 export const AUTH_API = {
   SIGNUP: `${BASE_URL}/auth/signup`,
   LOGIN: `${BASE_URL}/auth/login`,
-  LOGOUT: `${BASE_URL}/auth/logout`,
-  IS_LOGGEDIN: `${BASE_URL}/auth/isloggedin`,
+  REFRESH_TOKEN: `${BASE_URL}/auth/refresh-token`,
   FORGOT_PASSWORD: `${BASE_URL}/auth/forgot-password`,
   RESET_PASSWORD: (token) => `${BASE_URL}/auth/reset-password/${token}`,
 };
