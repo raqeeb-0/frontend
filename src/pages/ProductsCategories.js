@@ -27,15 +27,16 @@ import { useMemo } from 'react';
 
 
 export const ProductsCategories = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingCategories,
     data
-  } = useGet(PRODUCT_CATEGORY_API);
+  } = useGet(PRODUCT_CATEGORY_API(organizationId));
 
   const { handleDelete, isDeleting } = useDelete(
-    PRODUCT_CATEGORY_API,
+    PRODUCT_CATEGORY_API(organizationId),
     refresh
   );
 
@@ -66,7 +67,7 @@ export const ProductsCategories = () => {
         <EmptyListPlaceholder
           listName='product categories'
           link={{
-            path: '/app/products/categories/create',
+            path: 'create',
             name: 'Create Category',
           }}
         />
@@ -80,14 +81,14 @@ export const ProductsCategories = () => {
         value='Products Categories'
         isEmptyList={categories.length === 0}
         link={{
-          path: '/app/products/categories/create',
+          path: 'create',
           name: 'New Category',
         }}
       />
       <SearchInput resourceName='categories' />
       <ResourcesTable
         resourceName='category'
-        resourcePath='/products/categories'
+        resourcePath='products/categories'
         resources={categories}
         handleDelete={handleDelete}
       />
@@ -99,10 +100,11 @@ export const ProductsCategories = () => {
 export const ProductsCategoryCreate = () => {
   const { errors, register, handleSubmit } = useForm();
 
+  const { organizationId } = useParams();
   const navigate = useNavigate();
   const { handleCreate, isCreating } = useCreate(
-    PRODUCT_CATEGORY_API,
-    () => navigate('/app/products/categories')
+    PRODUCT_CATEGORY_API(organizationId),
+    () => navigate(-1)
   );
 
   return (
@@ -142,20 +144,20 @@ export const ProductsCategoryCreate = () => {
 
 
 export const ProductsCategoryUpdate = () => {
-  const { categoryId } = useParams();
+  const { organizationId, categoryId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingCategory,
     data: category
-  } = useGet(`${PRODUCT_CATEGORY_API}/${categoryId}`);
+  } = useGet(`${PRODUCT_CATEGORY_API(organizationId)}/${categoryId}`);
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { handleUpdate, isUpdating } = useUpdate(
-    `${PRODUCT_CATEGORY_API}/${categoryId}`,
-    () => navigate('/app/products/categories')
+    `${PRODUCT_CATEGORY_API(organizationId)}/${categoryId}`,
+    () => navigate(-1)
   );
 
   if (isFetchingCategory) {

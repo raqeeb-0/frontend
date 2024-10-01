@@ -4,42 +4,35 @@ import {
   AppLayout
 } from './layouts';
 import {
-  ExpensePurchaseUpdate,
-  MaterialPurchaseUpdate,
-  ExpensePurchaseCreate,
-  MaterialPurchaseCreate,
-  ExpensePurchases,
-  MaterialPurchases,
+  InvoiceUpdate,
+  InvoiceCreate,
+  Invoices,
   SaleUpdate,
   SaleCreate,
   Sales,
   ProductionOrderUpdate,
   ProductionOrderCreate,
   ProductionOrders,
-  ProductsCategoryUpdate,
-  ProductsCategoryCreate,
-  ProductsCategories,
-  ProductUpdate,
-  ProductCreate,
-  Products,
-  ExpensesCategoryUpdate,
-  ExpensesCategoryCreate,
-  ExpensesCategories,
-  ExpenseUpdate,
-  ExpenseCreate,
-  Expenses,
   CustomerUpdate,
   CustomerCreate,
   Customers,
   SupplierUpdate,
   SupplierCreate,
   Suppliers,
-  MaterialsCategoryUpdate,
-  MaterialsCategoryCreate,
-  MaterialsCategories,
-  MaterialUpdate,
-  MaterialCreate,
-  Materials,
+  ProductInventory,
+  MaterialStock,
+  PurchaseItemUpdate,
+  PurchaseItemCreate,
+  PurchaseItems,
+  PurchaseItemsCategoryUpdate,
+  PurchaseItemsCategoryCreate,
+  PurchaseItemsCategories,
+  ProductUpdate,
+  ProductCreate,
+  Products,
+  ProductsCategoryUpdate,
+  ProductsCategoryCreate,
+  ProductsCategories,
   OrganizationUpdate,
   OrganizationCreate,
   Organization,
@@ -92,57 +85,21 @@ export const router = createBrowserRouter([
         element: <ResetPassword />,
       },
       {
-        path: 'app',
+        path: 'organizations/:organizationId/app/',
         element: <AppLayout />,
         errorElement: <ErrorPage />,
         children: [
           {
-            path: 'materials/items',
-            element: <Materials />,
+            path: 'purchasing',
+            element: <Invoices />,
           },
           {
-            path: 'materials/items/create',
-            element: <MaterialCreate />,
+            path: 'purchasing/create',
+            element: <InvoiceCreate />,
           },
           {
-            path: 'materials/items/:materialId/edit',
-            element: <MaterialUpdate />,
-          },
-          {
-            path: 'materials/categories',
-            element: <MaterialsCategories />,
-          },
-          {
-            path: 'materials/categories/create',
-            element: <MaterialsCategoryCreate />,
-          },
-          {
-            path: 'materials/categories/:categoryId/edit',
-            element: <MaterialsCategoryUpdate />,
-          },
-          {
-            path: 'expense-purchases',
-            element: <ExpensePurchases />,
-          },
-          {
-            path: 'expense-purchases/create',
-            element: <ExpensePurchaseCreate />,
-          },
-          {
-            path: 'expense-purchases/:purchaseId/edit',
-            element: <ExpensePurchaseUpdate />,
-          },
-          {
-            path: 'material-purchases',
-            element: <MaterialPurchases />,
-          },
-          {
-            path: 'material-purchases/create',
-            element: <MaterialPurchaseCreate />,
-          },
-          {
-            path: 'material-purchases/:purchaseId/edit',
-            element: <MaterialPurchaseUpdate />,
+            path: 'purchasing/:invoiceId/edit',
+            element: <InvoiceUpdate />,
           },
           {
             path: 'suppliers',
@@ -155,30 +112,6 @@ export const router = createBrowserRouter([
           {
             path: 'suppliers/:supplierId/edit',
             element: <SupplierUpdate />,
-          },
-          {
-            path: 'expenses/units',
-            element: <Expenses />,
-          },
-          {
-            path: 'expenses/units/create',
-            element: <ExpenseCreate />,
-          },
-          {
-            path: 'expenses/units/:expenseId/edit',
-            element: <ExpenseUpdate />,
-          },
-          {
-            path: 'expenses/categories',
-            element: <ExpensesCategories />,
-          },
-          {
-            path: 'expenses/categories/create',
-            element: <ExpensesCategoryCreate />,
-          },
-          {
-            path: 'expenses/categories/:categoryId/edit',
-            element: <ExpensesCategoryUpdate />,
           },
           {
             path: 'sales',
@@ -217,15 +150,47 @@ export const router = createBrowserRouter([
             element: <ProductionOrderUpdate />,
           },
           {
-            path: 'products/items',
+            path: 'inventory/material-stock',
+            element: <MaterialStock />,
+          },
+          {
+            path: 'inventory/product-inventory',
+            element: <ProductInventory />,
+          },
+          {
+            path: 'purchase-items/list',
+            element: <PurchaseItems />,
+          },
+          {
+            path: 'purchase-items/list/create',
+            element: <PurchaseItemCreate />,
+          },
+          {
+            path: 'purchase-items/list/:purchaseItemId/edit',
+            element: <PurchaseItemUpdate />,
+          },
+          {
+            path: 'purchase-items/categories',
+            element: <PurchaseItemsCategories />,
+          },
+          {
+            path: 'purchase-items/categories/create',
+            element: <PurchaseItemsCategoryCreate />,
+          },
+          {
+            path: 'purchase-items/categories/:categoryId/edit',
+            element: <PurchaseItemsCategoryUpdate />,
+          },
+          {
+            path: 'products/list',
             element: <Products />
           },
           {
-            path: 'products/items/create',
+            path: 'products/list/create',
             element: <ProductCreate />
           },
           {
-            path: 'products/items/:productId/edit',
+            path: 'products/list/:productId/edit',
             element: <ProductUpdate />
           },
           {

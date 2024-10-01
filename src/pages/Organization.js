@@ -13,10 +13,7 @@ import {
   PageHeader
 } from '../components/common';
 import { useForm, useNotify } from '../hooks';
-import {
-  ORG_API,
-  ORG_SELECT_API
-} from '../lib/endpoints';
+import { ORG_API } from '../lib/endpoints';
 import {
   useGet,
   useCreate,
@@ -39,23 +36,7 @@ export const Organization = () => {
     data: organizations
   } = useGet(ORG_API);
 
-  const navigate = useNavigate();
-  const {
-    handleCreate: handleSelect,
-    isCreating: isSelecting,
-    data
-  } = useCreate(ORG_SELECT_API, () => navigate('/app/materials/items'));
-
   const { handleDelete, isDeleting } = useDelete(ORG_API, refresh);
-
-  const { notify } = useNotify();
-  const hasMounted = useRef(false);
-  useEffect(() => {
-    if (hasMounted.current && isSelecting) {
-      notify('Selecting organization...');
-    }
-    hasMounted.current = true;
-  }, [isSelecting, data]);
 
   if (isFetchingOrgs || isDeleting ) {
     return (
@@ -113,15 +94,9 @@ export const Organization = () => {
               </td>
               <td>
                 <Link
-                  to={`/app/organizations/${org.id}`}
+                  to={`/organizations/${org.id}/app`}
                   className={styles.resourceLink}
                   data-id={org.id}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSelect({
-                      organizationId: e.currentTarget.getAttribute('data-id'),
-                    });
-                  }}
                 >
                   { org.name }
                 </Link>

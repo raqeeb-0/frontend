@@ -1,15 +1,16 @@
 import styles from './styles/Sidebar.module.css';
 import {
+  LuTags,
   LuBoxes,
   LuTruck,
   LuLayers,
   LuUsers2,
   LuPackage,
   LuWarehouse,
+  LuLayoutList,
   LuLayoutGrid,
   LuPackagePlus,
   LuPackageOpen,
-  LuTrendingDown,
   LuClipboardList,
   LuCircleDollarSign
 } from 'react-icons/lu';
@@ -18,63 +19,55 @@ import { Link, NavLink } from 'react-router-dom';
 import { useState } from 'react';
 
 
-const purchasing = [
-  {
-    path: '/app/material-purchases',
-    name: 'Materials',
-    icon: <LuLayers />,
-  },
-  {
-    path: '/app/expense-purchases',
-    name: 'Expenses',
-    icon: <LuBoxes />,
-  }
-];
-
 const common = [
   {
-    path: '/app/sales',
+    path: 'purchasing',
+    name: 'Purchasing',
+    icon: <LuClipboardList />,
+  },
+  {
+    path: 'sales',
     name: 'Sales',
     icon: <LuCircleDollarSign />,
   },
   {
-    path: '/app/production-orders',
+    path: 'production-orders',
     name: 'Production Orders',
     icon: <LuPackagePlus />,
   },
   {
-    path: '/app/suppliers',
+    path: 'suppliers',
     name: 'Suppliers',
     icon: <LuTruck />,
   },
   {
-    path: '/app/customers',
+    path: 'customers',
     name: 'Customers',
     icon: <LuUsers2 />,
   }
 ];
 
-const materials = [
+const inventory = [
   {
-    path: '/app/materials/items',
-    name: 'Items',
+    path: 'inventory/material-stock',
+    name: 'Material Stock',
     icon: <LuLayers />,
   },
   {
-    path: '/app/materials/categories',
-    name: 'Categories',
-    icon: <LuLayoutGrid />,
+    path: 'inventory/product-inventory',
+    name: 'Product Inventory',
+    icon: <LuPackageOpen />,
   }
-];
+]
 
-const expenses = [
+const purchaseItems = [
   {
-    path: '/app/expenses/units',
-    name: 'Units',
-    icon: <LuBoxes />,
+    path: 'purchase-items/list',
+    name: 'List',
+    icon: <LuLayoutList />,
   },
   {
-    path: '/app/expenses/categories',
+    path: 'purchase-items/categories',
     name: 'Categories',
     icon: <LuLayoutGrid />,
   }
@@ -82,27 +75,27 @@ const expenses = [
 
 const products = [
   {
-    path: '/app/products/items',
-    name: 'Items',
-    icon: <LuPackageOpen />,
+    path: 'products/list',
+    name: 'List',
+    icon: <LuLayoutList />,
   },
   {
-    path: '/app/products/categories',
+    path: 'products/categories',
     name: 'Categories',
-    icon: <LuLayoutGrid />,
+    icon: <LuTags />,
   }
 ];
 
 const panels = [
   {
-    title: 'Materials',
+    title: 'Inventory',
     icon: <LuWarehouse />,
-    list: materials,
+    list: inventory,
   },
   {
-    title: 'Expenses',
-    icon: <LuTrendingDown />,
-    list: expenses,
+    title: 'Purchase Items',
+    icon: <LuBoxes />,
+    list: purchaseItems,
   },
   {
     title: 'Products',
@@ -110,8 +103,6 @@ const panels = [
     list: products,
   }
 ];
-
-const logoUrl = `${process.env.PUBLIC_URL}/logo192name.png`;
 
 export const Sidebar = ({ isOpen }) => {
   const [activePanel, setActivePanel] = useState(null);
@@ -135,25 +126,13 @@ export const Sidebar = ({ isOpen }) => {
     <aside className={`${styles.sidebar} ${sidebarWidth}`}>
       <Link to='/organizations/overview' className={styles.header}>
         <img
-          src={logoUrl}
+          src='/logo192name.png'
           alt='logo'
           width='128'
           height='64'
         />
       </Link>
       <ul className={styles.list}>
-        <li>
-          <SideNav
-            panelHeader={{
-              title: 'Purchasing',
-              icon: <LuClipboardList />,
-            }}
-            panelList={purchasing}
-            isActive={activePanel === 0}
-            onClick={() => handlePanelClick(0)}
-            onFocus={() => handlePanelFocus(0)}
-          />
-        </li>
         {
           common.map((link, index) => {
             return (
@@ -172,18 +151,17 @@ export const Sidebar = ({ isOpen }) => {
         }
         {
           panels.map((panel, index) => {
-            const idx = index + 1;
             return (
-              <li key={idx}>
+              <li key={index}>
                 <SideNav
                   panelHeader={{
                     title: panel.title,
                     icon: panel.icon,
                   }}
                   panelList={panel.list}
-                  isActive={activePanel === idx}
-                  onClick={() => handlePanelClick(idx)}
-                  onFocus={() => handlePanelFocus(idx)}
+                  isActive={activePanel === index}
+                  onClick={() => handlePanelClick(index)}
+                  onFocus={() => handlePanelFocus(index)}
                 />
               </li>
             )

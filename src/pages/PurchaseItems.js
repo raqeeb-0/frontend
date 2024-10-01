@@ -1,6 +1,6 @@
 import {
-  Header,
   Form,
+  Header,
   SearchInput,
   OptionsList,
   ResourcesTable,
@@ -14,8 +14,8 @@ import {
 } from '../components/common';
 import { useForm } from '../hooks';
 import {
-  EXPENSE_API,
-  EXPENSE_CATEGORY_API
+  PURCHASE_ITEM_API,
+  PURCHASE_ITEM_CATEGORY_API
 } from '../lib/endpoints';
 import {
   useGet,
@@ -30,30 +30,31 @@ import {
 import { useMemo } from 'react';
 
 
-export const Expenses = () => {
+export const PurchaseItems = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
-    isLoading: isFetchingExpenses,
+    isLoading: isFetchingPurchaseItems,
     data
-  } = useGet(EXPENSE_API);
+  } = useGet(`${PURCHASE_ITEM_API(organizationId)}`);
 
   const { handleDelete, isDeleting } = useDelete(
-    EXPENSE_API,
+    PURCHASE_ITEM_API(organizationId),
     refresh
   );
 
-  const expenses = useMemo(() => {
-    return data ? data.map((expense) => ({
-      'id': expense.id,
-      'name': expense.name,
-      'last purchase price': expense.price,
-      'category': expense.category.name,
-      'created at': expense.createdAt.split('T')[0],
+  const purchaseItems = useMemo(() => {
+    return data ? data.map((purchaseItem) => ({
+      'id': purchaseItem.id,
+      'name': purchaseItem.name,
+      'type': purchaseItem.type,
+      'category': purchaseItem.category.name,
+      'create at': purchaseItem.createdAt.split('T')[0],
     })) : [];
   }, [data]);
 
-  if (isFetchingExpenses || isDeleting) {
+  if (isFetchingPurchaseItems || isDeleting) {
     return <Loader />;
   }
 
@@ -66,14 +67,14 @@ export const Expenses = () => {
     );
   }
 
-  if (expenses.length === 0) {
+  if (purchaseItems.length === 0) {
     return (
       <section>
         <EmptyListPlaceholder
-          listName='expenses'
+          listName='Purchase Items'
           link={{
-            path: '/app/expenses/units/create',
-            name: 'Create Expense',
+            path: 'create',
+            name: 'Create Item',
           }}
         />
       </section>
@@ -83,38 +84,39 @@ export const Expenses = () => {
   return (
     <section>
       <Header
-        value='Expenses'
-        isEmptyList={expenses.length === 0}
+        value='Purchase Items'
+        isEmptyList={purchaseItems.length === 0}
         link={{
-          path: '/app/expenses/units/create',
-          name: 'New Expense',
+          path: 'create',
+          name: 'New Item',
         }}
       />
-      <SearchInput resourceName='expenses' />
+      <SearchInput resourceName='items' />
       <ResourcesTable
-        resourceName='expense'
-        resourcePath='/expenses/units'
-        resources={expenses}
+        resourceName='item'
+        resourcePath='purchase-items/list'
+        resources={purchaseItems}
         handleDelete={handleDelete}
       />
     </section>
   );
 }
 
-export const ExpenseCreate = () => {
+export const PurchaseItemCreate = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingCategories,
     data: categories
-  } = useGet(EXPENSE_CATEGORY_API);
+  } = useGet(PURCHASE_ITEM_CATEGORY_API(organizationId));
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isCreating, handleCreate } = useCreate(
-    EXPENSE_API,
-    () => navigate('/app/expenses/units')
+    PURCHASE_ITEM_API(organizationId),
+    () => navigate(-1)
   );
 
   if (isFetchingCategories) {
@@ -132,9 +134,9 @@ export const ExpenseCreate = () => {
 
   return (
     <section>
-      <PageHeader value='New Expense' />
+      <PageHeader value='New Purchase Item' />
       <Form
-        legend='Expense Details'
+        legend='Purchase Item Details'
         onSubmit={(e) => handleSubmit(e, handleCreate)}
         isLoading={isCreating}
       >
@@ -159,6 +161,46 @@ export const ExpenseCreate = () => {
               )
             }
           />
+        </FormField>
+        <FormField error={errors.price}>
+          <label htmlFor='price'>Price/Unit</label>
+          <input
+            id='price'
+            type='number'
+            disabled={isCreating}
+            {
+              ...register(
+                'price',
+                {
+                  required: true,
+                  length: {
+                    min: 1,
+                    max: 15,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.type}>
+          <label htmlFor='type'>Type</label>
+          <select
+            id='type'
+            disabled={isCreating}
+            {
+              ...register(
+                'type',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a type--
+            </option>
+            <OptionsList options={['storable', 'consumable', 'service']} />
+          </select>
         </FormField>
         <FormField error={errors.categoryId}>
           <label htmlFor='categoryId'>Category</label>
@@ -185,53 +227,53 @@ export const ExpenseCreate = () => {
   );
 }
 
-export const ExpenseUpdate = () => {
+export const PurchaseItemUpdate = () => {
+  const { organizationId, purchaseItemId } = useParams();
   const {
     error: categoriesFetchError,
     refresh: refreshCategories,
     isLoading: isFetchingCategories,
     data: categories
-  } = useGet(EXPENSE_CATEGORY_API);
+  } = useGet(PURCHASE_ITEM_CATEGORY_API(organizationId));
 
-  const { expenseId } = useParams();
   const {
-    error: expenseFetchError,
-    refresh: refreshExpense,
-    isLoading: isFetchingExpense,
-    data: expense
-  } = useGet(`${EXPENSE_API}/${expenseId}`);
+    error: purchaseItemFetchError,
+    refresh: refreshPurchaseItem,
+    isLoading: isFetchingPurchaseItem,
+    data: purchaseItem
+  } = useGet(`${PURCHASE_ITEM_API(organizationId)}/${purchaseItemId}`);
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isUpdating, handleUpdate } = useUpdate(
-    `${EXPENSE_API}/${expenseId}`,
-    () => navigate('/app/expenses/units')
+    `${PURCHASE_ITEM_API(organizationId)}/${purchaseItemId}`,
+    () => navigate(-1)
   );
 
   const refresh = () => {
     refreshCategories();
-    refreshExpense();
+    refreshPurchaseItem();
   }
 
-  if (isFetchingCategories || isFetchingExpense) {
+  if (isFetchingCategories || isFetchingPurchaseItem) {
     return <Loader />;
   }
 
-  if (categoriesFetchError || expenseFetchError) {
+  if (categoriesFetchError || purchaseItemFetchError) {
     return (
       <ErrorContainer
-        error={categoriesFetchError || expenseFetchError}
+        error={categoriesFetchError || purchaseItemFetchError}
         refresh={refresh}
       />
     );
   }
-
+    
   return (
     <section>
-      <PageHeader value='Edit Expense' />
+      <PageHeader value='Edit Purchase Item' />
       <Form
-        legend='Expense Details'
+        legend='Purchase Item Details'
         onSubmit={(e) => handleSubmit(e, handleUpdate)}
         isLoading={isUpdating}
       >
@@ -242,8 +284,8 @@ export const ExpenseUpdate = () => {
             type='text'
             autoFocus='on'
             autoComplete='on'
+            defaultValue={purchaseItem.name}
             disabled={isUpdating}
-            defaultValue={expense.name}
             {
               ...register(
                 'name',
@@ -263,7 +305,7 @@ export const ExpenseUpdate = () => {
           <select
             id='categoryId'
             disabled={isUpdating}
-            defaultValue={expense.category.id}
+            defaultValue={purchaseItem.category.id}
             {
               ...register(
                 'categoryId',

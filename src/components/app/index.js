@@ -1,3 +1,4 @@
+export { InputTable } from './InputTable';
 export { OptionsList } from './OptionsList';
 export { ErrorContainer } from './ErrorContainer';
 export { SelectMultiple } from './SelectMultiple';

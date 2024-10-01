@@ -1,6 +1,7 @@
 import {
   Form,
   Header,
+  InputTable,
   SearchInput,
   OptionsList,
   ResourcesTable,
@@ -14,9 +15,9 @@ import {
 } from '../components/common';
 import { useForm } from '../hooks';
 import {
-  MATERIAL_API,
+  PURCHASE_ITEM_API,
   SUPPLIER_API,
-  MATERIAL_PURCHASE_API
+  INVOICE_API
 } from '../lib/endpoints';
 import {
   useGet,
@@ -28,30 +29,31 @@ import {
   useNavigate,
   useParams
 } from 'react-router-dom';
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 
 
-export const MaterialPurchases = () => {
+export const Invoices = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingPurchases,
     data
-  } = useGet(MATERIAL_PURCHASE_API);
+  } = useGet(INVOICE_API(organizationId));
 
   const { handleDelete, isDeleting } = useDelete(
-    MATERIAL_PURCHASE_API,
+    INVOICE_API(organizationId),
     refresh
   );
 
-  const purchases = useMemo(() => {
-    return data ? data.map((purchase) => ({
-      'id': purchase.id,
-      'ID': purchase.id,
-      'material': purchase.material.name,
-      'quantity': purchase.quantity,
-      'price': purchase.price,
-      'created at': purchase.createdAt.split('T')[0],
+  const invoices = useMemo(() => {
+    return data ? data.map((invoice) => ({
+      'id': invoice.id,
+      'invoice number': invoice.invoiceNumber,
+      'invoice total': invoice.totalAmount,
+      'supplier': invoice.supplier.name,
+      'effective date': invoice.effectiveDate,
+      'created at': invoice.createdAt.split('T')[0],
     })) : [];
   }, [data]);
 
@@ -68,13 +70,13 @@ export const MaterialPurchases = () => {
     );
   }
 
-  if (purchases.length === 0) {
+  if (invoices.length === 0) {
     return (
       <section>
         <EmptyListPlaceholder
-          listName='purchases'
+          listName='invoices'
           link={{
-            path: '/app/material-purchases/create',
+            path: 'create',
             name: 'Create Purchase',
           }}
         />
@@ -85,44 +87,45 @@ export const MaterialPurchases = () => {
   return (
     <section>
       <Header
-        value='Material Purchases'
-        isEmptyList={purchases.length === 0}
+        value='Invoices'
+        isEmptyList={invoices.length === 0}
         link={{
-          path: '/app/material-purchases/create',
-          name: 'New Purchase',
+          path: 'create',
+          name: 'New Invoice',
         }}
       />
-      <SearchInput resourceName='material purchases' />
+      <SearchInput resourceName='invoices' />
       <ResourcesTable
-        resourceName='purchase'
-        resourcePath='/material-purchases'
-        resources={purchases}
+        resourceName='invoice'
+        resourcePath='invoices'
+        resources={invoices}
         handleDelete={handleDelete}
       />
     </section>
   );
 }
 
-export const MaterialPurchaseCreate = () => {
+export const InvoiceCreate = () => {
+  const { organizationId } = useParams();
   const {
     error: materialsFetchError,
     refresh: refreshMaterials,
     isLoading: isFetchingMaterials,
     data: materials
-  } = useGet(MATERIAL_API);
+  } = useGet(PURCHASE_ITEM_API(organizationId));
   const {
     error: suppliersFetchError,
     refresh: refreshSuppliers,
     isLoading: isFetchingSuppliers,
     data: suppliers
-  } = useGet(SUPPLIER_API);
+  } = useGet(SUPPLIER_API(organizationId));
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isCreating, handleCreate } = useCreate(
-    MATERIAL_PURCHASE_API,
-    () => navigate('/app/material-purchases')
+    INVOICE_API(organizationId),
+    () => navigate(-1)
   );
 
   const refresh = () => {
@@ -145,72 +148,28 @@ export const MaterialPurchaseCreate = () => {
 
   return (
     <section>
-      <Header
-        value='New Material Purchase'
-        link={{
-          path: '/app/expense-purchases/create',
-          name: 'Expense Purchase',
-        }}
-      />
+      <PageHeader value='New Invoice' />
       <Form
-        legend='Purchase Details'
+        legend='Invoice'
         onSubmit={(e) => handleSubmit(e, handleCreate)}
         isLoading={isCreating}
       >
-        <FormField error={errors.materialId}>
-          <label htmlFor='material'>Material</label>
-          <select
-            id='material'
-            disabled={isCreating}
-            {
-              ...register(
-                'materialId',
-                {
-                  required: true,
-                }
-              )
-            }
-          >
-            <option value=''>
-              --Please choose a material--
-            </option>
-            <OptionsList options={materials} />
-          </select>
-        </FormField>
-        <FormField error={errors.quantity}>
-          <label htmlFor='quantity'>Quantity</label>
+        <FormField error={errors.invoiceNumber}>
+          <label htmlFor='invoiceNumber'>Invoice Number</label>
           <input
-            id='quantity'
-            type='number'
+            id='invoiceNumber'
+            type='text'
+            autoFocus='on'
+            autoComplete='on'
             disabled={isCreating}
             {
               ...register(
-                'quantity',
+                'invoiceNumber',
                 {
                   required: true,
                   length: {
-                    min: 1,
-                    max: 15,
-                  },
-                }
-              )
-            }
-          />
-        </FormField>
-        <FormField error={errors.price}>
-          <label htmlFor='price'>Price/Unit</label>
-          <input
-            id='price'
-            type='number'
-            disabled={isCreating}
-            {
-              ...register(
-                'price',
-                {
-                  required: true,
-                  length: {
-                    min: 1,
-                    max: 15,
+                    min: 2,
+                    max: 50,
                   },
                 }
               )
@@ -237,39 +196,91 @@ export const MaterialPurchaseCreate = () => {
             <OptionsList options={suppliers} />
           </select>
         </FormField>
+        <FormField error={errors.effectiveDate}>
+          <label htmlFor='effectiveDate'>Effective Date</label>
+          <input
+            id='effectiveDate'
+            type='date'
+            disabled={isCreating}
+            {
+              ...register(
+                'effectiveDate',
+                {
+                  required: true,
+                }
+              )
+            }
+          />
+        </FormField>
+        <div style={{gridColumn: 'span 2'}}>
+          <InputTable
+            tableContents={[
+              {
+                label: 'items',
+                input: <select disabled={isCreating}>
+                    <option value=''>
+                      --Please choose a material--
+                    </option>
+                    <OptionsList options={materials} />
+                  </select>,
+              },
+              {
+                label: 'quantity',
+                input: <input
+                    type='number'
+                    disabled={isCreating}
+                  />,
+              },
+              {
+                label: 'price',
+                input: <input
+                    type='number'
+                    disabled={isCreating}
+                  />,
+              },
+              {
+                label: 'amount',
+                input: <input
+                    type='number'
+                    disabled={isCreating}
+                  />,
+              }
+            ]}
+          />
+        </div>
       </Form>
     </section>
   );
 }
 
-export const MaterialPurchaseUpdate = () => {
+export const InvoiceUpdate = () => {
+  const { organizationId, invoiceId } = useParams();
   const {
     error: materialsFetchError,
     refresh: refreshMaterials,
     isLoading: isFetchingMaterials,
     data: materials
-  } = useGet(MATERIAL_API);
+  } = useGet(PURCHASE_ITEM_API(organizationId));
   const {
     error: suppliersFetchError,
     refresh: refreshSuppliers,
     isLoading: isFetchingSuppliers,
     data: suppliers
-  } = useGet(SUPPLIER_API);
+  } = useGet(SUPPLIER_API(organizationId));
 
-  const { purchaseId } = useParams();
   const {
-    error: purchaseFetchError,
+    error: invoiceFetchError,
     refresh: refreshPurchase,
     isLoading: isFetchingPurchase,
-    data: purchase
-  } = useGet(`${MATERIAL_PURCHASE_API}/${purchaseId}`)
+    data: invoice
+  } = useGet(`${INVOICE_API(organizationId)}/${invoiceId}`)
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isUpdating, handleUpdate } = useUpdate(
-    `${MATERIAL_PURCHASE_API}/${purchaseId}`,
-    () => navigate('/app/material-purchases')
+    `${INVOICE_API(organizationId)}/${invoiceId}`,
+    () => navigate(-1)
   );
 
   const refresh = () => {
@@ -282,7 +293,7 @@ export const MaterialPurchaseUpdate = () => {
     return <Loader />;
   }
 
-  const error = materialsFetchError || suppliersFetchError || purchaseFetchError;
+  const error = materialsFetchError || suppliersFetchError || invoiceFetchError;
   if (error) {
     return (
       <ErrorContainer
@@ -305,7 +316,7 @@ export const MaterialPurchaseUpdate = () => {
           <select
             id='material'
             disabled={isUpdating}
-            defaultValue={purchase.material.id}
+            defaultValue={invoice.material.id}
             {
               ...register(
                 'materialId',
@@ -327,7 +338,7 @@ export const MaterialPurchaseUpdate = () => {
             id='quantity'
             type='number'
             disabled={isUpdating}
-            defaultValue={purchase.quantity}
+            defaultValue={invoice.quantity}
             {
               ...register(
                 'quantity',
@@ -348,7 +359,7 @@ export const MaterialPurchaseUpdate = () => {
             id='price'
             type='number'
             disabled={isUpdating}
-            defaultValue={purchase.price}
+            defaultValue={invoice.price}
             {
               ...register(
                 'price',
@@ -368,7 +379,7 @@ export const MaterialPurchaseUpdate = () => {
           <select
             id='supplier'
             disabled={isUpdating}
-            defaultValue={purchase.supplier.id}
+            defaultValue={invoice.supplier.id}
             {
               ...register(
                 'supplierId',

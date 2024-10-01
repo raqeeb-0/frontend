@@ -27,15 +27,16 @@ import { useMemo } from 'react';
 
 
 export const Customers = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingCustomers,
     data
-  } = useGet(CUSTOMER_API);
+  } = useGet(CUSTOMER_API(organizationId));
 
   const { handleDelete, isDeleting } = useDelete(
-    CUSTOMER_API,
+    CUSTOMER_API(organizationId),
     refresh
   );
 
@@ -67,7 +68,7 @@ export const Customers = () => {
         <EmptyListPlaceholder
           listName='customers'
           link={{
-            path: '/app/customers/create',
+            path: 'create',
             name: 'Create Customer',
           }}
         />
@@ -81,14 +82,14 @@ export const Customers = () => {
         value='Customers'
         isEmptyList={customers.length === 0}
         link={{
-          path: '/app/customers/create',
+          path: 'create',
           name: 'New Customer',
         }}
       />
       <SearchInput resourceName='customers' />
       <ResourcesTable
         resourceName='customer'
-        resourcePath='/customers'
+        resourcePath='customers'
         resources={customers}
         handleDelete={handleDelete}
       />
@@ -99,10 +100,11 @@ export const Customers = () => {
 export const CustomerCreate = () => {
   const { errors, register, handleSubmit } = useForm();
 
+  const { organizationId } = useParams();
   const navigate = useNavigate();
   const { handleCreate, isCreating } = useCreate(
-    CUSTOMER_API,
-    () => navigate('/app/customers')
+    CUSTOMER_API(organizationId),
+    () => navigate(-1)
   );
 
   return (
@@ -158,20 +160,20 @@ export const CustomerCreate = () => {
 }
 
 export const CustomerUpdate = () => {
-  const { customerId } = useParams();
+  const { organizationId, customerId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingCustomer,
     data: customer
-  } = useGet(`${CUSTOMER_API}/${customerId}`);
+  } = useGet(`${CUSTOMER_API(organizationId)}/${customerId}`);
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { handleUpdate, isUpdating } = useUpdate(
-    `${CUSTOMER_API}/${customerId}`,
-    () => navigate('/app/customers')
+    `${CUSTOMER_API(organizationId)}/${customerId}`,
+    () => navigate(-1)
   );
 
   if (isFetchingCustomer) {

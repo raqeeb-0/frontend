@@ -47,7 +47,7 @@ export const ResourcesTable = (props) => {
                   return (
                     <td key={key}>
                       <Link
-                        to={`/app${resourcePath}/${resource.id}`}
+                        to={`${resource.id}`}
                         className={styles.resourceLink}
                         onClick={(e) => e.preventDefault()}
                       >
@@ -66,7 +66,7 @@ export const ResourcesTable = (props) => {
             }
             <td>
               <ActionsMenu
-                updatePath={`/app${resourcePath}/${resource.id}/edit`}
+                updatePath={`${resource.id}/edit`}
                 data={{ id: resource.id }}
                 handleDelete={handleDelete}
               />

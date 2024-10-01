@@ -27,15 +27,16 @@ import { useMemo } from 'react';
 
 
 export const Suppliers = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingSuppliers,
     data
-  } = useGet(SUPPLIER_API);
+  } = useGet(SUPPLIER_API(organizationId));
 
   const { handleDelete, isDeleting } = useDelete(
-    SUPPLIER_API,
+    SUPPLIER_API(organizationId),
     refresh
   );
 
@@ -67,7 +68,7 @@ export const Suppliers = () => {
         <EmptyListPlaceholder
           listName='suppliers'
           link={{
-            path: '/app/suppliers/create',
+            path: 'create',
             name: 'Create Supplier',
           }}
         />
@@ -81,14 +82,14 @@ export const Suppliers = () => {
         value='Suppliers'
         isEmptyList={suppliers.length === 0}
         link={{
-          path: '/app/suppliers/create',
+          path: 'create',
           name: 'New Supplier',
         }}
       />
       <SearchInput resourceName='suppliers' />
       <ResourcesTable
         resourceName='supplier'
-        resourcePath='/suppliers'
+        resourcePath='suppliers'
         resources={suppliers}
         handleDelete={handleDelete}
       />
@@ -99,10 +100,11 @@ export const Suppliers = () => {
 export const SupplierCreate = () => {
   const { errors, register, handleSubmit } = useForm();
 
+  const { organizationId } = useParams();
   const navigate = useNavigate();
   const { isCreating, handleCreate } = useCreate(
-    SUPPLIER_API,
-    () => navigate('/app/suppliers')
+    SUPPLIER_API(organizationId),
+    () => navigate(-1)
   );
 
   return (
@@ -158,20 +160,20 @@ export const SupplierCreate = () => {
 }
 
 export const SupplierUpdate = () => {
-  const { supplierId } = useParams();
+  const { organizationId, supplierId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingSupplier,
     data: supplier
-  } = useGet(`${SUPPLIER_API}/${supplierId}`);
+  } = useGet(`${SUPPLIER_API(organizationId)}/${supplierId}`);
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isUpdating, handleUpdate } = useUpdate(
-    `${SUPPLIER_API}/${supplierId}`,
-    () => navigate('/app/suppliers')
+    `${SUPPLIER_API(organizationId)}/${supplierId}`,
+    () => navigate(-1)
   );
 
   if (isFetchingSupplier) {

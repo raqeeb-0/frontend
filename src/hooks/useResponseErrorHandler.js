@@ -23,7 +23,7 @@ export const useResponseErrorHandler = () => {
       handleLogout();
     }
 
-    console.log(errorMsg);
+    console.log(error);
     notify(errorMsg, 'error');
   }
 

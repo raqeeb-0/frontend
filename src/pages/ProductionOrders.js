@@ -30,12 +30,13 @@ import { useMemo } from 'react';
 
 
 export const ProductionOrders = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingProductionOrders,
     data
-  } = useGet(PRODUCTION_ORDER_API);
+  } = useGet(PRODUCTION_ORDER_API(organizationId));
 
   const productionOrders = useMemo(() => {
     return data ? data.map((productionOrder) => ({
@@ -67,7 +68,7 @@ export const ProductionOrders = () => {
         <EmptyListPlaceholder
           listName='orders'
           link={{
-            path: '/app/production-orders/create',
+            path: 'create',
             name: 'Create Order',
           }}
         />
@@ -81,14 +82,14 @@ export const ProductionOrders = () => {
         value='Production Orders'
         isEmptyList={productionOrders.length === 0}
         link={{
-          path: '/app/production-orders/create',
+          path: 'create',
           name: 'New Order',
         }}
       />
       <SearchInput resourceName='production-orders' />
       <ResourcesTable
         resourceName='order'
-        resourcePath='/production-orders'
+        resourcePath='production-orders'
         resources={productionOrders}
       />
     </section>
@@ -96,19 +97,20 @@ export const ProductionOrders = () => {
 }
 
 export const ProductionOrderCreate = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingProducts,
     data: products
-  } = useGet(PRODUCT_API);
+  } = useGet(PRODUCT_API(organizationId));
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isCreating, handleCreate } = useCreate(
-    PRODUCTION_ORDER_API,
-    () => navigate('/app/production-orders')
+    PRODUCTION_ORDER_API(organizationId),
+    () => navigate(-1)
   );
 
   if (isFetchingProducts) {
@@ -185,7 +187,7 @@ export const ProductionOrderUpdate = () => {
   //   data: products
   // } = useGet(PRODUCT_API);
 
-  const { productionOrderId } = useParams();
+  const { organizationId, productionOrderId } = useParams();
   // const {
   //   error: productionOrderFetchError,
   //   refresh: refreshProductionOrder,
@@ -197,8 +199,8 @@ export const ProductionOrderUpdate = () => {
 
   const navigate = useNavigate();
   const { isUpdating, handleUpdate } = useUpdate(
-    `${PRODUCTION_ORDER_API}/${productionOrderId}`,
-    () => navigate('/app/production-orders')
+    `${PRODUCTION_ORDER_API(organizationId)}/${productionOrderId}`,
+    () => navigate(-1)
   );
 
   // const refresh = () => {

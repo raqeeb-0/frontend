@@ -17,7 +17,7 @@ import {
 import { useForm } from '../hooks';
 import {
   PRODUCT_API,
-  MATERIAL_API,
+  PURCHASE_ITEM_API,
   PRODUCT_CATEGORY_API
 } from '../lib/endpoints';
 import {
@@ -34,15 +34,16 @@ import { useMemo } from 'react';
 
 
 export const Products = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingProducts,
     data
-  } = useGet(PRODUCT_API);
+  } = useGet(PRODUCT_API(organizationId));
 
   const { handleDelete, isDeleting } = useDelete(
-    PRODUCT_API,
+    PRODUCT_API(organizationId),
     refresh
   );
 
@@ -50,8 +51,6 @@ export const Products = () => {
     return data ? data.map((product) => ({
       'id': product.id,
       'name': product.name,
-      'price/unit': product.price,
-      'quantity': product.quantity,
       'category': product.category.name,
       'create at': product.createdAt.split('T')[0],
     })) : [];
@@ -76,7 +75,7 @@ export const Products = () => {
         <EmptyListPlaceholder
           listName='products'
           link={{
-            path: '/app/products/items/create',
+            path: 'create',
             name: 'Create Product',
           }}
         />
@@ -90,14 +89,14 @@ export const Products = () => {
         value='Products'
         isEmptyList={products.length === 0}
         link={{
-          path: '/app/products/items/create',
+          path: 'create',
           name: 'New Product',
         }}
       />
       <SearchInput resourceName='products' />
       <ResourcesTable
         resourceName='product'
-        resourcePath='/products/items'
+        resourcePath='products/list'
         resources={products}
         handleDelete={handleDelete}
       />
@@ -106,25 +105,26 @@ export const Products = () => {
 }
 
 export const ProductCreate = () => {
+  const { organizationId } = useParams();
   const {
     error: categoriesFetchError,
     refresh: refreshCategories,
     isLoading: isFetchingCategories,
     data: categories
-  } = useGet(PRODUCT_CATEGORY_API);
+  } = useGet(PRODUCT_CATEGORY_API(organizationId));
   const {
     error: materialsFetchError,
     refresh: refreshMaterials,
     isLoading: isFetchingMaterials,
     data: materials
-  } = useGet(MATERIAL_API);
+  } = useGet(`${PURCHASE_ITEM_API(organizationId)}?type=storable`);
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isCreating, handleCreate } = useCreate(
-    PRODUCT_API,
-    () => navigate('/app/products/items')
+    PRODUCT_API(organizationId),
+    () => navigate(-1)
   );
 
   const refresh = () => {
@@ -153,7 +153,9 @@ export const ProductCreate = () => {
         onSubmit={(e) => handleSubmit(e, handleCreate)}
         isLoading={isCreating}
       >
-        <ImageUploader />
+        <div style={{ gridRow: 'span 2' }}>
+          <ImageUploader />
+        </div>
         <FormField error={errors.name}>
           <label htmlFor='name'>Name</label>
           <input
@@ -175,6 +177,26 @@ export const ProductCreate = () => {
               )
             }
           />
+        </FormField>
+        <FormField error={errors.categoryId}>
+          <label htmlFor='category'>Category</label>
+          <select
+            id='category'
+            disabled={isCreating}
+            {
+              ...register(
+                'categoryId',
+                {
+                  required: true,
+                }
+              )
+            }
+          >
+            <option value=''>
+              --Please choose a category--
+            </option>
+            <OptionsList options={categories} />
+          </select>
         </FormField>
         <FormField error={errors.indirectCostPercent}>
           <label htmlFor='indirectCostPercent'>Indirect Cost (%)</label>
@@ -216,73 +238,55 @@ export const ProductCreate = () => {
             }
           />
         </FormField>
-        <FormField error={errors.categoryId}>
-          <label htmlFor='category'>Category</label>
-          <select
-            id='category'
-            disabled={isCreating}
-            {
-              ...register(
-                'categoryId',
+        <div style={{ gridColumn: 'span 2' }}>
+          <SelectMultiple
+            label='Materials'
+            id='materials'
+            options={materials}
+            error={errors.materials}
+            registerObj={
+              register(
+                'materials',
                 {
                   required: true,
                 }
               )
             }
-          >
-            <option value=''>
-              --Please choose a category--
-            </option>
-            <OptionsList options={categories} />
-          </select>
-        </FormField>
-        <SelectMultiple
-          label='Materials'
-          id='materials'
-          options={materials}
-          error={errors.materials}
-          registerObj={
-            register(
-              'materials',
-              {
-                required: true,
-              }
-            )
-          }
-        />
+          />
+        </div>
       </Form>
     </section>
   );
 }
 
 export const ProductUpdate = () => {
+  const { organizationId, productId } = useParams();
   const {
     error: categoriesFetchError,
     refresh: refreshCategories,
     isLoading: isFetchingCategories,
     data: categories
-  } = useGet(PRODUCT_CATEGORY_API);
+  } = useGet(PRODUCT_CATEGORY_API(organizationId));
   const {
     error: materialsFetchError,
     refresh: refreshMaterials,
     isLoading: isFetchingMaterials,
     data: materials
-  } = useGet(MATERIAL_API);
+  } = useGet(`${PURCHASE_ITEM_API(organizationId)}?type=storable`);
 
-  const { productId } = useParams();
   const {
     error: productFetchError,
     refresh: refreshProduct,
     isLoading: isFetchingProduct,
     data: product
-  } = useGet(`${PRODUCT_API}/${productId}`);
+  } = useGet(`${PRODUCT_API(organizationId)}/${productId}`);
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isUpdating, handleUpdate } = useUpdate(
-    `${PRODUCT_API}/${productId}`,
-    () => navigate('/app/products/items')
+    `${PRODUCT_API(organizationId)}/${productId}`,
+    () => navigate(-1)
   );
 
   const refresh = () => {

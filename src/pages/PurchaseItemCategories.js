@@ -12,7 +12,7 @@ import {
   PageHeader
 } from '../components/common';
 import { useForm } from '../hooks';
-import { MATERIAL_CATEGORY_API } from '../lib/endpoints';
+import { PURCHASE_ITEM_CATEGORY_API } from '../lib/endpoints';
 import {
   useGet,
   useCreate,
@@ -26,16 +26,17 @@ import {
 import { useMemo } from 'react';
 
 
-export const MaterialsCategories = () => {
+export const PurchaseItemsCategories = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingCategories,
     data
-  } = useGet(MATERIAL_CATEGORY_API);
+  } = useGet(PURCHASE_ITEM_CATEGORY_API(organizationId));
 
   const { handleDelete, isDeleting } = useDelete(
-    MATERIAL_CATEGORY_API,
+    PURCHASE_ITEM_CATEGORY_API(organizationId),
     refresh
   );
 
@@ -64,9 +65,9 @@ export const MaterialsCategories = () => {
     return (
       <section>
         <EmptyListPlaceholder
-          listName='material categories'
+          listName='purchase item categories'
           link={{
-            path: '/app/materials/categories/create',
+            path: 'create',
             name: 'Create Category',
           }}
         />
@@ -77,17 +78,17 @@ export const MaterialsCategories = () => {
   return (
     <section>
       <Header
-        value='Materials Categories'
+        value='Purchase Item Categories'
         isEmptyList={categories.length === 0}
         link={{
-          path: '/app/materials/categories/create',
+          path: 'create',
           name: 'New Category',
         }}
       />
       <SearchInput resourceName='categories' />
       <ResourcesTable
         resourceName='category'
-        resourcePath='/materials/categories'
+        resourcePath='purchase-items/categories'
         resources={categories}
         handleDelete={handleDelete}
       />
@@ -96,18 +97,19 @@ export const MaterialsCategories = () => {
 }
 
 
-export const MaterialsCategoryCreate = () => {
+export const PurchaseItemsCategoryCreate = () => {
   const { errors, register, handleSubmit } = useForm();
 
+  const { organizationId } = useParams();
   const navigate = useNavigate();
   const { handleCreate, isCreating } = useCreate(
-    MATERIAL_CATEGORY_API,
-    () => navigate('/app/materials/categories')
+    PURCHASE_ITEM_CATEGORY_API(organizationId),
+    () => navigate(-1)
   );
 
   return (
     <section>
-      <PageHeader value='New Material Category' />
+      <PageHeader value='New Purchase Item Category' />
       <Form
         legend='Category Details'
         onSubmit={(e) => handleSubmit(e, handleCreate)}
@@ -141,21 +143,21 @@ export const MaterialsCategoryCreate = () => {
 }
 
 
-export const MaterialsCategoryUpdate = () => {
-  const { categoryId } = useParams();
+export const PurchaseItemsCategoryUpdate = () => {
+  const { organizationId, categoryId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingCategory,
     data: category
-  } = useGet(`${MATERIAL_CATEGORY_API}/${categoryId}`);
+  } = useGet(`${PURCHASE_ITEM_CATEGORY_API(organizationId)}/${categoryId}`);
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { handleUpdate, isUpdating } = useUpdate(
-    `${MATERIAL_CATEGORY_API}/${categoryId}`,
-    () => navigate('/app/materials/categories')
+    `${PURCHASE_ITEM_CATEGORY_API(organizationId)}/${categoryId}`,
+    () => navigate(-1)
   );
 
   if (isFetchingCategory) {
@@ -173,7 +175,7 @@ export const MaterialsCategoryUpdate = () => {
 
   return (
     <section>
-      <PageHeader value='Edit Materials Category' />
+      <PageHeader value='Edit Purchase Item Category' />
       <Form
         legend='Category Details'
         onSubmit={(e) => handleSubmit(e, handleUpdate)}

@@ -32,15 +32,16 @@ import { useMemo } from 'react';
 
 
 export const Sales = () => {
+  const { organizationId } = useParams();
   const {
     error,
     refresh,
     isLoading: isFetchingSales,
     data
-  } = useGet(SALE_API);
+  } = useGet(SALE_API(organizationId));
 
   const { handleDelete, isDeleting } = useDelete(
-    SALE_API,
+    SALE_API(organizationId),
     refresh
   );
 
@@ -74,7 +75,7 @@ export const Sales = () => {
         <EmptyListPlaceholder
           listName='sales'
           link={{
-            path: '/app/sales/create',
+            path: 'create',
             name: 'Create Sale',
           }}
         />
@@ -88,14 +89,14 @@ export const Sales = () => {
         value='Sales'
         isEmptyList={sales.length === 0}
         link={{
-          path: '/app/sales/create',
+          path: 'create',
           name: 'New Sale',
         }}
       />
       <SearchInput resourceName='sales' />
       <ResourcesTable
         resourceName='sale'
-        resourcePath='/sales'
+        resourcePath='sales'
         resources={sales}
         handleDelete={handleDelete}
       />
@@ -104,25 +105,26 @@ export const Sales = () => {
 }
 
 export const SaleCreate = () => {
+  const { organizationId } = useParams();
   const {
     error: productsFetchError,
     refresh: refreshProducts,
     isLoading: isFetchingProducts,
     data: products
-  } = useGet(PRODUCT_API);
+  } = useGet(PRODUCT_API(organizationId));
   const {
     error: customersFetchError,
     refresh: refreshCustomers,
     isLoading: isFetchingCustomers,
     data: customers
-  } = useGet(CUSTOMER_API);
+  } = useGet(CUSTOMER_API(organizationId));
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isCreating, handleCreate } = useCreate(
-    SALE_API,
-    () => navigate('/app/sales')
+    SALE_API(organizationId),
+    () => navigate(-1)
   );
 
   const refresh = () => {
@@ -191,6 +193,26 @@ export const SaleCreate = () => {
             }
           />
         </FormField>
+        <FormField error={errors.price}>
+          <label htmlFor='price'>Price</label>
+          <input
+            id='price'
+            type='number'
+            disabled={isCreating}
+            {
+              ...register(
+                'price',
+                {
+                  required: true,
+                  length: {
+                    min: 1,
+                    max: 15,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
         <FormField error={errors.customerId}>
           <label htmlFor='customer'>Customer</label>
           <select
@@ -217,33 +239,33 @@ export const SaleCreate = () => {
 }
 
 export const SaleUpdate = () => {
+  const { organizationId, saleId } = useParams();
   const {
     error: productsFetchError,
     refresh: refreshProducts,
     isLoading: isFetchingProducts,
     data: products
-  } = useGet(PRODUCT_API);
+  } = useGet(PRODUCT_API(organizationId));
   const {
     error: customersFetchError,
     refresh: refreshCustomers,
     isLoading: isFetchingCustomers,
     data: customers
-  } = useGet(CUSTOMER_API);
+  } = useGet(CUSTOMER_API(organizationId));
 
-  const { saleId } = useParams();
   const {
     error: saleFetchError,
     refresh: refreshSale,
     isLoading: isFetchingSale,
     data: sale
-  } = useGet(`${SALE_API}/${saleId}`);
+  } = useGet(`${SALE_API(organizationId)}/${saleId}`);
 
   const { errors, register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
   const { isUpdating, handleUpdate } = useUpdate(
-    `${SALE_API}/${saleId}`,
-    () => navigate('/app/sales')
+    `${SALE_API(organizationId)}/${saleId}`,
+    () => navigate(-1)
   );
 
   const refresh = () => {
@@ -305,6 +327,27 @@ export const SaleUpdate = () => {
             {
               ...register(
                 'quantity',
+                {
+                  required: true,
+                  length: {
+                    min: 1,
+                    max: 15,
+                  },
+                }
+              )
+            }
+          />
+        </FormField>
+        <FormField error={errors.price}>
+          <label htmlFor='price'>Price</label>
+          <input
+            id='price'
+            type='number'
+            disabled={isUpdating}
+            defaultValue={sale.price}
+            {
+              ...register(
+                'price',
                 {
                   required: true,
                   length: {
